@@ -1,0 +1,8 @@
+name = "ticket-page"
+compatibility_date = "2026-02-27"
+pages_build_output_dir = "."
+
+[[d1_databases]]
+binding = "DB"
+database_name = "ticket-page-db"
+database_id = "REPLACE_WITH_D1_DATABASE_ID"
