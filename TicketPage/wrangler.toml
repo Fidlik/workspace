@@ -4,5 +4,5 @@ pages_build_output_dir = "."
 
 [[d1_databases]]
 binding = "DB"
-database_name = "ticket-page-db"
-database_id = "REPLACE_WITH_D1_DATABASE_ID"
+database_name = "ticketdatabase"
+database_id = "e3d57332-3160-4043-9f4e-be4b728f5722"

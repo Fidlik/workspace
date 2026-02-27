@@ -28,11 +28,6 @@ async function loadRecent() {
   container.innerHTML = data.tickets.map(ticketCard).join("\n");
 }
 
-function parseGenres(raw) {
-  if (!raw) return [];
-  return raw.split(",").map(v => v.trim()).filter(Boolean).slice(0, 8);
-}
-
 function setupTurnstile() {
   const siteKey = window.APP_CONFIG?.turnstileSiteKey;
   const widget = document.querySelector("#turnstile-widget");
@@ -57,7 +52,6 @@ async function submitForm(event) {
     description: String(formData.get("description") || "").trim(),
     year: String(formData.get("year") || "").trim(),
     language: String(formData.get("language") || "").trim(),
-    genre: parseGenres(String(formData.get("genres") || "")),
     turnstileToken: typeof turnstile !== "undefined" ? turnstile.getResponse() : ""
   };
 
