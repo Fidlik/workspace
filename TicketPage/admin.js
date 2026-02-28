@@ -1,4 +1,6 @@
 const statuses = ["new", "triaged", "in_progress", "done", "closed", "rejected"];
+const COMPLETED_STATUSES = new Set(["done", "closed", "rejected"]);
+let cachedTickets = [];
 
 const TYPE_LABELS = {
   issue: "problem",
@@ -37,6 +39,14 @@ function apiError(data, fallback) {
   return data?.error || fallback;
 }
 
+async function readJsonSafe(response) {
+  try {
+    return await response.json();
+  } catch {
+    return {};
+  }
+}
+
 function statusSelect(ticketId, current) {
   const options = statuses
     .map(s => `<option value="${s}" ${s === current ? "selected" : ""}>${escapeHtml(labelStatus(s))}</option>`)
@@ -61,7 +71,7 @@ function card(ticket) {
 
 async function loadStats() {
   const res = await fetch("/api/admin/stats");
-  const data = await res.json();
+  const data = await readJsonSafe(res);
   const stats = document.querySelector("#stats");
 
   if (!res.ok) {
@@ -73,17 +83,22 @@ async function loadStats() {
   return true;
 }
 
-async function loadQueue() {
-  const res = await fetch("/api/tickets?page=1&pageSize=50");
-  const data = await res.json();
-  const list = document.querySelector("#admin-list");
+function filteredTickets() {
+  const hideCompleted = document.querySelector("#hide-completed")?.checked;
+  if (!hideCompleted) return cachedTickets;
+  return cachedTickets.filter(ticket => !COMPLETED_STATUSES.has(ticket.status));
+}
 
-  if (!res.ok) {
-    list.innerHTML = `<p>${escapeHtml(apiError(data, "Nepodarilo se nacist frontu"))}</p>`;
+function renderQueue() {
+  const list = document.querySelector("#admin-list");
+  const tickets = filteredTickets();
+
+  if (!tickets.length) {
+    list.innerHTML = "<p>Ve fronte nejsou zadne viditelne pozadavky.</p>";
     return;
   }
 
-  list.innerHTML = (data.tickets || []).map(card).join("\n");
+  list.innerHTML = tickets.map(card).join("\n");
 
   for (const button of document.querySelectorAll("[data-save-id]")) {
     button.addEventListener("click", async () => {
@@ -98,10 +113,11 @@ async function loadQueue() {
         body: JSON.stringify({ status, adminNote })
       });
 
-      const patchData = await patchRes.json();
+      const patchData = await readJsonSafe(patchRes);
       msg.textContent = patchRes.ok ? "Ulozeno" : apiError(patchData, "Chyba");
 
       if (patchRes.ok) {
+        await loadQueue();
         await loadStats();
       }
     });
@@ -120,12 +136,7 @@ async function loadQueue() {
         method: "DELETE"
       });
 
-      let delData = {};
-      try {
-        delData = await delRes.json();
-      } catch {
-        delData = {};
-      }
+      const delData = await readJsonSafe(delRes);
 
       if (!delRes.ok) {
         msg.textContent = apiError(delData, "Mazani se nezdarilo.");
@@ -139,7 +150,26 @@ async function loadQueue() {
   }
 }
 
+async function loadQueue() {
+  const res = await fetch("/api/tickets?page=1&pageSize=50");
+  const data = await readJsonSafe(res);
+  const list = document.querySelector("#admin-list");
+
+  if (!res.ok) {
+    list.innerHTML = `<p>${escapeHtml(apiError(data, "Nepodarilo se nacist frontu"))}</p>`;
+    return;
+  }
+
+  cachedTickets = data.tickets || [];
+  renderQueue();
+}
+
 window.addEventListener("load", async () => {
+  const hideCompleted = document.querySelector("#hide-completed");
+  hideCompleted?.addEventListener("change", () => {
+    renderQueue();
+  });
+
   await loadStats();
   await loadQueue();
 });

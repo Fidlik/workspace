@@ -228,6 +228,25 @@ pre {
   margin: 0;
 }
 
+.admin-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.7rem;
+}
+
+.admin-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  font-weight: 600;
+}
+
+.admin-toggle input {
+  width: auto;
+  margin: 0;
+}
+
 .admin-actions {
   display: flex;
   gap: 0.6rem;
