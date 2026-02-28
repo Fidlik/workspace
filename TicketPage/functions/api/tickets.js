@@ -1,7 +1,7 @@
-import { error, json, parseJson } from "../../_lib/response.js";
-import { checkAndConsumeRateLimit, fingerprintRequest, verifyTurnstileToken } from "../../_lib/security.js";
-import { createId, nowIso, toPublicTicketRow } from "../../_lib/utils.js";
-import { parseListQuery, validateCreateTicket } from "../../_lib/validation.js";
+import { error, json, parseJson } from "../_lib/response.js";
+import { checkAndConsumeRateLimit, fingerprintRequest, verifyTurnstileToken } from "../_lib/security.js";
+import { createId, nowIso, toPublicTicketRow } from "../_lib/utils.js";
+import { parseListQuery, validateCreateTicket } from "../_lib/validation.js";
 
 export async function onRequestGet(context) {
   const { request, env } = context;
