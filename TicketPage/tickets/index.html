@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ticket Board</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <script src="/tickets.js" defer></script>
+</head>
+<body>
+  <header class="shell">
+    <h1>Ticket Board</h1>
+    <nav>
+      <a href="/tickets">Board</a>
+      <a href="/admin">Admin</a>
+    </nav>
+  </header>
+
+  <main class="shell panel">
+    <h2>Browse Tickets</h2>
+    <form id="filters" class="filters">
+      <input type="text" name="q" placeholder="Search title or description" />
+      <select name="type">
+        <option value="">All types</option>
+        <option value="issue">Issue</option>
+        <option value="movie">Movie</option>
+        <option value="tv">TV</option>
+      </select>
+      <select name="status">
+        <option value="">All statuses</option>
+        <option value="new">new</option>
+        <option value="triaged">triaged</option>
+        <option value="in_progress">in_progress</option>
+        <option value="done">done</option>
+        <option value="closed">closed</option>
+        <option value="rejected">rejected</option>
+      </select>
+      <button type="submit">Apply</button>
+    </form>
+
+    <div id="ticket-list"></div>
+
+    <div class="pager">
+      <button id="prev" type="button">Previous</button>
+      <span id="pager-info"></span>
+      <button id="next" type="button">Next</button>
+    </div>
+  </main>
+</body>
+</html>
