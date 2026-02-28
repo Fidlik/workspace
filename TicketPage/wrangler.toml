@@ -1,4 +1,4 @@
-name = "ticket-page"
+name = "ticketpage"
 compatibility_date = "2026-02-27"
 pages_build_output_dir = "."
 
