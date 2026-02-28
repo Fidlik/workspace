@@ -46,13 +46,19 @@ async function submitForm(event) {
   const message = document.querySelector("#form-message");
   const formData = new FormData(form);
 
+  const token = typeof turnstile !== "undefined" ? turnstile.getResponse() : "";
+  if (!token) {
+    message.textContent = "Please complete the Turnstile check.";
+    return;
+  }
+
   const payload = {
     type: String(formData.get("type") || "").trim(),
     title: String(formData.get("title") || "").trim(),
     description: String(formData.get("description") || "").trim(),
     year: String(formData.get("year") || "").trim(),
     language: String(formData.get("language") || "").trim(),
-    turnstileToken: typeof turnstile !== "undefined" ? turnstile.getResponse() : ""
+    turnstileToken: token
   };
 
   if (!payload.year) delete payload.year;
