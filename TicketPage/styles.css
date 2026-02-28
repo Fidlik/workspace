@@ -9,6 +9,29 @@
   --line: #cdbba4;
   --accent: #9c2727;
   --accent-2: #c6922a;
+  --nav-bg: rgba(255, 255, 255, 0.5);
+  --input-bg: #fffcf8;
+  --ticket-bg: #ffffff;
+  --shadow: rgba(30, 22, 12, 0.08);
+  --bg-grad-a: rgba(156, 39, 39, 0.06);
+  --bg-grad-b: rgba(198, 146, 42, 0.2);
+}
+
+[data-theme="dark"] {
+  --bg: #101318;
+  --bg-soft: #171d24;
+  --panel: #1c2430;
+  --ink: #efe9df;
+  --muted: #b5aea3;
+  --line: #3c4756;
+  --accent: #e45a5a;
+  --accent-2: #efbf65;
+  --nav-bg: rgba(15, 20, 28, 0.72);
+  --input-bg: #121923;
+  --ticket-bg: #1a222d;
+  --shadow: rgba(0, 0, 0, 0.36);
+  --bg-grad-a: rgba(228, 90, 90, 0.12);
+  --bg-grad-b: rgba(239, 191, 101, 0.12);
 }
 
 * { box-sizing: border-box; }
@@ -17,8 +40,8 @@ body {
   margin: 0;
   color: var(--ink);
   background:
-    linear-gradient(130deg, rgba(156, 39, 39, 0.06), transparent 35%),
-    radial-gradient(circle at 92% -10%, rgba(198, 146, 42, 0.2), transparent 42%),
+    linear-gradient(130deg, var(--bg-grad-a), transparent 35%),
+    radial-gradient(circle at 92% -10%, var(--bg-grad-b), transparent 42%),
     linear-gradient(180deg, var(--bg) 0%, var(--bg-soft) 100%);
   font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
 }
@@ -68,21 +91,35 @@ h1 {
 nav {
   display: flex;
   gap: 0.6rem;
+  align-items: center;
 }
 
-nav a {
+nav a,
+.theme-toggle {
   color: var(--ink);
   text-decoration: none;
   font-weight: 700;
   border: 1px solid var(--line);
   border-radius: 999px;
   padding: 0.35rem 0.8rem;
-  background: rgba(255, 255, 255, 0.5);
+  background: var(--nav-bg);
 }
 
-nav a:hover {
+.theme-toggle {
+  cursor: pointer;
+  width: auto;
+  font: inherit;
+}
+
+nav a:hover,
+.theme-toggle:hover {
   border-color: var(--accent);
   color: var(--accent);
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 main {
@@ -95,7 +132,7 @@ main {
   border-radius: 14px;
   padding: 1rem;
   margin-bottom: 1rem;
-  box-shadow: 0 8px 24px rgba(30, 22, 12, 0.08);
+  box-shadow: 0 8px 24px var(--shadow);
 }
 
 .panel h2 {
@@ -113,16 +150,17 @@ label {
 input,
 textarea,
 select,
-button {
+button:not(.theme-toggle) {
   width: 100%;
   border: 1px solid #bca98e;
   border-radius: 8px;
   padding: 0.6rem 0.7rem;
   font: inherit;
-  background: #fffcf8;
+  background: var(--input-bg);
+  color: var(--ink);
 }
 
-button {
+button:not(.theme-toggle) {
   background: linear-gradient(135deg, var(--accent) 0%, #7f1f1f 100%);
   color: #fff;
   cursor: pointer;
@@ -143,7 +181,7 @@ button {
   border-radius: 10px;
   padding: 0.85rem;
   margin-bottom: 0.7rem;
-  background: #fff;
+  background: var(--ticket-bg);
 }
 
 .ticket small {
