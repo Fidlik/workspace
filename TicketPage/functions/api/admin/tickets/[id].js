@@ -38,3 +38,22 @@ export async function onRequestPatch(context) {
 
   return json({ id, status: body.status, updatedAt: now });
 }
+
+export async function onRequestDelete(context) {
+  const { request, env, params } = context;
+
+  if (!assertAdmin(request)) return error("Unauthorized", 401);
+
+  const id = params?.id;
+  if (!id) return error("Missing ticket id.", 400);
+
+  const existing = await env.DB.prepare("SELECT id FROM tickets WHERE id = ?1").bind(id).first();
+  if (!existing) return error("Ticket not found.", 404);
+
+  await env.DB.batch([
+    env.DB.prepare("DELETE FROM ticket_events WHERE ticket_id = ?1").bind(id),
+    env.DB.prepare("DELETE FROM tickets WHERE id = ?1").bind(id)
+  ]);
+
+  return json({ id, deleted: true });
+}

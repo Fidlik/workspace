@@ -32,6 +32,11 @@ function labelStatus(status) {
   return STATUS_LABELS[status] || status;
 }
 
+function apiError(data, fallback) {
+  if (data?.error === "Unauthorized") return "Nemate opravneni. Prihlaste se jako admin.";
+  return data?.error || fallback;
+}
+
 function statusSelect(ticketId, current) {
   const options = statuses
     .map(s => `<option value="${s}" ${s === current ? "selected" : ""}>${escapeHtml(labelStatus(s))}</option>`)
@@ -46,7 +51,10 @@ function card(ticket) {
     <p>${escapeHtml(ticket.description || "")}</p>
     ${statusSelect(ticket.id, ticket.status)}
     <textarea data-note-id="${ticket.id}" placeholder="Poznamka spravce (volitelne)" maxlength="1000"></textarea>
-    <button data-save-id="${ticket.id}" type="button">Ulozit</button>
+    <div class="admin-actions">
+      <button data-save-id="${ticket.id}" type="button">Ulozit</button>
+      <button data-delete-id="${ticket.id}" class="danger-btn" type="button">Smazat</button>
+    </div>
     <p data-msg-id="${ticket.id}"></p>
   </article>`;
 }
@@ -54,7 +62,15 @@ function card(ticket) {
 async function loadStats() {
   const res = await fetch("/api/admin/stats");
   const data = await res.json();
-  document.querySelector("#stats").textContent = JSON.stringify(data, null, 2);
+  const stats = document.querySelector("#stats");
+
+  if (!res.ok) {
+    stats.textContent = apiError(data, "Nepodarilo se nacist statistiky.");
+    return false;
+  }
+
+  stats.textContent = JSON.stringify(data, null, 2);
+  return true;
 }
 
 async function loadQueue() {
@@ -63,7 +79,7 @@ async function loadQueue() {
   const list = document.querySelector("#admin-list");
 
   if (!res.ok) {
-    list.innerHTML = `<p>${escapeHtml(data.error || "Nepodarilo se nacist frontu")}</p>`;
+    list.innerHTML = `<p>${escapeHtml(apiError(data, "Nepodarilo se nacist frontu"))}</p>`;
     return;
   }
 
@@ -83,11 +99,42 @@ async function loadQueue() {
       });
 
       const patchData = await patchRes.json();
-      msg.textContent = patchRes.ok ? "Ulozeno" : (patchData.error || "Chyba");
+      msg.textContent = patchRes.ok ? "Ulozeno" : apiError(patchData, "Chyba");
 
       if (patchRes.ok) {
         await loadStats();
       }
+    });
+  }
+
+  for (const button of document.querySelectorAll("[data-delete-id]")) {
+    button.addEventListener("click", async () => {
+      const id = button.getAttribute("data-delete-id");
+      const msg = document.querySelector(`[data-msg-id='${id}']`);
+
+      if (!confirm("Opravdu chcete tento pozadavek smazat?")) {
+        return;
+      }
+
+      const delRes = await fetch(`/api/admin/tickets/${id}`, {
+        method: "DELETE"
+      });
+
+      let delData = {};
+      try {
+        delData = await delRes.json();
+      } catch {
+        delData = {};
+      }
+
+      if (!delRes.ok) {
+        msg.textContent = apiError(delData, "Mazani se nezdarilo.");
+        return;
+      }
+
+      msg.textContent = "Smazano";
+      await loadQueue();
+      await loadStats();
     });
   }
 }
