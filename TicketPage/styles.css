@@ -1,9 +1,14 @@
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap");
+
 :root {
-  --bg: #f6f4ef;
-  --panel: #fffdf8;
-  --ink: #1f2329;
-  --accent: #086788;
-  --line: #d7d0c4;
+  --bg: #f6efe2;
+  --bg-soft: #ebe0d1;
+  --panel: #fff8ee;
+  --ink: #26211c;
+  --muted: #6f655b;
+  --line: #cdbba4;
+  --accent: #9c2727;
+  --accent-2: #c6922a;
 }
 
 * { box-sizing: border-box; }
@@ -12,38 +17,92 @@ body {
   margin: 0;
   color: var(--ink);
   background:
-    radial-gradient(circle at 10% -20%, #ffe6b7 0, transparent 45%),
-    radial-gradient(circle at 100% 10%, #dceeff 0, transparent 50%),
-    var(--bg);
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    linear-gradient(130deg, rgba(156, 39, 39, 0.06), transparent 35%),
+    radial-gradient(circle at 92% -10%, rgba(198, 146, 42, 0.2), transparent 42%),
+    linear-gradient(180deg, var(--bg) 0%, var(--bg-soft) 100%);
+  font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
 }
 
 .shell {
-  width: min(960px, 92vw);
+  width: min(1020px, 92vw);
   margin: 0 auto;
 }
 
 header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 1rem 0;
+  align-items: flex-end;
+  padding: 1.2rem 0 1rem;
+  border-bottom: 3px solid var(--line);
+  position: relative;
+}
+
+header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -8px;
+  height: 8px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--ink) 0 12px,
+    transparent 12px 20px
+  );
+  opacity: 0.2;
+}
+
+h1 {
+  margin: 0;
+  font-family: "Bebas Neue", "Impact", sans-serif;
+  letter-spacing: 0.04em;
+  font-size: clamp(2rem, 4.3vw, 2.8rem);
+}
+
+.subtitle {
+  margin: 0.2rem 0 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+nav {
+  display: flex;
+  gap: 0.6rem;
 }
 
 nav a {
-  margin-left: 1rem;
-  color: var(--accent);
+  color: var(--ink);
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 700;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.35rem 0.8rem;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+nav a:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+main {
+  padding-top: 1rem;
 }
 
 .panel {
   background: var(--panel);
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: 14px;
   padding: 1rem;
   margin-bottom: 1rem;
-  box-shadow: 0 8px 20px rgba(40, 46, 56, 0.06);
+  box-shadow: 0 8px 24px rgba(30, 22, 12, 0.08);
+}
+
+.panel h2 {
+  margin-top: 0;
+  font-family: "Bebas Neue", "Impact", sans-serif;
+  letter-spacing: 0.05em;
+  font-size: 1.65rem;
 }
 
 label {
@@ -51,20 +110,25 @@ label {
   margin-bottom: 0.7rem;
 }
 
-input, textarea, select, button {
+input,
+textarea,
+select,
+button {
   width: 100%;
-  border: 1px solid #c4bdb0;
+  border: 1px solid #bca98e;
   border-radius: 8px;
   padding: 0.6rem 0.7rem;
   font: inherit;
+  background: #fffcf8;
 }
 
 button {
-  background: var(--accent);
+  background: linear-gradient(135deg, var(--accent) 0%, #7f1f1f 100%);
   color: #fff;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 700;
   width: auto;
+  border-color: transparent;
 }
 
 .meta-grid {
@@ -75,17 +139,22 @@ button {
 
 .ticket {
   border: 1px solid var(--line);
+  border-left: 6px solid var(--accent-2);
   border-radius: 10px;
-  padding: 0.8rem;
+  padding: 0.85rem;
   margin-bottom: 0.7rem;
   background: #fff;
 }
 
 .ticket small {
-  color: #5b5f66;
+  color: var(--muted);
 }
 
-.message { min-height: 1.2rem; }
+.message {
+  min-height: 1.2rem;
+  color: var(--accent);
+  font-weight: 600;
+}
 
 .filters {
   display: grid;
@@ -105,7 +174,17 @@ pre {
 }
 
 @media (max-width: 760px) {
-  header { flex-direction: column; align-items: flex-start; }
-  nav a { margin: 0 1rem 0 0; }
-  .filters { grid-template-columns: 1fr; }
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.8rem;
+  }
+
+  nav {
+    flex-wrap: wrap;
+  }
+
+  .filters {
+    grid-template-columns: 1fr;
+  }
 }
