@@ -29,9 +29,9 @@ function applyTheme(theme) {
   const btn = document.getElementById("theme-toggle");
   if (btn) {
     const nextTheme = theme === "dark" ? "light" : "dark";
-    btn.textContent = nextTheme === "dark" ? "Dark" : "Light";
-    btn.setAttribute("aria-label", `Switch to ${nextTheme} theme`);
-    btn.setAttribute("title", `Switch to ${nextTheme} theme`);
+    btn.textContent = nextTheme === "dark" ? "Tmavy rezim" : "Svetly rezim";
+    btn.setAttribute("aria-label", `Prepnout na ${nextTheme === "dark" ? "tmavy" : "svetly"} rezim`);
+    btn.setAttribute("title", `Prepnout na ${nextTheme === "dark" ? "tmavy" : "svetly"} rezim`);
   }
 }
 

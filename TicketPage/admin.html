@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en">
+<html lang="cs">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>CineDesk Admin</title>
+  <title>CineDesk | Sprava</title>
   <link rel="stylesheet" href="/styles.css" />
   <script src="/theme.js" defer></script>
   <script src="/admin.js" defer></script>
@@ -11,24 +11,24 @@
 <body>
   <header class="shell">
     <div>
-      <h1>Projection Booth</h1>
-      <p class="subtitle">Triage incoming tickets and keep the queue moving.</p>
+      <h1>Promitaci kabina</h1>
+      <p class="subtitle">Trideni fronty pozadavku a zmena stavu.</p>
     </div>
     <nav>
-      <a href="/tickets">Board</a>
-      <a href="/admin">Admin</a>
-      <button id="theme-toggle" class="theme-toggle" type="button">Dark</button>
+      <a href="/tickets">Nastenka</a>
+      <a href="/admin">Sprava</a>
+      <button id="theme-toggle" class="theme-toggle" type="button">Tmavy rezim</button>
     </nav>
   </header>
 
   <main class="shell">
     <section class="panel">
-      <h2>Stats</h2>
+      <h2>Statistiky</h2>
       <pre id="stats"></pre>
     </section>
 
     <section class="panel">
-      <h2>Queue</h2>
+      <h2>Fronta</h2>
       <div id="admin-list"></div>
     </section>
   </main>

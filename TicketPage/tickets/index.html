@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en">
+<html lang="cs">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>CineDesk Board</title>
+  <title>CineDesk | Nastenka</title>
   <link rel="stylesheet" href="/styles.css" />
   <script src="/theme.js" defer></script>
   <script src="/tickets.js" defer></script>
@@ -11,44 +11,44 @@
 <body>
   <header class="shell">
     <div>
-      <h1>Screening Board</h1>
-      <p class="subtitle">Track incoming issue reports and watchlist requests.</p>
+      <h1>Nastenka projekce</h1>
+      <p class="subtitle">Prehled nahlasenych problemu a pozadavku na obsah.</p>
     </div>
     <nav>
-      <a href="/tickets">Board</a>
-      <a href="/admin">Admin</a>
-      <button id="theme-toggle" class="theme-toggle" type="button">Dark</button>
+      <a href="/tickets">Nastenka</a>
+      <a href="/admin">Sprava</a>
+      <button id="theme-toggle" class="theme-toggle" type="button">Tmavy rezim</button>
     </nav>
   </header>
 
   <main class="shell panel">
-    <h2>Browse Tickets</h2>
+    <h2>Prochazet pozadavky</h2>
     <form id="filters" class="filters">
-      <input type="text" name="q" placeholder="Search title or description" />
+      <input type="text" name="q" placeholder="Hledat podle nazvu nebo popisu" />
       <select name="type">
-        <option value="">All types</option>
-        <option value="issue">Issue</option>
-        <option value="movie">Movie</option>
-        <option value="tv">TV</option>
+        <option value="">Vsechny typy</option>
+        <option value="issue">Problem</option>
+        <option value="movie">Film</option>
+        <option value="tv">Serial</option>
       </select>
       <select name="status">
-        <option value="">All statuses</option>
-        <option value="new">new</option>
-        <option value="triaged">triaged</option>
-        <option value="in_progress">in_progress</option>
-        <option value="done">done</option>
-        <option value="closed">closed</option>
-        <option value="rejected">rejected</option>
+        <option value="">Vsechny stavy</option>
+        <option value="new">Novy</option>
+        <option value="triaged">Roztrideno</option>
+        <option value="in_progress">Resi se</option>
+        <option value="done">Hotovo</option>
+        <option value="closed">Uzavreno</option>
+        <option value="rejected">Zamitnuto</option>
       </select>
-      <button type="submit">Apply</button>
+      <button type="submit">Filtrovat</button>
     </form>
 
     <div id="ticket-list"></div>
 
     <div class="pager">
-      <button id="prev" type="button">Previous</button>
+      <button id="prev" type="button">Predchozi</button>
       <span id="pager-info"></span>
-      <button id="next" type="button">Next</button>
+      <button id="next" type="button">Dalsi</button>
     </div>
   </main>
 </body>

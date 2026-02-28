@@ -1,3 +1,18 @@
+const TYPE_LABELS = {
+  issue: "problem",
+  movie: "film",
+  tv: "serial"
+};
+
+const STATUS_LABELS = {
+  new: "novy",
+  triaged: "roztrideno",
+  in_progress: "resi se",
+  done: "hotovo",
+  closed: "uzavreno",
+  rejected: "zamitnuto"
+};
+
 function escapeHtml(value) {
   return String(value)
     .replaceAll("&", "&amp;")
@@ -7,10 +22,18 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
+function labelType(type) {
+  return TYPE_LABELS[type] || type;
+}
+
+function labelStatus(status) {
+  return STATUS_LABELS[status] || status;
+}
+
 function ticketCard(ticket) {
   return `<article class="ticket">
     <h3>${escapeHtml(ticket.title)}</h3>
-    <small>${escapeHtml(ticket.type)} | ${escapeHtml(ticket.status)} | ${new Date(ticket.createdAt).toLocaleString()}</small>
+    <small>${escapeHtml(labelType(ticket.type))} | ${escapeHtml(labelStatus(ticket.status))} | ${new Date(ticket.createdAt).toLocaleString("cs-CZ")}</small>
     <p>${escapeHtml(ticket.description || "")}</p>
   </article>`;
 }
@@ -21,7 +44,7 @@ async function loadRecent() {
   const container = document.querySelector("#recent-list");
 
   if (!Array.isArray(data.tickets) || data.tickets.length === 0) {
-    container.innerHTML = "<p>No open tickets yet.</p>";
+    container.innerHTML = "<p>Zatim zadne otevrene pozadavky.</p>";
     return;
   }
 
@@ -35,7 +58,7 @@ function setupTurnstile() {
 
   turnstile.render(widget, {
     sitekey: siteKey,
-    theme: "light"
+    theme: "auto"
   });
 }
 
@@ -48,7 +71,7 @@ async function submitForm(event) {
 
   const token = typeof turnstile !== "undefined" ? turnstile.getResponse() : "";
   if (!token) {
-    message.textContent = "Please complete the Turnstile check.";
+    message.textContent = "Dokoncete prosim overeni Turnstile.";
     return;
   }
 
@@ -73,13 +96,13 @@ async function submitForm(event) {
   const data = await res.json();
 
   if (!res.ok) {
-    message.textContent = data.error || "Submit failed.";
+    message.textContent = data.error || "Odeslani se nezdarilo.";
     return;
   }
 
   form.reset();
   if (typeof turnstile !== "undefined") turnstile.reset();
-  message.textContent = `Submitted: ${data.id}`;
+  message.textContent = `Odeslano: ${data.id}`;
   await loadRecent();
 }
 
@@ -87,7 +110,7 @@ window.addEventListener("load", () => {
   setupTurnstile();
   loadRecent().catch(() => {
     const container = document.querySelector("#recent-list");
-    container.innerHTML = "<p>Failed to load recent tickets.</p>";
+    container.innerHTML = "<p>Nepodarilo se nacist posledni pozadavky.</p>";
   });
 
   document.querySelector("#ticket-form")?.addEventListener("submit", submitForm);

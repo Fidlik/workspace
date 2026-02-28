@@ -1,6 +1,21 @@
 let page = 1;
 let totalPages = 1;
 
+const TYPE_LABELS = {
+  issue: "problem",
+  movie: "film",
+  tv: "serial"
+};
+
+const STATUS_LABELS = {
+  new: "novy",
+  triaged: "roztrideno",
+  in_progress: "resi se",
+  done: "hotovo",
+  closed: "uzavreno",
+  rejected: "zamitnuto"
+};
+
 function escapeHtml(value) {
   return String(value)
     .replaceAll("&", "&amp;")
@@ -10,10 +25,18 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
+function labelType(type) {
+  return TYPE_LABELS[type] || type;
+}
+
+function labelStatus(status) {
+  return STATUS_LABELS[status] || status;
+}
+
 function ticketCard(ticket) {
   return `<article class="ticket">
     <h3>${escapeHtml(ticket.title)}</h3>
-    <small>${escapeHtml(ticket.type)} | ${escapeHtml(ticket.status)} | ${new Date(ticket.createdAt).toLocaleString()}</small>
+    <small>${escapeHtml(labelType(ticket.type))} | ${escapeHtml(labelStatus(ticket.status))} | ${new Date(ticket.createdAt).toLocaleString("cs-CZ")}</small>
     <p>${escapeHtml(ticket.description || "")}</p>
   </article>`;
 }
@@ -35,15 +58,15 @@ async function loadTickets() {
 
   const list = document.querySelector("#ticket-list");
   if (!res.ok) {
-    list.innerHTML = `<p>${escapeHtml(data.error || "Failed to load.")}</p>`;
+    list.innerHTML = `<p>${escapeHtml(data.error || "Nepodarilo se nacist data.")}</p>`;
     return;
   }
 
   const tickets = Array.isArray(data.tickets) ? data.tickets : [];
   totalPages = data.pagination?.totalPages || 1;
 
-  list.innerHTML = tickets.length ? tickets.map(ticketCard).join("\n") : "<p>No tickets match this filter.</p>";
-  document.querySelector("#pager-info").textContent = `Page ${page} / ${totalPages}`;
+  list.innerHTML = tickets.length ? tickets.map(ticketCard).join("\n") : "<p>Zadny pozadavek neodpovida filtru.</p>";
+  document.querySelector("#pager-info").textContent = `Strana ${page} / ${totalPages}`;
 
   document.querySelector("#prev").disabled = page <= 1;
   document.querySelector("#next").disabled = page >= totalPages;

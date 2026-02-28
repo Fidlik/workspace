@@ -1,5 +1,20 @@
 const statuses = ["new", "triaged", "in_progress", "done", "closed", "rejected"];
 
+const TYPE_LABELS = {
+  issue: "problem",
+  movie: "film",
+  tv: "serial"
+};
+
+const STATUS_LABELS = {
+  new: "novy",
+  triaged: "roztrideno",
+  in_progress: "resi se",
+  done: "hotovo",
+  closed: "uzavreno",
+  rejected: "zamitnuto"
+};
+
 function escapeHtml(value) {
   return String(value)
     .replaceAll("&", "&amp;")
@@ -9,9 +24,17 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
+function labelType(type) {
+  return TYPE_LABELS[type] || type;
+}
+
+function labelStatus(status) {
+  return STATUS_LABELS[status] || status;
+}
+
 function statusSelect(ticketId, current) {
   const options = statuses
-    .map(s => `<option value="${s}" ${s === current ? "selected" : ""}>${s}</option>`)
+    .map(s => `<option value="${s}" ${s === current ? "selected" : ""}>${escapeHtml(labelStatus(s))}</option>`)
     .join("");
   return `<select data-status-id="${ticketId}">${options}</select>`;
 }
@@ -19,11 +42,11 @@ function statusSelect(ticketId, current) {
 function card(ticket) {
   return `<article class="ticket" data-ticket-id="${ticket.id}">
     <h3>${escapeHtml(ticket.title)}</h3>
-    <small>${escapeHtml(ticket.type)} | ${escapeHtml(ticket.status)} | ${new Date(ticket.createdAt).toLocaleString()}</small>
+    <small>${escapeHtml(labelType(ticket.type))} | ${escapeHtml(labelStatus(ticket.status))} | ${new Date(ticket.createdAt).toLocaleString("cs-CZ")}</small>
     <p>${escapeHtml(ticket.description || "")}</p>
     ${statusSelect(ticket.id, ticket.status)}
-    <textarea data-note-id="${ticket.id}" placeholder="Admin note (optional)" maxlength="1000"></textarea>
-    <button data-save-id="${ticket.id}" type="button">Save</button>
+    <textarea data-note-id="${ticket.id}" placeholder="Poznamka spravce (volitelne)" maxlength="1000"></textarea>
+    <button data-save-id="${ticket.id}" type="button">Ulozit</button>
     <p data-msg-id="${ticket.id}"></p>
   </article>`;
 }
@@ -40,7 +63,7 @@ async function loadQueue() {
   const list = document.querySelector("#admin-list");
 
   if (!res.ok) {
-    list.innerHTML = `<p>${escapeHtml(data.error || "Failed to load queue")}</p>`;
+    list.innerHTML = `<p>${escapeHtml(data.error || "Nepodarilo se nacist frontu")}</p>`;
     return;
   }
 
@@ -60,7 +83,7 @@ async function loadQueue() {
       });
 
       const patchData = await patchRes.json();
-      msg.textContent = patchRes.ok ? "Saved" : (patchData.error || "Failed");
+      msg.textContent = patchRes.ok ? "Ulozeno" : (patchData.error || "Chyba");
 
       if (patchRes.ok) {
         await loadStats();

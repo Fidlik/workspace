@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en">
+<html lang="cs">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>CineDesk Requests</title>
+  <title>CineDesk | Pozadavky</title>
   <link rel="stylesheet" href="/styles.css" />
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <script src="/theme.js" defer></script>
@@ -13,55 +13,55 @@
 <body>
   <header class="shell">
     <div>
-      <h1>CineDesk Request Box</h1>
-      <p class="subtitle">Collect issues and movie or TV requests for your library.</p>
+      <h1>CineDesk pozadavky</h1>
+      <p class="subtitle">Sbirani hlaseni problemu a pozadavku na filmy nebo serialy.</p>
     </div>
     <nav>
-      <a href="/tickets">Board</a>
-      <a href="/admin">Admin</a>
-      <button id="theme-toggle" class="theme-toggle" type="button">Dark</button>
+      <a href="/tickets">Nastenka</a>
+      <a href="/admin">Sprava</a>
+      <button id="theme-toggle" class="theme-toggle" type="button">Tmavy rezim</button>
     </nav>
   </header>
 
   <main class="shell">
     <section class="panel">
-      <h2>Submit a Ticket</h2>
+      <h2>Odeslat pozadavek</h2>
       <form id="ticket-form">
-        <label>Type
+        <label>Typ
           <select name="type" id="type" required>
-            <option value="issue">Issue</option>
-            <option value="movie">Movie Request</option>
-            <option value="tv">TV Show Request</option>
+            <option value="issue">Problem</option>
+            <option value="movie">Pozadavek na film</option>
+            <option value="tv">Pozadavek na serial</option>
           </select>
         </label>
 
-        <label>Title
+        <label>Nazev
           <input type="text" name="title" maxlength="120" minlength="3" required />
         </label>
 
-        <label>Description (optional)
+        <label>Popis (volitelne)
           <textarea name="description" maxlength="2000" rows="5"></textarea>
         </label>
 
         <div class="meta-grid">
-          <label>Year (optional)
+          <label>Rok (volitelne)
             <input type="number" name="year" min="1888" />
           </label>
 
-          <label>Language (optional)
+          <label>Jazyk (volitelne)
             <input type="text" name="language" maxlength="40" />
           </label>
         </div>
 
         <div class="cf-turnstile" id="turnstile-widget"></div>
 
-        <button type="submit">Submit Ticket</button>
+        <button type="submit">Odeslat</button>
       </form>
       <p id="form-message" class="message"></p>
     </section>
 
     <section class="panel">
-      <h2>Recent Open Tickets</h2>
+      <h2>Posledni otevrene pozadavky</h2>
       <div id="recent-list"></div>
     </section>
   </main>
