@@ -1,0 +1,94 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+type Props = {
+  title: string;
+  eyebrow: string;
+  description: string;
+  formType: 'poptavka' | 'objednavka';
+};
+
+const { title, eyebrow, description, formType } = Astro.props as Props;
+---
+
+<Layout title={`${title} | DR zámečnictví a kovovýroba`} description={description}>
+  <section class="page-hero">
+    <div class="section">
+      <span class="eyebrow">{eyebrow}</span>
+      <h1>{title}</h1>
+      <p>{description}</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="form-shell">
+      <article class="page-card">
+        <span class="section__eyebrow">Formulář</span>
+        <h2>Vyplňte základní údaje</h2>
+        <form class="inquiry-form" method="POST" action="/api/forms">
+          <input type="hidden" name="formType" value={formType} />
+          <input type="hidden" name="product" value="" data-product-field />
+
+          <label>
+            <span>Produkt / téma</span>
+            <input type="text" name="productLabel" placeholder="Např. Pergola 3000 / 4000" data-product-label />
+          </label>
+
+          <label>
+            <span>Jméno a příjmení</span>
+            <input type="text" name="name" required />
+          </label>
+
+          <label>
+            <span>Telefon</span>
+            <input type="tel" name="phone" required />
+          </label>
+
+          <label>
+            <span>E-mail</span>
+            <input type="email" name="email" />
+          </label>
+
+          <label>
+            <span>Město / adresa realizace</span>
+            <input type="text" name="location" />
+          </label>
+
+          <label>
+            <span>Rozměry nebo požadované provedení</span>
+            <input type="text" name="dimensions" placeholder="Např. 3000 / 5000" />
+          </label>
+
+          <label>
+            <span>Zpráva</span>
+            <textarea name="message" rows="6" placeholder="Napište stručně, co potřebujete vyrobit."></textarea>
+          </label>
+
+          <label class="checkbox">
+            <input type="checkbox" name="consent" required />
+            <span>Souhlasím se zpracováním údajů za účelem vyřízení poptávky.</span>
+          </label>
+
+          <button class="button button--primary" type="submit">
+            Odeslat formulář
+          </button>
+        </form>
+      </article>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const product = params.get('produkt') ?? '';
+  const hiddenField = document.querySelector('[data-product-field]');
+  const labelField = document.querySelector('[data-product-label]');
+
+  if (hiddenField instanceof HTMLInputElement) {
+    hiddenField.value = product;
+  }
+
+  if (labelField instanceof HTMLInputElement && product) {
+    labelField.value = product.replace(/-/g, ' ');
+  }
+</script>

@@ -1,8 +1,27 @@
 ---
-import CollectionPage from '../components/CollectionPage.astro';
-import { getCollectionBySlug } from '../data/site';
-
-const page = getCollectionBySlug('ostatni');
+import Layout from '../layouts/Layout.astro';
+import DetailSection from '../components/DetailSection.astro';
+import { ostatniSections } from '../data/site';
 ---
 
-<CollectionPage page={page!} />
+<Layout
+  title="Ostatní | DR zámečnictví a kovovýroba"
+  description="Schodiště, zábradlí a umělecké projekty přehledně na jedné stránce."
+>
+  <section class="page-hero">
+    <div class="section">
+      <span class="eyebrow">Ostatní</span>
+      <h1>Schodiště, zábradlí a umělecké projekty</h1>
+      <p>
+        Tato stránka sdružuje zakázky, které je potřeba řešit individuálně. Každá oblast má vlastní úvodní blok,
+        text, typy řešení, fotku a odkaz na formulář.
+      </p>
+    </div>
+  </section>
+
+  <section class="section page-stack">
+    {ostatniSections.map((section, index) => (
+      <DetailSection section={section} reverse={index % 2 === 1} />
+    ))}
+  </section>
+</Layout>

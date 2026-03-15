@@ -1,0 +1,49 @@
+---
+import type { SectionBlock } from '../data/site';
+
+type Props = {
+  section: SectionBlock;
+  reverse?: boolean;
+};
+
+const { section, reverse = false } = Astro.props as Props;
+---
+
+<section class:list={['detail-section', reverse && 'detail-section--reverse']} id={section.id}>
+  <figure class="detail-section__media image-card">
+    <img src={section.image} alt={section.title} loading="lazy" />
+  </figure>
+
+  <article class="page-card detail-section__content">
+    <span class="section__eyebrow">{section.title}</span>
+    <h2>{section.title}</h2>
+    <p class="detail-section__lead">{section.intro}</p>
+    <p>{section.text}</p>
+
+    {section.price && (
+      <div class="price-box">
+        <strong>{section.price}</strong>
+        {section.priceNote && <span>{section.priceNote}</span>}
+      </div>
+    )}
+
+    {(section.fieldTypesTitle || section.fieldTypesText) && (
+      <div class="field-types">
+        {section.fieldTypesTitle && <h3>{section.fieldTypesTitle}</h3>}
+        {section.fieldTypesText && <p>{section.fieldTypesText}</p>}
+      </div>
+    )}
+
+    {section.variants && section.variants.length > 0 && (
+      <ul class="detail-list">
+        {section.variants.map((item) => <li>{item}</li>)}
+      </ul>
+    )}
+
+    <div class="contact-actions">
+      <a class="button button--primary" href={section.ctaHref}>
+        {section.ctaLabel}
+      </a>
+    </div>
+  </article>
+</section>

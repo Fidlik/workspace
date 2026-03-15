@@ -1,8 +1,27 @@
 ---
-import CollectionPage from '../components/CollectionPage.astro';
-import { getCollectionBySlug } from '../data/site';
-
-const page = getCollectionBySlug('oploceni');
+import Layout from '../layouts/Layout.astro';
+import DetailSection from '../components/DetailSection.astro';
+import { oploceniSections } from '../data/site';
 ---
 
-<CollectionPage page={page!} />
+<Layout
+  title="Brány a oplocení | DR zámečnictví a kovovýroba"
+  description="Kované ploty, tahokov, hliníkové a kombinované oplocení včetně samonosných a dvoukřídlých bran."
+>
+  <section class="page-hero">
+    <div class="section">
+      <span class="eyebrow">Brány a oplocení</span>
+      <h1>Kované ploty, tahokov, hliník, kombinace i různé typy bran</h1>
+      <p>
+        Všechny hlavní typy oplocení a bran jsou nově přehledně na jedné stránce. Každá sekce má úvodní foto,
+        text, orientaci v typech polí a přímý odkaz na formulář.
+      </p>
+    </div>
+  </section>
+
+  <section class="section page-stack">
+    {oploceniSections.map((section, index) => (
+      <DetailSection section={section} reverse={index % 2 === 1} />
+    ))}
+  </section>
+</Layout>

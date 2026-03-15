@@ -1,8 +1,27 @@
 ---
-import CollectionPage from '../components/CollectionPage.astro';
-import { getCollectionBySlug } from '../data/site';
-
-const page = getCollectionBySlug('venkovni-nabytek');
+import Layout from '../layouts/Layout.astro';
+import DetailSection from '../components/DetailSection.astro';
+import { venkovniNabytekSections } from '../data/site';
 ---
 
-<CollectionPage page={page!} />
+<Layout
+  title="Venkovní nábytek | DR zámečnictví a kovovýroba"
+  description="Venkovní kuchyně a stoly s orientační cenou, produktem a objednávkovým formulářem."
+>
+  <section class="page-hero">
+    <div class="section">
+      <span class="eyebrow">Venkovní nábytek</span>
+      <h1>Kuchyně a stoly pod sebou, přehledně na jedné stránce</h1>
+      <p>
+        Tato sekce sdružuje venkovní kuchyně a stoly. U obou typů najdete foto, stručný popis, cenu pod produktem
+        a přímý odkaz do objednávkového formuláře.
+      </p>
+    </div>
+  </section>
+
+  <section class="section page-stack">
+    {venkovniNabytekSections.map((section, index) => (
+      <DetailSection section={section} reverse={index % 2 === 1} />
+    ))}
+  </section>
+</Layout>

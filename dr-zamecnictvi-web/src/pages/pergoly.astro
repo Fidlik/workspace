@@ -1,8 +1,75 @@
 ---
-import ServicePage from '../components/ServicePage.astro';
-import { getServiceBySlug } from '../data/site';
-
-const service = getServiceBySlug('pergoly');
+import Layout from '../layouts/Layout.astro';
+import { pergolaBasePriceRows, pergolaCalculatorOptions } from '../data/site';
 ---
 
-<ServicePage service={service!} />
+<Layout
+  title="Pergoly | DR zámečnictví a kovovýroba"
+  description="Pergoly na míru včetně cenového přehledu, rozměrů, kalkulačky a nezávazné poptávky."
+>
+  <section class="page-hero">
+    <div class="section">
+      <span class="eyebrow">Pergoly</span>
+      <h1>Ocelové pergoly na míru</h1>
+      <p>
+        Pergola musí dobře sedět prostoru, proporčně navazovat na dům a dlouhodobě fungovat v běžném provozu.
+        Níže najdete úvodní přehled, orientační cenové položky i kalkulačku podle základních rozměrů.
+      </p>
+      <div class="contact-actions">
+        <a class="button button--primary" href="#kalkulacka">Kalkulačka s rozměry</a>
+        <a class="button button--ghost" href="/poptavka?produkt=pergola">Nezávazná poptávka</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="page-grid">
+      <figure class="image-card">
+        <img src="/images/hero.jpg" alt="Pergola na míru" loading="eager" />
+      </figure>
+
+      <article class="page-card">
+        <span class="section__eyebrow">Úvodní přehled</span>
+        <h2>Co je v základní kalkulaci</h2>
+        <p>
+          Základní varianta vychází z konstrukce 3000 / 4000 a obsahuje hlavní položky potřebné k výrobě a
+          dokončení pergoly. Dopravu počítám vždy podle konkrétní adresy realizace.
+        </p>
+        <div class="price-list">
+          {pergolaBasePriceRows.map((row) => (
+            <div class="price-list__row">
+              <span>{row.label}</span>
+              <strong>{row.value}</strong>
+            </div>
+          ))}
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section" id="kalkulacka">
+    <div class="section__header">
+      <span class="section__eyebrow">Kalkulačka s rozměry</span>
+      <h2 class="section__title">Orientační ceny pergol podle základních rozměrů</h2>
+      <p class="section__intro">
+        Přehled slouží jako rychlá orientace. U atypických rozměrů a individuálních požadavků připravím samostatnou
+        cenovou nabídku.
+      </p>
+    </div>
+
+    <div class="calculator-grid">
+      {pergolaCalculatorOptions.map((item) => (
+        <article class="page-card calculator-card">
+          <span class="calculator-card__size">{item.size}</span>
+          <strong>{item.total}</strong>
+          {item.assembly && <span>Montáž: {item.assembly}</span>}
+          {item.note && <span>{item.note}</span>}
+        </article>
+      ))}
+    </div>
+
+    <div class="contact-actions">
+      <a class="button button--primary" href="/poptavka?produkt=pergola-kalkulace">Nezávazná poptávka</a>
+    </div>
+  </section>
+</Layout>
