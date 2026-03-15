@@ -582,6 +582,21 @@ img {
   align-items: start;
 }
 
+.map-frame {
+  overflow: hidden;
+  margin-top: 1rem;
+  border-radius: 20px;
+  border: 1px solid var(--card-border);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.map-frame iframe {
+  display: block;
+  width: 100%;
+  min-height: 360px;
+  border: 0;
+}
+
 .contact-list,
 .page-stack {
   display: grid;
