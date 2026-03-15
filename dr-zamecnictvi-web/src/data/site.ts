@@ -101,56 +101,56 @@ export const featuredSections: FeatureCard[] = [
     title: 'Pergoly',
     eyebrow: 'Úvodní foto, kalkulačka, poptávka',
     summary: 'Ocelové pergoly na míru s cenovým přehledem, rozměry a nezávaznou poptávkou.',
-    image: '/images/hero.jpg',
+    image: '/images/portfolio/pristresek-1-2023.jpg',
   },
   {
     href: '/venkovni-nabytek',
     title: 'Venkovní nábytek',
     eyebrow: 'Kuchyně a stoly',
     summary: 'Venkovní kuchyně a stoly s orientační cenou a objednávkovým formulářem.',
-    image: '/images/grily.jpg',
+    image: '/images/portfolio/image0-scaled.jpeg',
   },
   {
     href: '/oploceni',
     title: 'Brány a oplocení',
     eyebrow: 'Ploty, výplně, brány',
     summary: 'Kované ploty, tahokov, hliníkové i ocel-dřevo kombinace a různé typy bran.',
-    image: '/images/ploty.jpg',
+    image: '/images/portfolio/plot-tahokov-2023.jpg',
   },
   {
     href: '/ostatni',
     title: 'Ostatní',
     eyebrow: 'Schodiště, zábradlí, umělecké projekty',
     summary: 'Zakázkové realizace, které stojí na přesném detailu a individuálním návrhu.',
-    image: '/images/zabradli.jpg',
+    image: '/images/portfolio/schodiste-3-2023.jpg',
   },
 ];
 
 export const gallery = [
   {
-    src: '/images/hero.jpg',
-    alt: 'Ocelová pergola a zakázková kovovýroba',
+    src: '/images/portfolio/pristresek-1-2023.jpg',
+    alt: 'Ocelová pergola na míru',
     caption: 'Pergoly a venkovní realizace s důrazem na pevnost a čisté linie',
   },
   {
-    src: '/images/ploty.jpg',
-    alt: 'Plot na míru',
+    src: '/images/portfolio/plot-tahokov-2023.jpg',
+    alt: 'Tahokovové oplocení',
     caption: 'Oplocení navržené podle domu, pozemku a potřeb soukromí',
   },
   {
-    src: '/images/brany.jpg',
-    alt: 'Brána a branka',
-    caption: 'Brány a branky sladěné s celým oplocením',
+    src: '/images/portfolio/image0-scaled.jpeg',
+    alt: 'Stůl a lavice v interiéru',
+    caption: 'Venkovní nábytek i stoly řešené s důrazem na čistý detail',
   },
   {
-    src: '/images/zabradli.jpg',
-    alt: 'Kovové zábradlí',
+    src: '/images/portfolio/schodiste-3-2023.jpg',
+    alt: 'Kovové schodiště',
     caption: 'Schodiště a zábradlí pro interiér i exteriér',
   },
   {
-    src: '/images/grily.jpg',
-    alt: 'Venkovní kuchyně nebo stůl',
-    caption: 'Venkovní nábytek, kuchyně a atypické realizace',
+    src: '/images/portfolio/industrialni-stul-2.jpg',
+    alt: 'Industriální stůl s masivní deskou',
+    caption: 'Masivní stoly a atypické kusy s výrazným charakterem',
   },
 ];
 
@@ -186,7 +186,7 @@ export const venkovniNabytekSections: SectionBlock[] = [
   {
     id: 'kuchyne',
     title: 'Kuchyně',
-    image: '/images/grily.jpg',
+    image: '/images/portfolio/industrialni-stul-2.jpg',
     intro: 'Venkovní kuchyně na míru podle prostoru a způsobu používání.',
     text:
       'Venkovní kuchyně navrhuji jako praktický a odolný prvek pro pergolu, terasu nebo zahradu. Důležitá je správná pracovní výška, stabilita konstrukce a sladění s okolním prostorem.',
@@ -213,7 +213,7 @@ export const oploceniSections: SectionBlock[] = [
   {
     id: 'kovane-ploty',
     title: 'Kované ploty',
-    image: '/images/ploty.jpg',
+    image: '/images/portfolio/plot-tahokov-2023.jpg',
     intro: 'Reprezentativní ploty s poctivým detailem a klasickým charakterem.',
     text:
       'Kované ploty vyrábím s důrazem na rytmus, proporce a řemeslné zpracování detailu. Každý návrh přizpůsobuji domu, okolí i požadované míře zdobnosti.',
@@ -324,7 +324,7 @@ export const ostatniSections: SectionBlock[] = [
   {
     id: 'schodiste',
     title: 'Schodiště',
-    image: '/images/zabradli.jpg',
+    image: '/images/portfolio/schodiste-3-2023.jpg',
     intro: 'Schodiště na míru s důrazem na bezpečnost, proporce a čistý detail.',
     text:
       'Kovová schodiště navrhuji jako pevný a přirozený prvek prostoru. Každé řešení vzniká podle dispozice stavby, provozu i požadovaného výrazu.',
@@ -342,7 +342,7 @@ export const ostatniSections: SectionBlock[] = [
   {
     id: 'zabradli',
     title: 'Zábradlí',
-    image: '/images/zabradli.jpg',
+    image: '/images/portfolio/zabradli-1-2023.jpg',
     intro: 'Interiérové i exteriérové zábradlí navržené podle konkrétní stavby.',
     text:
       'Zábradlí musí být bezpečné, pohodlné na úchop a zároveň působit přirozeně v prostoru, kde se nachází. Důležitý je pro mě detail napojení, rytmus i povrchová úprava.',
