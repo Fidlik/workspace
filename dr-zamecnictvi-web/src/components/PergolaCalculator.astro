@@ -15,11 +15,6 @@ const formatCurrency = (value: number) =>
 ---
 
 <div class="pergola-calculator" data-pergola-calculator-root>
-  <div class="pergola-calculator__badge">
-    <span>Vlastní montáž</span>
-    <strong>do 120 min</strong>
-  </div>
-
   <div class="pergola-calculator__panel">
     <div class="pergola-calculator__header">
       <span class="section__eyebrow">Kalkulačka</span>
@@ -153,15 +148,13 @@ const formatCurrency = (value: number) =>
   </div>
 </div>
 
-<script type="application/json" id="pergola-calculator-data">{JSON.stringify(pergolaCalculatorSettings)}</script>
-<script is:inline>
-  (() => {
+<script define:vars={{ calculatorConfig: pergolaCalculatorSettings }}>
+  const initPergolaCalculator = () => {
     const root = document.querySelector('[data-pergola-calculator-root]');
-    const dataElement = document.querySelector('#pergola-calculator-data');
-    if (!root || !dataElement) return;
+    if (!root || root.dataset.initialized === 'true') return;
+    root.dataset.initialized = 'true';
 
-    const config = JSON.parse(dataElement.textContent || '{}');
-    const sizeMap = new Map((config.sizes || []).map((size) => [size.id, size]));
+    const sizeMap = new Map((calculatorConfig.sizes || []).map((size) => [size.id, size]));
     const totalElement = root.querySelector('[data-total]');
     const deliveryNoteElement = root.querySelector('[data-delivery-note]');
     const rowElements = {
@@ -175,16 +168,19 @@ const formatCurrency = (value: number) =>
     const formatter = new Intl.NumberFormat('cs-CZ', { maximumFractionDigits: 0 });
     const formatCurrency = (value) => `${formatter.format(value)} Kč`;
 
-    const getValue = (name) => root.querySelector(`input[name="${name}"]:checked`)?.value;
+    const getValue = (name) => {
+      const checkedInput = root.querySelector(`input[name="${name}"]:checked`);
+      return checkedInput instanceof HTMLInputElement ? checkedInput.value : '';
+    };
 
     const render = () => {
-      const size = sizeMap.get(getValue('size')) || config.sizes?.[0];
+      const size = sizeMap.get(getValue('size')) || calculatorConfig.sizes?.[0];
       if (!size) return;
 
-      const roofingPrice = getValue('roofing') === 'polycarbonate' ? config.roofingPrice : 0;
-      const zincPrice = getValue('zinc') === 'included' ? config.zincPrice : 0;
+      const roofingPrice = getValue('roofing') === 'polycarbonate' ? calculatorConfig.roofingPrice : 0;
+      const zincPrice = getValue('zinc') === 'included' ? calculatorConfig.zincPrice : 0;
       const assemblyPrice = getValue('assembly') === 'pro' ? size.assembly : 0;
-      const colorPrice = config.colorPrice;
+      const colorPrice = calculatorConfig.colorPrice;
       const total = size.structure + roofingPrice + zincPrice + assemblyPrice + colorPrice;
 
       if (totalElement) totalElement.textContent = formatCurrency(total);
@@ -197,15 +193,21 @@ const formatCurrency = (value: number) =>
       if (deliveryNoteElement) {
         deliveryNoteElement.textContent =
           getValue('delivery') === 'delivery'
-            ? config.deliveryNote
+            ? calculatorConfig.deliveryNote
             : 'Osobní vyzvednutí bez dalšího příplatku.';
       }
     };
 
-    root.querySelectorAll('input').forEach((input) => {
-      input.addEventListener('change', render);
-    });
-
+    root.addEventListener('change', render);
+    root.addEventListener('input', render);
     render();
-  })();
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initPergolaCalculator, { once: true });
+  } else {
+    initPergolaCalculator();
+  }
+
+  document.addEventListener('astro:page-load', initPergolaCalculator);
 </script>
