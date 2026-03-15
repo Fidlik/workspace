@@ -1,0 +1,31 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { gallery } from '../data/site';
+---
+
+<Layout
+  title="Fotogalerie | DR zámečnictví a kovovýroba"
+  description="Ukázka realizací plotů, bran, zábradlí a atypických kovových prvků."
+>
+  <section class="page-hero">
+    <div class="section">
+      <span class="eyebrow">Fotogalerie</span>
+      <h1>Vybrané realizace</h1>
+      <p>
+        Přehled několika typů zakázek, na kterých je vidět řemeslné zpracování, různorodost projektů i
+        materiálový detail.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="gallery-grid">
+      {gallery.map((item) => (
+        <figure class="gallery-card">
+          <img src={item.src} alt={item.alt} loading="lazy" />
+          <figcaption class="gallery-card__caption">{item.caption}</figcaption>
+        </figure>
+      ))}
+    </div>
+  </section>
+</Layout>

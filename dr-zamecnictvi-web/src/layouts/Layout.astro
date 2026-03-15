@@ -1,0 +1,83 @@
+---
+import '../styles/global.css';
+import { company, navItems, siteUrl } from '../data/site';
+
+type Props = {
+  title?: string;
+  description?: string;
+};
+
+const {
+  title = `${company.name} | Zakázková kovovýroba`,
+  description = company.description,
+} = Astro.props as Props;
+
+const canonical = new URL(Astro.url.pathname, siteUrl).toString();
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: company.name,
+  url: canonical,
+  areaServed: company.location,
+  telephone: company.phones.map((phone) => `+420${phone.href}`),
+  description,
+  sameAs: [company.facebook],
+};
+---
+
+<!doctype html>
+<html lang="cs">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#161311" />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={`${siteUrl}/images/hero.jpg`} />
+    <title>{title}</title>
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="topbar">
+        <div class="topbar__inner">
+          <a class="brand" href="/">
+            <img src="/images/logo.png" alt={company.name} />
+            <span class="brand__text">
+              <span class="brand__title">{company.name}</span>
+              <span class="brand__meta">{company.workshop}</span>
+            </span>
+          </a>
+
+          <nav class="nav" aria-label="Hlavní navigace">
+            {navItems.map((item) => (
+              <a href={item.href} aria-current={Astro.url.pathname === item.href ? 'page' : undefined}>
+                {item.label}
+              </a>
+            ))}
+          </nav>
+        </div>
+      </header>
+
+      <main>
+        <slot />
+      </main>
+
+      <footer class="footer">
+        <div class="footer__inner">
+          <span>
+            {company.name} · {company.owner} · {company.location}
+          </span>
+          <a href={`tel:+420${company.phones[0].href}`}>{company.phones[0].display}</a>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

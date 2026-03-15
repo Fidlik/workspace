@@ -1,0 +1,188 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { company, gallery, process, references, services, stats, strengths } from '../data/site';
+---
+
+<Layout
+  title="DR zámečnictví a kovovýroba | Zakázková kovovýroba bez pluginového balastu"
+  description="Moderní jednodušší prezentace pro zakázkovou kovovýrobu Daniela Richtera ve Studénce."
+>
+  <section class="hero">
+    <div class="section hero__grid">
+      <div>
+        <span class="eyebrow">Zakázková kovovýroba ve Studénce</span>
+        <h1>Ploty, brány, zábradlí a poctivé řemeslo na míru.</h1>
+        <p>{company.intro}</p>
+
+        <div class="hero__actions">
+          <a class="button button--primary" href="/kontakty">Nezávazná konzultace</a>
+          <a class="button button--ghost" href="/fotogalerie">Prohlédnout realizace</a>
+        </div>
+
+        <div class="stats">
+          {stats.map((item) => (
+            <div class="stat">
+              <strong>{item.value}</strong>
+              <span>{item.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <figure class="hero__media">
+        <img src="/images/hero.jpg" alt="Zakázková kovovýroba DR zámečnictví" loading="eager" />
+        <figcaption class="hero__badge">
+          <strong>{company.owner}</strong>
+          <span>{company.workshop}</span>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section__header">
+      <span class="section__eyebrow">Služby</span>
+      <h2 class="section__title">Čistý servis, jasná nabídka, žádná pluginová zátěž</h2>
+      <p class="section__intro">
+        Současný WordPress web táhne zbytečně velké množství pluginů a šablonových vrstev. Tahle nová verze
+        drží stejný obsah, ale podstatně čistší technické řešení a lepší prezentaci služeb.
+      </p>
+    </div>
+
+    <div class="service-grid">
+      {services.map((service) => (
+        <article class="service-card">
+          <img src={service.image} alt={service.title} loading="lazy" />
+          <div class="service-card__body">
+            <span class="section__eyebrow">{service.eyebrow}</span>
+            <h3>{service.title}</h3>
+            <p>{service.summary}</p>
+            <ul>
+              {service.bullets.map((item) => <li>{item}</li>)}
+            </ul>
+            <a class="service-card__link" href={service.href}>
+              Detail služby
+            </a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section__header">
+      <span class="section__eyebrow">Jak probíhá spolupráce</span>
+      <h2 class="section__title">Od prvního hovoru po montáž</h2>
+      <p class="section__intro">
+        Web má být stejně přímý jako samotná spolupráce. Proto jsou tady hlavní kroky přehledně a bez
+        zbytečných vrstev navíc.
+      </p>
+    </div>
+
+    <div class="process-grid">
+      {process.map((step, index) => (
+        <article class="process-card">
+          <div class="process-card__index">0{index + 1}</div>
+          <h3>{step.title}</h3>
+          <p>{step.text}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section__header">
+      <span class="section__eyebrow">Proč právě sem</span>
+      <h2 class="section__title">Řemeslo, které stojí na osobním přístupu</h2>
+    </div>
+
+    <div class="process-grid">
+      {strengths.map((item, index) => (
+        <article class="process-card">
+          <div class="process-card__index">0{index + 1}</div>
+          <h3>{item}</h3>
+          <p>
+            Každá zakázka se řeší individuálně. Není to anonymní formulářový provoz, ale domluva s člověkem,
+            který projekt opravdu vyrábí.
+          </p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section__header">
+      <span class="section__eyebrow">Reference</span>
+      <h2 class="section__title">Spokojenost zákazníků je nejlepší reklama</h2>
+    </div>
+
+    {references.map((reference) => (
+      <article class="quote-card">
+        <blockquote>{reference.quote}</blockquote>
+        <footer>{reference.author}</footer>
+      </article>
+    ))}
+  </section>
+
+  <section class="section">
+    <div class="section__header">
+      <span class="section__eyebrow">Fotogalerie</span>
+      <h2 class="section__title">Ukázka různých typů realizací</h2>
+      <p class="section__intro">
+        Místo těžké galerie s pluginy tady stačí rychlý, přehledný výběr obrázků, který se dobře načte i na
+        mobilu.
+      </p>
+    </div>
+
+    <div class="gallery-grid">
+      {gallery.map((item) => (
+        <figure class="gallery-card">
+          <img src={item.src} alt={item.alt} loading="lazy" />
+          <figcaption class="gallery-card__caption">{item.caption}</figcaption>
+        </figure>
+      ))}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="contact-grid">
+      <article class="contact-card">
+        <span class="section__eyebrow">Kontakt</span>
+        <h2>Daniel Richter</h2>
+        <p>
+          Rodinná dílna ve Studénce, více než deset let praxe a osobní vedení každé zakázky od návrhu po
+          dokončení.
+        </p>
+        <div class="contact-list">
+          {company.phones.map((phone) => (
+            <div class="contact-row">
+              <span>{phone.label}</span>
+              <a href={`tel:+420${phone.href}`}>{phone.display}</a>
+            </div>
+          ))}
+          <div class="contact-row">
+            <span>Facebook</span>
+            <a href={company.facebook} target="_blank" rel="noreferrer">
+              DR zámečnictví a kovovýroba
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <article class="contact-card">
+        <span class="section__eyebrow">Moderní nasazení</span>
+        <h2>Připraveno pro GitHub a Cloudflare Pages</h2>
+        <p>
+          Nová verze běží jako statický Astro web. To znamená rychlejší načítání, jednodušší aktualizace a
+          žádné starosti s pluginy, šablonami nebo bezpečnostními záplatami ve WordPressu.
+        </p>
+        <div class="contact-actions">
+          <a class="button button--primary" href="/kontakty">Kontaktovat</a>
+          <a class="button button--ghost" href={company.facebook} target="_blank" rel="noreferrer">
+            Facebook profil
+          </a>
+        </div>
+      </article>
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,71 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { company, strengths } from '../data/site';
+---
+
+<Layout
+  title="Kontakty | DR zámečnictví a kovovýroba"
+  description="Kontakt na Daniela Richtera, rodinnou dílnu ve Studénce a další možnosti spojení."
+>
+  <section class="page-hero">
+    <div class="section">
+      <span class="eyebrow">Kontakty</span>
+      <h1>Domluvme si zakázku</h1>
+      <p>
+        Nejrychlejší je telefonát. Pokud už máte představu, můžeme rovnou probrat typ realizace, termín i
+        místo zaměření.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="contact-grid">
+      <article class="contact-card">
+        <span class="section__eyebrow">Spojení</span>
+        <h2>Kontaktní informace</h2>
+        <div class="contact-list">
+          {company.phones.map((phone) => (
+            <div class="contact-row">
+              <span>{phone.label}</span>
+              <a href={`tel:+420${phone.href}`}>{phone.display}</a>
+            </div>
+          ))}
+          <div class="contact-row">
+            <span>Facebook</span>
+            <a href={company.facebook} target="_blank" rel="noreferrer">
+              DR zámečnictví a kovovýroba
+            </a>
+          </div>
+          <div class="contact-row">
+            <span>Dílna</span>
+            <strong>{company.workshop}</strong>
+          </div>
+          <div class="contact-row">
+            <span>Region</span>
+            <strong>{company.location}</strong>
+          </div>
+        </div>
+      </article>
+
+      <article class="contact-card">
+        <span class="section__eyebrow">Proč spolupracovat</span>
+        <h2>Osobní přístup bez agenturního filtru</h2>
+        <p>
+          Cílem nového webu je přesně to, co odpovídá i samotné spolupráci: žádné pluginové naddimenzování,
+          ale přehledná komunikace, jasné služby a poctivé řemeslo.
+        </p>
+        <ul class="detail-list">
+          {strengths.map((item) => <li>{item}</li>)}
+        </ul>
+        <div class="contact-actions">
+          <a class="button button--primary" href={`tel:+420${company.phones[0].href}`}>
+            Zavolat hned
+          </a>
+          <a class="button button--ghost" href={company.facebook} target="_blank" rel="noreferrer">
+            Otevřít Facebook
+          </a>
+        </div>
+      </article>
+    </div>
+  </section>
+</Layout>
