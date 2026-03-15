@@ -10,9 +10,21 @@ const { section, reverse = false } = Astro.props as Props;
 ---
 
 <section class:list={['detail-section', reverse && 'detail-section--reverse']} id={section.id}>
-  <figure class="detail-section__media image-card">
-    <img src={section.image} alt={section.title} loading="lazy" />
-  </figure>
+  <div class="detail-section__visuals">
+    <figure class:list={['detail-section__media', 'image-card', section.plainMedia && 'image-card--plain']}>
+      <img src={section.image} alt={section.title} loading="lazy" />
+    </figure>
+
+    {section.gallery && section.gallery.length > 0 && (
+      <div class="detail-gallery">
+        {section.gallery.map((image) => (
+          <figure class:list={['detail-gallery__item', section.plainMedia && 'detail-gallery__item--plain']}>
+            <img src={image.src} alt={image.alt} loading="lazy" />
+          </figure>
+        ))}
+      </div>
+    )}
+  </div>
 
   <article class="page-card detail-section__content">
     <span class="section__eyebrow">{section.title}</span>

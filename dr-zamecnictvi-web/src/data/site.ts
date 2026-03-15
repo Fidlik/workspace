@@ -46,17 +46,29 @@ export type PriceRow = {
   value: string;
 };
 
-export type CalculatorOption = {
-  size: string;
-  total: string;
-  assembly?: string;
-  note?: string;
+export type ProductImage = {
+  src: string;
+  alt: string;
+};
+
+export type PergolaCalculatorSize = {
+  id: string;
+  label: string;
+  structure: number;
+  assembly: number;
+};
+
+export type PergolaCalculatorColor = {
+  id: string;
+  label: string;
+  swatch: string;
 };
 
 export type SectionBlock = {
   id: string;
   title: string;
   image: string;
+  plainMedia?: boolean;
   intro: string;
   text: string;
   price?: string;
@@ -64,6 +76,7 @@ export type SectionBlock = {
   fieldTypesTitle?: string;
   fieldTypesText?: string;
   variants?: string[];
+  gallery?: ProductImage[];
   ctaLabel: string;
   ctaHref: string;
 };
@@ -121,7 +134,7 @@ export const featuredSections: FeatureCard[] = [
     title: 'Venkovní nábytek',
     eyebrow: 'Kuchyně a stoly',
     summary: 'Venkovní kuchyně a stoly s orientační cenou a objednávkovým formulářem.',
-    image: '/images/portfolio/image0-scaled.jpeg',
+    image: '/images/products/kuchyne-1505.jpg',
   },
   {
     href: '/oploceni',
@@ -151,9 +164,9 @@ export const gallery = [
     caption: 'Oplocení navržené podle domu, pozemku a potřeb soukromí',
   },
   {
-    src: '/images/portfolio/image0-scaled.jpeg',
-    alt: 'Stůl a lavice v interiéru',
-    caption: 'Venkovní nábytek i stoly řešené s důrazem na čistý detail',
+    src: '/images/products/kuchyne-1544.jpg',
+    alt: 'Venkovní kuchyně na míru',
+    caption: 'Venkovní kuchyně a nábytek s důrazem na detail, odolnost a čisté proporce',
   },
   {
     src: '/images/portfolio/schodiste-3-2023.jpg',
@@ -185,38 +198,62 @@ export const pergolaBasePriceRows: PriceRow[] = [
   { label: 'Celkem', value: '65 545 Kč' },
 ];
 
-export const pergolaCalculatorOptions: CalculatorOption[] = [
-  { size: '3000 / 4000', total: '65 545 Kč', assembly: '8 000 Kč' },
-  { size: '3000 / 5000', total: '77 545 Kč', assembly: '10 000 Kč' },
-  { size: '3000 / 6000', total: '89 545 Kč', assembly: '13 000 Kč' },
-  { size: '4000 / 4000', total: '84 545 Kč', assembly: '10 000 Kč' },
-  { size: '5000 / 4000', total: '99 545 Kč', assembly: '12 000 Kč' },
-  { size: '6000 / 4000', total: '112 545 Kč', assembly: '14 000 Kč' },
-  { size: 'Rozměry na míru', total: 'Individuální cenová nabídka', note: 'Cena dle konkrétního zadání a místa montáže.' },
-];
+export const pergolaCalculatorSettings = {
+  defaultSizeId: '3000x4000',
+  roofingPrice: 12545,
+  zincPrice: 4500,
+  colorPrice: 5000,
+  deliveryNote: 'Doprava k vám domů se doplní podle adresy realizace.',
+  sizes: [
+    { id: '3000x4000', label: '3000 / 4000', structure: 35500, assembly: 8000 },
+    { id: '3000x5000', label: '3000 / 5000', structure: 45500, assembly: 10000 },
+    { id: '3000x6000', label: '3000 / 6000', structure: 54500, assembly: 13000 },
+    { id: '4000x4000', label: '4000 / 4000', structure: 52500, assembly: 10000 },
+    { id: '5000x4000', label: '5000 / 4000', structure: 65500, assembly: 12000 },
+    { id: '6000x4000', label: '6000 / 4000', structure: 76500, assembly: 14000 },
+  ] satisfies PergolaCalculatorSize[],
+  colors: [
+    { id: '7016', label: 'Antracit 7016', swatch: '#444d56' },
+    { id: '9005', label: 'Černá matná 9005', swatch: '#111017' },
+    { id: '9010', label: 'Bílá 9010', swatch: '#f0f1ec' },
+  ] satisfies PergolaCalculatorColor[],
+};
 
 export const venkovniNabytekSections: SectionBlock[] = [
   {
     id: 'kuchyne',
     title: 'Kuchyně',
-    image: '/images/portfolio/industrialni-stul-2.jpg',
+    image: '/images/products/kuchyne-1505.jpg',
+    plainMedia: true,
     intro: 'Venkovní kuchyně na míru podle prostoru a způsobu používání.',
     text:
       'Venkovní kuchyně navrhuji jako praktický a odolný prvek pro pergolu, terasu nebo zahradu. Důležitá je správná pracovní výška, stabilita konstrukce a sladění s okolním prostorem.',
     price: 'Základní rozměr kuchyně dle vzorové fotografie 1800 / 600 / 900: 40 615 Kč',
     priceNote: 'Konečná cena se může upravit podle konkrétního provedení, vybavení a místa realizace.',
+    gallery: [
+      { src: '/images/products/kuchyne-1544.jpg', alt: 'Venkovní kuchyně v šikmém pohledu' },
+      { src: '/images/products/kuchyne-1487.jpg', alt: 'Venkovní kuchyně s dřezem' },
+      { src: '/images/products/kuchyne-1619.jpg', alt: 'Detail zásuvek venkovní kuchyně' },
+      { src: '/images/products/kuchyne-1664.jpg', alt: 'Detail rohu a loga venkovní kuchyně' },
+    ],
     ctaLabel: 'Objednávkový formulář',
     ctaHref: '/objednavka?produkt=venkovni-kuchyne',
   },
   {
     id: 'stoly',
     title: 'Stoly',
-    image: '/images/grily.jpg',
+    image: '/images/products/stul-1703.jpg',
+    plainMedia: true,
     intro: 'Kovové stoly a podnože pro venkovní i interiérové použití.',
     text:
       'Stůl nebo podnož vyrábím vždy s ohledem na konkrétní desku, zatížení a styl prostoru. Důležitá je tuhost konstrukce, čisté napojení a proporce, které fungují i vizuálně.',
     price: 'Stůl 1500 / 900: 20 000 Kč',
     priceNote: 'Při atypických rozměrech nebo jiném materiálovém řešení připravím individuální nabídku.',
+    gallery: [
+      { src: '/images/products/stul-1739.jpg', alt: 'Kovový stůl z čelního pohledu' },
+      { src: '/images/products/stul-1793.jpg', alt: 'Kovový stůl v šikmém pohledu' },
+      { src: '/images/products/stul-1907.jpg', alt: 'Detail hrany stolu s logem' },
+    ],
     ctaLabel: 'Objednávkový formulář',
     ctaHref: '/objednavka?produkt=stul',
   },

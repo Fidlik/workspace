@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { pergolaBasePriceRows, pergolaCalculatorOptions } from '../data/site';
+import PergolaCalculator from '../components/PergolaCalculator.astro';
+import { pergolaBasePriceRows } from '../data/site';
 ---
 
 <Layout
@@ -50,26 +51,13 @@ import { pergolaBasePriceRows, pergolaCalculatorOptions } from '../data/site';
   <section class="section" id="kalkulacka">
     <div class="section__header">
       <span class="section__eyebrow">Kalkulačka s rozměry</span>
-      <h2 class="section__title">Orientační ceny pergol podle základních rozměrů</h2>
+      <h2 class="section__title">Interaktivní kalkulace pro základní varianty pergol</h2>
       <p class="section__intro">
-        Přehled slouží jako rychlá orientace. U atypických rozměrů a individuálních požadavků připravím samostatnou
-        cenovou nabídku.
+        Přehled slouží jako rychlá orientace. Vyberte rozměr, krytinu, zinkování, montáž a barvu. U atypických
+        rozměrů nebo individuálních požadavků připravím samostatnou cenovou nabídku.
       </p>
     </div>
 
-    <div class="calculator-grid">
-      {pergolaCalculatorOptions.map((item) => (
-        <article class="page-card calculator-card">
-          <span class="calculator-card__size">{item.size}</span>
-          <strong>{item.total}</strong>
-          {item.assembly && <span>Montáž: {item.assembly}</span>}
-          {item.note && <span>{item.note}</span>}
-        </article>
-      ))}
-    </div>
-
-    <div class="contact-actions">
-      <a class="button button--primary" href="/poptavka?produkt=pergola-kalkulace">Nezávazná poptávka</a>
-    </div>
+    <PergolaCalculator />
   </section>
 </Layout>
