@@ -23,6 +23,9 @@ const schema = {
   description,
   sameAs: [company.facebook],
 };
+
+const isActive = (href: string, children?: Array<{ href: string }>) =>
+  Astro.url.pathname === href || children?.some((child) => child.href === Astro.url.pathname);
 ---
 
 <!doctype html>
@@ -58,9 +61,20 @@ const schema = {
 
           <nav class="nav" aria-label="Hlavní navigace">
             {navItems.map((item) => (
-              <a href={item.href} aria-current={Astro.url.pathname === item.href ? 'page' : undefined}>
-                {item.label}
-              </a>
+              <div class:list={['nav__item', item.children && 'nav__item--has-children']}>
+                <a class="nav__link" href={item.href} aria-current={isActive(item.href, item.children) ? 'page' : undefined}>
+                  {item.label}
+                </a>
+                {item.children && (
+                  <div class="nav__dropdown">
+                    {item.children.map((child) => (
+                      <a class="nav__sublink" href={child.href} aria-current={Astro.url.pathname === child.href ? 'page' : undefined}>
+                        {child.label}
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
             ))}
           </nav>
         </div>

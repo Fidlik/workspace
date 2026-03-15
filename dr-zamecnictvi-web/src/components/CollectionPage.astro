@@ -1,0 +1,64 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { company } from '../data/site';
+import type { CollectionPage } from '../data/site';
+
+type Props = {
+  page: CollectionPage;
+};
+
+const { page } = Astro.props as Props;
+---
+
+<Layout title={`${page.title} | ${company.name}`} description={page.summary}>
+  <section class="page-hero">
+    <div class="section">
+      <span class="eyebrow">{page.eyebrow}</span>
+      <h1>{page.title}</h1>
+      <p>{page.intro}</p>
+      <div class="page-meta">
+        <span class="pill">Zakázková výroba</span>
+        <span class="pill">Přehledná nabídka</span>
+        <span class="pill">Studénka a okolí</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="page-grid">
+      <div class="page-stack">
+        <article class="page-card">
+          <span class="section__eyebrow">Kategorie</span>
+          <h2>Vyberte konkrétní oblast</h2>
+          <p>{page.summary}</p>
+          <div class="collection-list">
+            {page.items.map((item) => (
+              <a class="collection-item" href={item.href}>
+                <strong>{item.label}</strong>
+                <span>{item.summary}</span>
+              </a>
+            ))}
+          </div>
+        </article>
+
+        <article class="page-card">
+          <span class="section__eyebrow">Jak spolupráce probíhá</span>
+          <p>
+            Každou realizaci řeším osobně. Nejprve společně ujasníme zadání, následně navrhnu vhodné řešení
+            a po odsouhlasení zajistím výrobu i montáž.
+          </p>
+          <div class="contact-actions">
+            <a class="button button--primary" href="/kontakty">Domluvit konzultaci</a>
+            <a class="button button--ghost" href="/fotogalerie">Prohlédnout realizace</a>
+          </div>
+        </article>
+      </div>
+
+      <div class="page-stack">
+        <figure class="image-card">
+          <img src={page.image} alt={page.title} loading="eager" />
+        </figure>
+      </div>
+    </div>
+  </section>
+</Layout>

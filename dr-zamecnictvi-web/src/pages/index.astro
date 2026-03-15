@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { company, gallery, process, references, services, stats, strengths } from '../data/site';
+import { company, featuredSections, gallery, process, references, stats, strengths } from '../data/site';
 ---
 
 <Layout
@@ -11,7 +11,7 @@ import { company, gallery, process, references, services, stats, strengths } fro
     <div class="section hero__grid">
       <div>
         <span class="eyebrow">Zakázková kovovýroba ve Studénce</span>
-        <h1>Ploty, brány, zábradlí a poctivé řemeslo na míru.</h1>
+        <h1>Pergoly, venkovní nábytek, oplocení a poctivé řemeslo na míru.</h1>
         <p>{company.intro}</p>
 
         <div class="hero__actions">
@@ -42,24 +42,21 @@ import { company, gallery, process, references, services, stats, strengths } fro
   <section class="section">
     <div class="section__header">
       <span class="section__eyebrow">Služby</span>
-      <h2 class="section__title">Čistý servis, jasná nabídka, žádná pluginová zátěž</h2>
+      <h2 class="section__title">Méně položek, jasnější orientace, lepší čitelnost</h2>
       <p class="section__intro">
-        Současný WordPress web táhne zbytečně velké množství pluginů a šablonových vrstev. Tahle nová verze
-        drží stejný obsah, ale podstatně čistší technické řešení a lepší prezentaci služeb.
+        Horní navigace je nově zjednodušená do několika hlavních sekcí. Každá z nich vede na přehlednou stránku
+        a pod sebou sdružuje související oblasti výroby.
       </p>
     </div>
 
     <div class="service-grid">
-      {services.map((service) => (
+      {featuredSections.map((service) => (
         <article class="service-card">
           <img src={service.image} alt={service.title} loading="lazy" />
           <div class="service-card__body">
             <span class="section__eyebrow">{service.eyebrow}</span>
             <h3>{service.title}</h3>
             <p>{service.summary}</p>
-            <ul>
-              {service.bullets.map((item) => <li>{item}</li>)}
-            </ul>
             <a class="service-card__link" href={service.href}>
               Detail služby
             </a>
@@ -150,8 +147,7 @@ import { company, gallery, process, references, services, stats, strengths } fro
         <span class="section__eyebrow">Kontakt</span>
         <h2>Daniel Richter</h2>
         <p>
-          Rodinná dílna ve Studénce, více než deset let praxe a osobní vedení každé zakázky od návrhu po
-          dokončení.
+          Rodinná dílna ve Studénce, více než deset let praxe a osobní vedení každé zakázky od návrhu po dokončení.
         </p>
         <div class="contact-list">
           {company.phones.map((phone) => (

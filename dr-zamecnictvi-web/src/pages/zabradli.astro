@@ -1,8 +1,8 @@
 ---
 import ServicePage from '../components/ServicePage.astro';
-import { services } from '../data/site';
+import { getServiceBySlug } from '../data/site';
 
-const service = services.find(({ slug }) => slug === 'zabradli');
+const service = getServiceBySlug('zabradli');
 ---
 
 <ServicePage service={service!} />
