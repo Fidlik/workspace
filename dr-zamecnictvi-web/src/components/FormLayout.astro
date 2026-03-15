@@ -28,6 +28,7 @@ const { title, eyebrow, description, formType } = Astro.props as Props;
         <form class="inquiry-form" method="POST" action="/api/forms">
           <input type="hidden" name="formType" value={formType} />
           <input type="hidden" name="product" value="" data-product-field />
+          <input type="text" name="website" class="honeypot" tabindex="-1" autocomplete="off" />
 
           <label>
             <span>Produkt / téma</span>

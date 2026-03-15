@@ -625,6 +625,15 @@ img {
   font: inherit;
 }
 
+.honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0;
+  pointer-events: none;
+}
+
 .inquiry-form textarea {
   resize: vertical;
   min-height: 140px;
