@@ -11,7 +11,6 @@ export const company = {
     'Jmenuji se Daniel Richter a v rodinné dílně ve Studénce vyrábím pergoly, venkovní nábytek, oplocení i další kovové prvky na míru. Každou zakázku řeším osobně od konzultace a zaměření až po finální montáž.',
   phones: [
     { label: 'Telefon', display: '724 556 144', href: '724556144' },
-    { label: 'Druhý kontakt', display: '773 835 402', href: '773835402' },
   ],
   facebook: 'https://www.facebook.com/DR.zamecnictvi.a.kovovyroba',
 };
