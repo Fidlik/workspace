@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { company, strengths } from '../data/site';
+import { company } from '../data/site';
 ---
 
 <Layout
@@ -20,49 +20,61 @@ import { company, strengths } from '../data/site';
 
   <section class="section">
     <div class="contact-grid">
-      <article class="contact-card">
-        <span class="section__eyebrow">Spojení</span>
-        <h2>Kontaktní informace</h2>
-        <div class="contact-list">
-          {company.phones.map((phone) => (
-            <div class="contact-row">
-              <span>{phone.label}</span>
-              <a href={`tel:+420${phone.href}`}>{phone.display}</a>
-            </div>
-          ))}
-          <div class="contact-row">
-            <span>Facebook</span>
-            <a href={company.facebook} target="_blank" rel="noreferrer">
-              DR zámečnictví a kovovýroba
-            </a>
+      <article class="contact-card contact-card--details">
+        <span class="section__eyebrow">Kontakty</span>
+        <h2>{company.owner}</h2>
+        <p class="contact-subtitle">{company.addressName}</p>
+
+        <div class="contact-stack">
+          <div class="contact-block">
+            <h3>Adresa:</h3>
+            {company.addressLines.map((line) => (
+              <p>{line}</p>
+            ))}
           </div>
-          <div class="contact-row">
-            <span>Dílna</span>
-            <strong>{company.workshop}</strong>
+
+          <div class="contact-block">
+            <h3>Fakturační údaje:</h3>
+            <p>
+              <strong>IČ:</strong> {company.ico}
+            </p>
           </div>
-          <div class="contact-row">
-            <span>Region</span>
-            <strong>{company.location}</strong>
+
+          <div class="contact-block">
+            <h3>Kontaktní informace:</h3>
+            {company.phones.map((phone) => (
+              <p>
+                <strong>{phone.label}:</strong>{' '}
+                <a href={`tel:+420${phone.href}`}>{phone.display}</a>
+              </p>
+            ))}
+            <p>
+              <strong>E-mail:</strong>{' '}
+              <a href={`mailto:${company.email}`}>{company.email}</a>
+            </p>
+            <p>
+              <strong>Facebook:</strong>{' '}
+              <a href={company.facebook} target="_blank" rel="noreferrer">
+                DR zámečnictví a kovovýroba
+              </a>
+            </p>
           </div>
         </div>
       </article>
 
-      <article class="contact-card">
-        <span class="section__eyebrow">Proč spolupracovat</span>
-        <h2>Osobní přístup bez agenturního filtru</h2>
-        <p>
-          Cílem nového webu je přesně to, co odpovídá i samotné spolupráci: žádné pluginové naddimenzování,
-          ale přehledná komunikace, jasné služby a poctivé řemeslo.
-        </p>
-        <ul class="detail-list">
-          {strengths.map((item) => <li>{item}</li>)}
-        </ul>
+      <article class="contact-card contact-card--map">
+        <span class="section__eyebrow">Kde mě najdete</span>
+        <div class="map-frame">
+          <iframe
+            title="Mapa - DR zámečnictví a kovovýroba"
+            src={company.mapEmbedUrl}
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+          ></iframe>
+        </div>
         <div class="contact-actions">
-          <a class="button button--primary" href={`tel:+420${company.phones[0].href}`}>
-            Zavolat hned
-          </a>
-          <a class="button button--ghost" href={company.facebook} target="_blank" rel="noreferrer">
-            Otevřít Facebook
+          <a class="button button--ghost" href={company.mapUrl} target="_blank" rel="noreferrer">
+            Otevřít mapu
           </a>
         </div>
       </article>

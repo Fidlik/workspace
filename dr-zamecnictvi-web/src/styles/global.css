@@ -582,6 +582,59 @@ img {
   align-items: start;
 }
 
+.contact-card--details,
+.contact-card--map {
+  min-height: 100%;
+}
+
+.contact-subtitle {
+  margin: 0;
+  color: var(--accent-soft) !important;
+  font-size: 1.55rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.contact-stack {
+  display: grid;
+  gap: 1.8rem;
+  margin-top: 1.8rem;
+}
+
+.contact-block {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.contact-block h3 {
+  margin: 0 0 0.35rem;
+  color: var(--accent-soft);
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+
+.contact-block p {
+  margin: 0;
+  color: var(--text);
+  font-size: 1.12rem;
+  line-height: 1.5;
+}
+
+.contact-block strong {
+  color: var(--text);
+}
+
+.contact-block a {
+  color: var(--muted);
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 226, 196, 0.35);
+  text-underline-offset: 0.18em;
+}
+
+.contact-block a:hover {
+  color: var(--text);
+}
+
 .map-frame {
   overflow: hidden;
   margin-top: 1rem;
@@ -593,7 +646,7 @@ img {
 .map-frame iframe {
   display: block;
   width: 100%;
-  min-height: 360px;
+  min-height: 460px;
   border: 0;
 }
 

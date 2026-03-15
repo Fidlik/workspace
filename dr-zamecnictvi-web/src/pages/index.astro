@@ -143,38 +143,54 @@ import { company, featuredSections, gallery, process, references, stats, strengt
 
   <section class="section">
     <div class="contact-grid">
-      <article class="contact-card">
-        <span class="section__eyebrow">Kontakt</span>
-        <h2>Daniel Richter</h2>
-        <p>
-          Rodinná dílna ve Studénce, více než deset let praxe a osobní vedení každé zakázky od návrhu po dokončení.
-        </p>
-        <div class="contact-list">
-          {company.phones.map((phone) => (
-            <div class="contact-row">
-              <span>{phone.label}</span>
-              <a href={`tel:+420${phone.href}`}>{phone.display}</a>
-            </div>
-          ))}
-          <div class="contact-row">
-            <span>Facebook</span>
-            <a href={company.facebook} target="_blank" rel="noreferrer">
-              DR zámečnictví a kovovýroba
-            </a>
+      <article class="contact-card contact-card--details">
+        <span class="section__eyebrow">Kontakty</span>
+        <h2>{company.owner}</h2>
+        <p class="contact-subtitle">{company.addressName}</p>
+
+        <div class="contact-stack">
+          <div class="contact-block">
+            <h3>Adresa:</h3>
+            {company.addressLines.map((line) => (
+              <p>{line}</p>
+            ))}
+          </div>
+
+          <div class="contact-block">
+            <h3>Fakturační údaje:</h3>
+            <p>
+              <strong>IČ:</strong> {company.ico}
+            </p>
+          </div>
+
+          <div class="contact-block">
+            <h3>Kontaktní informace:</h3>
+            {company.phones.map((phone) => (
+              <p>
+                <strong>{phone.label}:</strong>{' '}
+                <a href={`tel:+420${phone.href}`}>{phone.display}</a>
+              </p>
+            ))}
+            <p>
+              <strong>E-mail:</strong>{' '}
+              <a href={`mailto:${company.email}`}>{company.email}</a>
+            </p>
+            <p>
+              <strong>Facebook:</strong>{' '}
+              <a href={company.facebook} target="_blank" rel="noreferrer">
+                DR zámečnictví a kovovýroba
+              </a>
+            </p>
           </div>
         </div>
       </article>
 
-      <article class="contact-card">
+      <article class="contact-card contact-card--map">
         <span class="section__eyebrow">Kde mě najdete</span>
-        <h2>Studénka</h2>
-        <p>
-          Požárnická 261, 742 13 Studénka-Studénka 3
-        </p>
         <div class="map-frame">
           <iframe
             title="Mapa - DR zámečnictví a kovovýroba"
-            src="https://www.google.com/maps?q=Po%C5%BE%C3%A1rnick%C3%A1%20261%2C%20742%2013%20Stud%C3%A9nka-Stud%C3%A9nka%203&z=16&output=embed"
+            src={company.mapEmbedUrl}
             loading="lazy"
             referrerpolicy="no-referrer-when-downgrade"
           ></iframe>
@@ -182,7 +198,7 @@ import { company, featuredSections, gallery, process, references, stats, strengt
         <div class="contact-actions">
           <a
             class="button button--ghost"
-            href="https://www.google.com/maps/place/Po%C5%BE%C3%A1rnick%C3%A1+261,+742+13+Stud%C3%A9nka-Stud%C3%A9nka+3/"
+            href={company.mapUrl}
             target="_blank"
             rel="noreferrer"
           >

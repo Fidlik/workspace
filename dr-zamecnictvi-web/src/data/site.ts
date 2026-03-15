@@ -5,6 +5,19 @@ export const company = {
   owner: 'Daniel Richter',
   location: 'Studénka, severní Morava',
   workshop: 'Rodinná dílna blízko nádraží ve Studénce',
+  email: 'daniel.richter.st@gmail.com',
+  ico: '88133443',
+  addressName: 'Zakázková kovovýroba',
+  addressLines: [
+    'Požárnická 261',
+    '742 13 Studénka',
+    'ČESKÁ REPUBLIKA',
+  ],
+  mapLabel: 'Požárnická 261, 742 13 Studénka',
+  mapEmbedUrl:
+    'https://www.google.com/maps?q=Po%C5%BE%C3%A1rnick%C3%A1%20261%2C%20742%2013%20Stud%C3%A9nka-Stud%C3%A9nka%203&z=16&output=embed',
+  mapUrl:
+    'https://www.google.com/maps/place/Po%C5%BE%C3%A1rnick%C3%A1+261,+742+13+Stud%C3%A9nka-Stud%C3%A9nka+3/',
   description:
     'Zakázková kovovýroba se zaměřením na pergoly, venkovní nábytek, oplocení, brány, schodiště, zábradlí a atypické realizace.',
   intro:
