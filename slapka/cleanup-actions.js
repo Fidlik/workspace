@@ -123,8 +123,8 @@ renderReceipt = function renderReceiptWithGoingShortcut() {
 
   const shortcut = document.createElement("button");
   shortcut.type = "button";
-  shortcut.className = "share-all-button";
-  shortcut.textContent = "Všichni co jeli";
+  shortcut.className = "share-chip share-all-button";
+  shortcut.innerHTML = `<span class="share-all-check">✓</span><span>Všichni co jeli</span>`;
   shortcut.addEventListener("click", () => {
     receipt.shareIds = [...getGoingRiderIds()];
     saveState();
