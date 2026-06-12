@@ -63,6 +63,7 @@ button {
 
 h1,
 h2,
+h3,
 p {
   margin: 0;
 }
@@ -108,6 +109,17 @@ h2 {
 
 .hero-panel {
   padding: clamp(18px, 4vw, 32px);
+  margin-bottom: 18px;
+}
+
+.section-block {
+  padding: clamp(16px, 3vw, 24px);
+  margin-top: 18px;
+}
+
+.section-heading {
+  justify-content: space-between;
+  gap: 18px;
   margin-bottom: 18px;
 }
 
@@ -204,6 +216,7 @@ select:focus {
 }
 
 .primary-link,
+.primary-button,
 .inline-form button,
 .amount-options button {
   display: inline-flex;
@@ -218,20 +231,83 @@ select:focus {
   text-decoration: none;
 }
 
+.primary-button {
+  white-space: nowrap;
+}
+
 .autosave-note {
   color: var(--muted);
   font-size: 0.88rem;
 }
 
-.section-block {
-  padding: clamp(16px, 3vw, 24px);
-  margin-top: 18px;
+.trip-list,
+.receipt-list {
+  display: grid;
+  gap: 10px;
 }
 
-.section-heading {
-  justify-content: space-between;
-  gap: 18px;
+.trip-list {
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+}
+
+.trip-card,
+.receipt-tab {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fffefa;
+  color: var(--ink);
+  text-align: left;
+}
+
+.trip-card {
+  display: grid;
+  gap: 8px;
+  min-height: 112px;
+  padding: 14px;
+}
+
+.trip-card.active,
+.receipt-tab.active {
+  border-color: var(--brand);
+  background: var(--mint);
+  box-shadow: inset 0 0 0 1px var(--brand);
+}
+
+.trip-card strong,
+.receipt-tab strong {
+  display: block;
+  font-size: 1rem;
+}
+
+.trip-card span,
+.receipt-tab span {
+  display: block;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 650;
+}
+
+.trip-card .trip-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.trip-card .trip-meta span {
+  padding: 4px 7px;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.receipt-list {
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
   margin-bottom: 18px;
+}
+
+.receipt-tab {
+  padding: 12px;
 }
 
 .inline-form {
@@ -405,7 +481,6 @@ select:focus {
 }
 
 .payment-card h3 {
-  margin: 0;
   font-size: 1rem;
 }
 
@@ -461,6 +536,8 @@ select:focus {
   }
 
   .trip-grid,
+  .trip-list,
+  .receipt-list,
   .receipt-layout,
   .settlement-list {
     grid-template-columns: 1fr;
