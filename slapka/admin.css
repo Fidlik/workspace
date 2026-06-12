@@ -1,0 +1,91 @@
+.topbar-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-button,
+.admin-secondary {
+  min-height: 42px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: #fffefa;
+  color: var(--brand-dark);
+  padding: 10px 14px;
+  font-weight: 850;
+}
+
+.admin-unlocked .admin-button {
+  border-color: var(--brand);
+  background: var(--mint);
+}
+
+.admin-locked input:disabled,
+.admin-locked select:disabled,
+.admin-locked button:disabled {
+  cursor: not-allowed;
+  opacity: 0.62;
+}
+
+.admin-locked .section-block,
+.admin-locked .hero-panel {
+  position: relative;
+}
+
+.admin-locked .autosave-note::before {
+  content: "Zamčeno · ";
+  color: var(--accent);
+  font-weight: 850;
+}
+
+.admin-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(31, 39, 32, 0.38);
+}
+
+.admin-modal[hidden] {
+  display: none;
+}
+
+.admin-dialog {
+  width: min(100%, 380px);
+  display: grid;
+  gap: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+
+.admin-dialog h2 {
+  font-size: 1.45rem;
+}
+
+.admin-dialog-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.admin-error {
+  min-height: 20px;
+  color: #9a3412;
+  font-size: 0.9rem;
+  font-weight: 750;
+}
+
+@media (max-width: 760px) {
+  .topbar-actions {
+    justify-self: end;
+  }
+
+  .admin-dialog-actions {
+    display: grid;
+  }
+}
