@@ -156,16 +156,17 @@ async function saveState(db, rawState) {
   }
 
   await db.batch(statements);
+  return state;
 }
 
-async function loadState(db) {
+async function loadState(db, selection = {}) {
   if (!(await hasRows(db))) await saveState(db, defaultState);
 
   const tripsResult = await db
     .prepare(
       `SELECT id, title, trip_date AS date, start_place AS start, map_url AS map, note
        FROM trips
-       ORDER BY trip_date DESC, created_at DESC`
+       ORDER BY trip_date ASC, title COLLATE NOCASE ASC`
     )
     .all();
 
@@ -212,8 +213,12 @@ async function loadState(db) {
     message: receipt.message || ""
   }));
 
-  const currentTripId = trips[0]?.id || defaultState.currentTripId;
-  const currentReceiptId = receipts.find((receipt) => receipt.tripId === currentTripId)?.id || receipts[0]?.id || null;
+  const currentTripId = trips.some((trip) => trip.id === selection.currentTripId)
+    ? selection.currentTripId
+    : trips[0]?.id || defaultState.currentTripId;
+  const currentReceiptId = receipts.some((receipt) => receipt.id === selection.currentReceiptId && receipt.tripId === currentTripId)
+    ? selection.currentReceiptId
+    : receipts.find((receipt) => receipt.tripId === currentTripId)?.id || null;
 
   return { currentTripId, currentReceiptId, trips, riders, tripRiders, receipts };
 }
@@ -229,8 +234,9 @@ export async function onRequestGet({ env }) {
 export async function onRequestPut({ request, env }) {
   try {
     const db = requireDb(env);
-    await saveState(db, await request.json());
-    return json(await loadState(db));
+    const incoming = normalizeIncoming(await request.json());
+    await saveState(db, incoming);
+    return json(await loadState(db, incoming));
   } catch (error) {
     return json({ error: error.message }, { status: 500 });
   }
