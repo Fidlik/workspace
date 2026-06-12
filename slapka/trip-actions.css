@@ -143,31 +143,74 @@ body::before {
   border: 1px solid rgba(39, 103, 73, 0.24);
 }
 
-.share-all-button {
+.share-toggle {
   min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
   background: #fffefa;
-  color: var(--ink);
+  color: var(--muted);
   padding: 8px 10px;
-  font-weight: 650;
+  font-weight: 750;
 }
 
-.share-all-check {
+.share-toggle.selected,
+.share-all-button {
+  color: var(--ink);
+}
+
+.share-check {
   width: 18px;
   height: 18px;
   display: inline-grid;
   place-items: center;
+  border: 1px solid #aeb9b0;
   border-radius: 3px;
-  background: var(--brand);
+  background: #fffefa;
   color: #fff;
   font-size: 0.82rem;
   font-weight: 900;
+  line-height: 1;
 }
 
-.share-all-button:hover,
-.share-all-button:focus-visible {
+.share-toggle.selected .share-check,
+.share-all-button .share-check {
+  border-color: var(--brand);
+  background: var(--brand);
+}
+
+.share-toggle:hover,
+.share-toggle:focus-visible {
   outline: none;
   border-color: var(--brand);
   box-shadow: 0 0 0 3px rgba(39, 103, 73, 0.13);
+}
+
+.payment-card {
+  min-width: 0;
+}
+
+.qr-box {
+  min-height: 228px;
+  padding: 10px;
+  background: #fff;
+  overflow: visible;
+}
+
+.qr-box img {
+  display: block;
+  width: min(100%, 208px);
+  height: auto;
+  max-height: 208px;
+  object-fit: contain;
+}
+
+.qr-box canvas,
+.qr-box svg {
+  width: 188px !important;
+  height: 188px !important;
 }
 
 @media (max-width: 760px) {
