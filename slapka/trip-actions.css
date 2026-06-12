@@ -43,35 +43,43 @@ body::before {
 }
 
 .trip-card-main {
-  padding: 14px 48px 14px 14px;
+  padding: 14px 38px 14px 14px;
 }
 
 .receipt-tab-main {
-  padding: 12px 44px 12px 12px;
+  padding: 12px 36px 12px 12px;
 }
 
 .corner-delete {
   position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 28px;
-  height: 28px;
+  top: 7px;
+  right: 7px;
+  width: 20px;
+  height: 20px;
   display: inline-grid;
   place-items: center;
-  border: 1px solid rgba(127, 58, 22, 0.18);
+  border: 0;
   border-radius: 50%;
-  background: rgba(250, 234, 220, 0.92);
-  color: #7f3a16;
-  font-size: 1.15rem;
+  background: transparent;
+  color: #b42318;
+  font-size: 0.95rem;
   font-weight: 900;
   line-height: 1;
+  opacity: 0.34;
+  transition: opacity 0.16s ease, background-color 0.16s ease, transform 0.16s ease;
+}
+
+.trip-card-shell:hover .corner-delete,
+.receipt-tab-shell:hover .corner-delete,
+.corner-delete:focus-visible {
+  opacity: 1;
 }
 
 .corner-delete:hover,
 .corner-delete:focus-visible {
-  background: #f5d8c0;
+  background: #fee4e2;
   outline: none;
-  box-shadow: 0 0 0 3px rgba(214, 120, 50, 0.18);
+  transform: scale(1.05);
 }
 
 .delete-trip {
@@ -80,17 +88,28 @@ body::before {
 
 .share-all-button {
   min-height: 42px;
-  border: 1px solid rgba(39, 103, 73, 0.2);
-  border-radius: 8px;
-  background: var(--mint);
-  color: var(--brand-dark);
-  padding: 8px 11px;
-  font-weight: 850;
+  background: #fffefa;
+  color: var(--ink);
+  padding: 8px 10px;
+  font-weight: 650;
+}
+
+.share-all-check {
+  width: 18px;
+  height: 18px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 3px;
+  background: var(--brand);
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 900;
 }
 
 .share-all-button:hover,
 .share-all-button:focus-visible {
   outline: none;
+  border-color: var(--brand);
   box-shadow: 0 0 0 3px rgba(39, 103, 73, 0.13);
 }
 
