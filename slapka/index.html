@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="cs">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f5f0e6" />
+    <title>Šlapka</title>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script defer src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
+    <script defer src="./app.js"></script>
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Středeční vyjížďky</p>
+          <h1>Šlapka</h1>
+        </div>
+        <button class="icon-button" id="reset-demo" type="button" title="Obnovit demo data" aria-label="Obnovit demo data">↻</button>
+      </header>
+
+      <section class="hero-panel" aria-labelledby="trip-title">
+        <div class="trip-main">
+          <div class="date-pill">
+            <span id="trip-day">St</span>
+            <strong id="trip-date-short">19. 6.</strong>
+          </div>
+          <div>
+            <label class="field-label" for="trip-title-input">Název vyjížďky</label>
+            <input id="trip-title-input" class="title-input" type="text" />
+          </div>
+        </div>
+
+        <div class="trip-grid">
+          <label>
+            <span>Datum</span>
+            <input id="trip-date" type="date" />
+          </label>
+          <label>
+            <span>Start</span>
+            <input id="trip-start" type="text" placeholder="Kde se potkáme" />
+          </label>
+          <label class="wide">
+            <span>Mapa / trasa</span>
+            <input id="trip-map" type="url" placeholder="https://mapy.com/..." />
+          </label>
+        </div>
+
+        <div class="hero-actions">
+          <a id="map-link" class="primary-link" href="#" target="_blank" rel="noreferrer">Otevřít mapu</a>
+          <span id="autosave-note" class="autosave-note">Uloženo lokálně</span>
+        </div>
+      </section>
+
+      <section class="section-block" aria-labelledby="riders-heading">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Kdo pojede</p>
+            <h2 id="riders-heading">Jezdci</h2>
+          </div>
+          <form id="add-rider-form" class="inline-form">
+            <input id="new-rider-name" type="text" placeholder="Nový jezdec" aria-label="Nový jezdec" />
+            <button type="submit">Přidat</button>
+          </form>
+        </div>
+        <div id="rider-list" class="rider-list"></div>
+      </section>
+
+      <section class="section-block receipt-workflow" aria-labelledby="receipt-heading">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Hlavní věc</p>
+            <h2 id="receipt-heading">Účtenka a rozdělení</h2>
+          </div>
+        </div>
+
+        <div class="receipt-layout">
+          <div class="upload-panel">
+            <label class="dropzone" for="receipt-file">
+              <input id="receipt-file" type="file" accept="image/*" />
+              <span>Nahrát fotku účtenky</span>
+              <small>Appka se pokusí najít celkovou částku. Když se netrefí, částku upravíš ručně.</small>
+            </label>
+            <img id="receipt-preview" class="receipt-preview" alt="Náhled účtenky" hidden />
+            <div id="ocr-status" class="ocr-status">Čekám na účtenku.</div>
+          </div>
+
+          <div class="split-panel">
+            <div>
+              <label class="field-label" for="payer-select">Zaplatil/a</label>
+              <select id="payer-select"></select>
+            </div>
+
+            <div class="amount-row">
+              <label>
+                <span>Celkem</span>
+                <input id="amount-input" type="number" min="0" step="0.01" />
+              </label>
+              <label>
+                <span>Měna</span>
+                <select id="currency-select">
+                  <option value="CZK">CZK</option>
+                  <option value="EUR">EUR</option>
+                </select>
+              </label>
+            </div>
+
+            <div>
+              <div class="field-label">Nalezené možnosti</div>
+              <div id="amount-options" class="amount-options"></div>
+            </div>
+
+            <div>
+              <div class="field-label">Rozdělit mezi</div>
+              <div id="share-riders" class="share-riders"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-block" aria-labelledby="payment-heading">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">QR platby</p>
+            <h2 id="payment-heading">Vyrovnání</h2>
+          </div>
+          <div class="per-person" id="per-person">0 Kč / osoba</div>
+        </div>
+
+        <div class="payment-settings">
+          <label>
+            <span>Účet příjemce</span>
+            <input id="receiver-account" type="text" placeholder="CZ... nebo účet" />
+          </label>
+          <label>
+            <span>Zpráva</span>
+            <input id="payment-message" type="text" />
+          </label>
+        </div>
+
+        <div id="settlement-list" class="settlement-list"></div>
+      </section>
+    </main>
+  </body>
+</html>
