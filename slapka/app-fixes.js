@@ -41,6 +41,76 @@ function addWednesdayTrip(event) {
   renderAll();
 }
 
+function renderRiders() {
+  const goingIds = getGoingRiderIds();
+  els.riderList.innerHTML = "";
+
+  state.riders.forEach((rider) => {
+    const chip = document.createElement("div");
+    chip.className = "rider-chip rider-editor";
+    chip.innerHTML = `
+      <label class="rider-toggle">
+        <input type="checkbox" ${goingIds.includes(rider.id) ? "checked" : ""} data-rider-going="${rider.id}" />
+        <strong>${rider.name}</strong>
+      </label>
+      <label class="rider-account-field">
+        <span>Účet pro QR</span>
+        <input type="text" value="${rider.account || ""}" data-rider-account="${rider.id}" placeholder="1019741727/5500" />
+      </label>
+      <button class="remove-rider" type="button" data-remove-rider="${rider.id}" title="Odebrat ${rider.name}" aria-label="Odebrat ${rider.name}">×</button>
+    `;
+    els.riderList.append(chip);
+  });
+
+  els.riderList.querySelectorAll("[data-rider-going]").forEach((input) => {
+    input.addEventListener("change", (event) => {
+      const riderId = event.target.dataset.riderGoing;
+      const ids = new Set(getGoingRiderIds());
+      if (event.target.checked) ids.add(riderId);
+      else ids.delete(riderId);
+      state.tripRiders[state.currentTripId] = [...ids];
+
+      for (const receipt of getTripReceiptList()) {
+        if (event.target.checked && !receipt.shareIds.includes(riderId)) receipt.shareIds.push(riderId);
+        if (!event.target.checked) receipt.shareIds = receipt.shareIds.filter((id) => id !== riderId);
+      }
+      saveState();
+      renderAll();
+    });
+  });
+
+  els.riderList.querySelectorAll("[data-rider-account]").forEach((input) => {
+    input.addEventListener("input", (event) => {
+      const rider = state.riders.find((item) => item.id === event.target.dataset.riderAccount);
+      if (!rider) return;
+      rider.account = event.target.value;
+
+      const receipt = getCurrentReceipt();
+      if (receipt?.payerId === rider.id) {
+        receipt.receiverAccount = rider.account;
+        els.receiverAccount.value = rider.account;
+      }
+      saveState();
+      renderSettlements();
+    });
+  });
+
+  els.riderList.querySelectorAll("[data-remove-rider]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const id = button.dataset.removeRider;
+      state.riders = state.riders.filter((rider) => rider.id !== id);
+      for (const tripId of Object.keys(state.tripRiders)) state.tripRiders[tripId] = state.tripRiders[tripId].filter((riderId) => riderId !== id);
+      for (const receipt of state.receipts) {
+        receipt.shareIds = receipt.shareIds.filter((riderId) => riderId !== id);
+        if (receipt.payerId === id) receipt.payerId = state.riders[0]?.id || "";
+        if (receipt.payerId === state.riders[0]?.id) receipt.receiverAccount = state.riders[0]?.account || "";
+      }
+      saveState();
+      renderAll();
+    });
+  });
+}
+
 function parseCzechAccount(rawAccount) {
   const account = String(rawAccount || "").replace(/\s+/g, "").toUpperCase();
   const slashMatch = account.match(/^([0-9]{1,6}-)?([0-9]{2,10})\/([0-9]{4})$/);
@@ -152,4 +222,5 @@ if (addTripButton) {
   addTripButton.addEventListener("click", addWednesdayTrip, true);
 }
 
+setTimeout(renderAll, 0);
 setTimeout(renderQrCodes, 900);
