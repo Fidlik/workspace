@@ -52,6 +52,31 @@ function deleteReceipt(receiptId) {
   renderAll();
 }
 
+function setRiderAccount(riderId) {
+  const rider = state.riders.find((item) => item.id === riderId);
+  if (!rider) return;
+
+  const current = rider.account || "";
+  const value = prompt(`Účet pro QR platby pro ${rider.name}\n\nFormát: 1019741727/5500 nebo český IBAN.\nPrázdné pole účet smaže.`, current);
+  if (value === null) return;
+
+  const cleaned = value.trim();
+  if (cleaned && !parseCzechAccount(cleaned)) {
+    alert("Účet není ve správném formátu. Použij například 1019741727/5500 nebo český IBAN.");
+    return;
+  }
+
+  rider.account = cleaned;
+  const receipt = getCurrentReceipt();
+  if (receipt?.payerId === rider.id) {
+    receipt.receiverAccount = cleaned;
+    if (els.receiverAccount) els.receiverAccount.value = cleaned;
+  }
+
+  saveState();
+  renderAll();
+}
+
 renderTripList = function renderTripListWithCornerDelete() {
   els.tripList.innerHTML = "";
   state.trips.forEach((trip) => {
@@ -80,6 +105,65 @@ renderTripList = function renderTripListWithCornerDelete() {
     });
     card.querySelector("[data-delete-trip]").addEventListener("click", () => deleteTripFromCorner(trip.id));
     els.tripList.append(card);
+  });
+};
+
+renderRiders = function renderRidersWithAccountButtons() {
+  const goingIds = getGoingRiderIds();
+  els.riderList.innerHTML = "";
+
+  state.riders.forEach((rider) => {
+    const chip = document.createElement("div");
+    chip.className = "rider-chip rider-editor rider-compact-editor";
+    const accountText = rider.account ? rider.account : "Účet pro QR";
+    chip.innerHTML = `
+      <label class="rider-toggle">
+        <input type="checkbox" ${goingIds.includes(rider.id) ? "checked" : ""} data-rider-going="${rider.id}" />
+        <strong>${rider.name}</strong>
+      </label>
+      <button class="rider-account-button ${rider.account ? "has-account" : ""}" type="button" data-rider-account-button="${rider.id}" title="Upravit účet pro QR" aria-label="Upravit účet pro QR pro ${rider.name}">
+        <span class="qr-mini" aria-hidden="true"></span>
+        <span>${accountText}</span>
+      </button>
+      <button class="remove-rider" type="button" data-remove-rider="${rider.id}" title="Odebrat ${rider.name}" aria-label="Odebrat ${rider.name}">×</button>
+    `;
+    els.riderList.append(chip);
+  });
+
+  els.riderList.querySelectorAll("[data-rider-going]").forEach((input) => {
+    input.addEventListener("change", (event) => {
+      const riderId = event.target.dataset.riderGoing;
+      const ids = new Set(getGoingRiderIds());
+      if (event.target.checked) ids.add(riderId);
+      else ids.delete(riderId);
+      state.tripRiders[state.currentTripId] = [...ids];
+
+      for (const receipt of getTripReceiptList()) {
+        if (event.target.checked && !receipt.shareIds.includes(riderId)) receipt.shareIds.push(riderId);
+        if (!event.target.checked) receipt.shareIds = receipt.shareIds.filter((id) => id !== riderId);
+      }
+      saveState();
+      renderAll();
+    });
+  });
+
+  els.riderList.querySelectorAll("[data-rider-account-button]").forEach((button) => {
+    button.addEventListener("click", () => setRiderAccount(button.dataset.riderAccountButton));
+  });
+
+  els.riderList.querySelectorAll("[data-remove-rider]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const id = button.dataset.removeRider;
+      state.riders = state.riders.filter((rider) => rider.id !== id);
+      for (const tripId of Object.keys(state.tripRiders)) state.tripRiders[tripId] = state.tripRiders[tripId].filter((riderId) => riderId !== id);
+      for (const receipt of state.receipts) {
+        receipt.shareIds = receipt.shareIds.filter((riderId) => riderId !== id);
+        if (receipt.payerId === id) receipt.payerId = state.riders[0]?.id || "";
+        if (receipt.payerId === state.riders[0]?.id) receipt.receiverAccount = state.riders[0]?.account || "";
+      }
+      saveState();
+      renderAll();
+    });
   });
 };
 
