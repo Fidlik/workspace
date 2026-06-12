@@ -5,6 +5,7 @@
 ## Co je hotové
 
 - Seznam vyjížděk s možností přidat novou vyjížďku
+- Mazání vyjížděk s potvrzením, včetně jejich účtenek
 - Kliknutí na vyjížďku přepne celý detail: plán, jezdce, účtenky a QR platby
 - Úprava vyjížďky: název, datum, start a odkaz na mapy.com
 - Seznam jezdců a výběr, kdo jede v konkrétní den
