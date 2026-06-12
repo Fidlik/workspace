@@ -1,0 +1,10 @@
+name = "slapka"
+compatibility_date = "2026-06-12"
+pages_build_output_dir = "."
+
+# After creating the D1 database in Cloudflare, copy this file to wrangler.toml
+# and replace database_id with the real value from Cloudflare.
+[[d1_databases]]
+binding = "DB"
+database_name = "slapka-db"
+database_id = "REPLACE_WITH_CLOUDFLARE_D1_DATABASE_ID"
