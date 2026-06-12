@@ -343,6 +343,35 @@ select:focus {
   accent-color: var(--brand);
 }
 
+.rider-editor {
+  display: grid;
+  grid-template-columns: minmax(92px, auto) minmax(180px, 1fr) 24px;
+  align-items: end;
+  width: min(100%, 430px);
+}
+
+.rider-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+}
+
+.rider-toggle input {
+  width: 18px;
+  min-height: 18px;
+}
+
+.rider-account-field span {
+  margin-bottom: 4px;
+  font-size: 0.74rem;
+}
+
+.rider-account-field input {
+  min-height: 38px;
+  font-size: 0.92rem;
+}
+
 .remove-rider {
   width: 24px;
   height: 24px;
@@ -542,6 +571,14 @@ select:focus {
   .receipt-layout,
   .settlement-list {
     grid-template-columns: 1fr;
+  }
+
+  .rider-editor {
+    grid-template-columns: 1fr 24px;
+  }
+
+  .rider-account-field {
+    grid-column: 1 / -1;
   }
 
   .inline-form {
