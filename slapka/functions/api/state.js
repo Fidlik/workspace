@@ -51,6 +51,19 @@ function requireDb(env) {
   return env.DB;
 }
 
+function requireAdmin(request, env) {
+  if (!env.ADMIN_PASSWORD) {
+    return json({ error: "ADMIN_PASSWORD is not configured" }, { status: 403 });
+  }
+
+  const password = request.headers.get("x-slapka-admin") || "";
+  if (password !== env.ADMIN_PASSWORD) {
+    return json({ error: "Admin password required" }, { status: 401 });
+  }
+
+  return null;
+}
+
 function normalizeIncoming(raw) {
   if (Array.isArray(raw?.trips)) {
     return {
@@ -233,6 +246,9 @@ export async function onRequestGet({ env }) {
 
 export async function onRequestPut({ request, env }) {
   try {
+    const authError = requireAdmin(request, env);
+    if (authError) return authError;
+
     const db = requireDb(env);
     const incoming = normalizeIncoming(await request.json());
     await saveState(db, incoming);
