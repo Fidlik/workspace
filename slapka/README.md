@@ -16,6 +16,7 @@
 - Výchozí příjemce podle člověka, který platil
 - Editovatelný účet příjemce a zpráva pro platbu
 - QR platby ve formátu SPD pro vyrovnání
+- Přístupové heslo před načtením celé aplikace
 - Ukládání do Cloudflare D1 přes Pages Function `/api/state`
 - Lokální fallback do prohlížeče, pokud API není dostupné
 
@@ -27,6 +28,18 @@ Nastavení projektu:
 - Root directory: `slapka`
 - Build command: nechat prázdné nebo `exit 0`
 - Build output directory: `.`
+
+## Přístupové heslo
+
+V Cloudflare Pages nastav environment variable:
+
+```text
+ACCESS_PASSWORD=nejake-spolecne-tymoves-heslo
+```
+
+Bez této proměnné aplikace vrátí chybu a nenačte se. Po zadání hesla se uloží bezpečná cookie `slapka_access` a celý tým může aplikaci upravovat. Odhlášení je přes `/logout` nebo tlačítko `Odhlásit` v horní liště.
+
+Starší proměnná `ADMIN_PASSWORD` funguje jako fallback, ale pro nové nasazení používej `ACCESS_PASSWORD`.
 
 ## Cloudflare D1
 
