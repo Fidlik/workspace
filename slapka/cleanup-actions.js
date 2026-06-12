@@ -4,6 +4,25 @@ function resetReceiptUploadUi() {
   if (els.ocrStatus) els.ocrStatus.textContent = "Čekám na účtenku.";
 }
 
+function defaultQrMessage(trip = getCurrentTrip()) {
+  return `CykloVyjizdka ${formatDate(trip?.date || new Date().toISOString().slice(0, 10))}`;
+}
+
+function isLegacyQrMessage(message) {
+  return !message || /^(Šlapka|Slapka)\b/i.test(String(message));
+}
+
+function refreshDefaultQrMessages() {
+  let changed = false;
+  for (const receipt of state.receipts) {
+    if (!isLegacyQrMessage(receipt.message)) continue;
+    const trip = state.trips.find((item) => item.id === receipt.tripId) || getCurrentTrip();
+    receipt.message = defaultQrMessage(trip);
+    changed = true;
+  }
+  return changed;
+}
+
 function deleteTripFromCorner(tripId) {
   if (state.trips.length <= 1) {
     alert("Poslední vyjížďku nejde smazat. Nejdřív vytvoř novou.");
@@ -242,13 +261,34 @@ renderReceiptList = function renderReceiptListWithDelete() {
   });
 };
 
+const syncPayerDefaultsBase = syncPayerDefaults;
+syncPayerDefaults = function syncPayerDefaultsWithQrMessage() {
+  syncPayerDefaultsBase();
+  refreshDefaultQrMessages();
+};
+
+const addReceiptBase = addReceipt;
+addReceipt = function addReceiptWithCykloMessage(shouldSave = true) {
+  addReceiptBase(shouldSave);
+  const receipt = getCurrentReceipt();
+  if (receipt && isLegacyQrMessage(receipt.message)) receipt.message = defaultQrMessage(getCurrentTrip());
+  if (shouldSave) saveState();
+};
+
 const renderReceiptBase = renderReceipt;
 renderReceipt = function renderReceiptWithReliableShares() {
   renderReceiptBase();
 
   const receipt = getCurrentReceipt();
   if (!receipt) return;
+  if (isLegacyQrMessage(receipt.message)) {
+    receipt.message = defaultQrMessage(getCurrentTrip());
+    if (els.paymentMessage) els.paymentMessage.value = receipt.message;
+  }
   renderShareButtons(receipt);
 };
 
 setTimeout(renderAll, 0);
+setTimeout(() => {
+  if (refreshDefaultQrMessages()) saveState();
+}, 150);
