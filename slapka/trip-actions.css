@@ -130,17 +130,15 @@ body::before {
 }
 
 .qr-mini {
-  width: 18px;
-  height: 18px;
+  width: 24px;
+  height: 24px;
   flex: 0 0 auto;
-  border-radius: 4px;
-  background:
-    linear-gradient(90deg, var(--brand) 45%, transparent 45% 55%, var(--brand) 55%) left 3px top 3px / 12px 4px no-repeat,
-    linear-gradient(90deg, var(--brand) 45%, transparent 45% 55%, var(--brand) 55%) left 3px bottom 3px / 12px 4px no-repeat,
-    linear-gradient(var(--brand) 45%, transparent 45% 55%, var(--brand) 55%) left 3px top 3px / 4px 12px no-repeat,
-    linear-gradient(var(--brand) 45%, transparent 45% 55%, var(--brand) 55%) right 3px top 3px / 4px 12px no-repeat,
-    #eef7f1;
-  border: 1px solid rgba(39, 103, 73, 0.24);
+  border-radius: 5px;
+  border: 1px solid rgba(39, 103, 73, 0.22);
+  background-color: #eef7f1;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='42' height='42' viewBox='0 0 42 42'%3E%3Crect width='42' height='42' fill='%23eef7f1'/%3E%3Cg fill='%23276749'%3E%3Cpath d='M4 4h12v12H4zM7 7v6h6V7zM26 4h12v12H26zM29 7v6h6V7zM4 26h12v12H4zM7 29v6h6v-6zM20 4h3v3h-3zM20 10h3v6h-3zM17 20h6v3h-6zM26 20h3v3h-3zM32 20h6v3h-6zM20 26h3v6h-3zM26 26h9v3h-9zM38 26h3v6h-3zM23 32h3v3h-3zM29 32h3v6h-3zM35 35h6v3h-6zM17 35h3v3h-3z'/%3E%3C/g%3E%3C/svg%3E");
+  background-position: center;
+  background-size: cover;
 }
 
 .share-toggle {
@@ -156,9 +154,29 @@ body::before {
   font-weight: 750;
 }
 
+.share-toggle.going:not(.selected) {
+  background: #fffefa;
+  border-color: #d7cbb9;
+  color: #46534b;
+}
+
 .share-toggle.selected,
 .share-all-button {
-  color: var(--ink);
+  border-color: rgba(39, 103, 73, 0.34);
+  background: #e7f4ec;
+  color: var(--brand-dark);
+}
+
+.share-toggle.not-going {
+  border-color: #e2ded5;
+  background: #f3f1ec;
+  color: #777d76;
+}
+
+.share-toggle.not-going.selected {
+  border-color: rgba(214, 120, 50, 0.36);
+  background: #fff0e3;
+  color: #7f3a16;
 }
 
 .share-check {
@@ -179,6 +197,11 @@ body::before {
 .share-all-button .share-check {
   border-color: var(--brand);
   background: var(--brand);
+}
+
+.share-toggle.not-going.selected .share-check {
+  border-color: var(--accent);
+  background: var(--accent);
 }
 
 .share-toggle:hover,
