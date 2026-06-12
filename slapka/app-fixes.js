@@ -41,7 +41,48 @@ function addWednesdayTrip(event) {
   renderAll();
 }
 
+function renderQrWithGenerator(box, value) {
+  const qr = qrcode(0, "M");
+  qr.addData(value);
+  qr.make();
+  box.innerHTML = qr.createSvgTag({ cellSize: 4, margin: 1 });
+  const svg = box.querySelector("svg");
+  if (svg) {
+    svg.setAttribute("aria-label", "QR platba");
+    svg.setAttribute("role", "img");
+  }
+}
+
+function renderQrCodes() {
+  const boxes = els.settlementList.querySelectorAll("[data-qr]");
+  boxes.forEach((box) => {
+    const value = decodeURIComponent(box.dataset.qr);
+    box.innerHTML = "";
+
+    if (window.QRCode?.toCanvas) {
+      window.QRCode.toCanvas(value, { width: 164, margin: 1, color: { dark: "#1f2720", light: "#f5efe4" } }, (error, canvas) => {
+        if (error) {
+          if (window.qrcode) renderQrWithGenerator(box, value);
+          else box.textContent = "QR se nepodařilo vytvořit.";
+          return;
+        }
+        box.append(canvas);
+      });
+      return;
+    }
+
+    if (window.qrcode) {
+      renderQrWithGenerator(box, value);
+      return;
+    }
+
+    box.textContent = "QR knihovna není dostupná.";
+  });
+}
+
 const addTripButton = document.querySelector("#add-trip");
 if (addTripButton) {
   addTripButton.addEventListener("click", addWednesdayTrip, true);
 }
+
+setTimeout(renderQrCodes, 900);
