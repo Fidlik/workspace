@@ -54,8 +54,13 @@ function accessPassword(env) {
   return env.ACCESS_PASSWORD || env.ADMIN_PASSWORD || "";
 }
 
-function accessCookie(password) {
-  return `${COOKIE_NAME}=${encodeURIComponent(password)}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=2592000`;
+async function accessToken(password) {
+  const bytes = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(`slapka:${password}`));
+  return Array.from(new Uint8Array(bytes), (byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
+function accessCookie(token) {
+  return `${COOKIE_NAME}=${encodeURIComponent(token)}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=2592000`;
 }
 
 export async function onRequest(context) {
@@ -66,6 +71,8 @@ export async function onRequest(context) {
   if (!password) {
     return new Response("ACCESS_PASSWORD is not configured", { status: 503 });
   }
+
+  const token = await accessToken(password);
 
   if (url.pathname === "/logout") {
     return new Response(null, {
@@ -84,14 +91,14 @@ export async function onRequest(context) {
         status: 302,
         headers: {
           location: "/",
-          "set-cookie": accessCookie(password)
+          "set-cookie": accessCookie(token)
         }
       });
     }
     return loginPage("Heslo nesedí.");
   }
 
-  if (getCookie(request, COOKIE_NAME) === password) {
+  if (decodeURIComponent(getCookie(request, COOKIE_NAME)) === token) {
     return next();
   }
 
