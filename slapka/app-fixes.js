@@ -41,6 +41,49 @@ function addWednesdayTrip(event) {
   renderAll();
 }
 
+function parseCzechAccount(rawAccount) {
+  const account = String(rawAccount || "").replace(/\s+/g, "").toUpperCase();
+  const slashMatch = account.match(/^([0-9]{1,6}-)?([0-9]{2,10})\/([0-9]{4})$/);
+  if (slashMatch) {
+    return {
+      accountNumber: `${slashMatch[1] || ""}${slashMatch[2]}`,
+      bankCode: slashMatch[3]
+    };
+  }
+
+  const ibanMatch = account.match(/^CZ[0-9]{22}$/);
+  if (ibanMatch) {
+    const bban = account.slice(4);
+    const bankCode = bban.slice(0, 4);
+    const prefix = String(Number(bban.slice(4, 10)) || "");
+    const number = String(Number(bban.slice(10)) || "");
+    return {
+      accountNumber: prefix ? `${prefix}-${number}` : number,
+      bankCode
+    };
+  }
+
+  return null;
+}
+
+function payliboUrl(amount) {
+  const receipt = getCurrentReceipt();
+  const parsed = parseCzechAccount(receipt?.receiverAccount);
+  if (!receipt || !parsed) return null;
+
+  const params = new URLSearchParams({
+    compress: "false",
+    size: "440",
+    accountNumber: parsed.accountNumber,
+    bankCode: parsed.bankCode,
+    amount: cleanAmount(amount).toFixed(2),
+    currency: receipt.currency || "CZK",
+    message: receipt.message || "Šlapka"
+  });
+
+  return `https://api.paylibo.com/paylibo/generator/czech/image?${params.toString()}`;
+}
+
 function renderQrWithGenerator(box, value) {
   const qr = qrcode(0, "M");
   qr.addData(value);
@@ -55,9 +98,33 @@ function renderQrWithGenerator(box, value) {
 
 function renderQrCodes() {
   const boxes = els.settlementList.querySelectorAll("[data-qr]");
+  const receipt = getCurrentReceipt();
+  const shareCount = receipt?.shareIds?.length || 0;
+  const perPerson = shareCount ? cleanAmount(receipt.amount / shareCount) : 0;
+  const payliboImage = perPerson ? payliboUrl(perPerson) : null;
+
   boxes.forEach((box) => {
-    const value = decodeURIComponent(box.dataset.qr);
+    const value = decodeURIComponent(box.dataset.qr || "");
     box.innerHTML = "";
+
+    if (payliboImage) {
+      const image = document.createElement("img");
+      image.src = payliboImage;
+      image.alt = "QR platba";
+      image.loading = "lazy";
+      image.addEventListener("error", () => {
+        box.innerHTML = "";
+        if (window.qrcode) renderQrWithGenerator(box, value);
+        else box.textContent = "QR se nepodařilo načíst.";
+      });
+      box.append(image);
+      return;
+    }
+
+    if (!parseCzechAccount(receipt?.receiverAccount)) {
+      box.textContent = "Zadej účet ve tvaru 1019741727/5500.";
+      return;
+    }
 
     if (window.QRCode?.toCanvas) {
       window.QRCode.toCanvas(value, { width: 164, margin: 1, color: { dark: "#1f2720", light: "#f5efe4" } }, (error, canvas) => {
