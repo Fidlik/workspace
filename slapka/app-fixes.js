@@ -217,6 +217,68 @@ function renderQrCodes() {
   });
 }
 
+function deleteTrip(tripId) {
+  if (state.trips.length <= 1) {
+    alert("Poslední vyjížďku nejde smazat. Nejdřív vytvoř novou.");
+    return;
+  }
+
+  const trip = state.trips.find((item) => item.id === tripId);
+  if (!trip) return;
+  const receiptCount = getTripReceiptList(tripId).length;
+  const suffix = receiptCount ? ` Smažou se i účtenky (${receiptCount}).` : "";
+  if (!confirm(`Smazat vyjížďku „${trip.title}“?${suffix}`)) return;
+
+  const removedIndex = state.trips.findIndex((item) => item.id === tripId);
+  state.trips = state.trips.filter((item) => item.id !== tripId);
+  state.receipts = state.receipts.filter((receipt) => receipt.tripId !== tripId);
+  delete state.tripRiders[tripId];
+
+  if (state.currentTripId === tripId) {
+    const nextTrip = state.trips[Math.max(0, removedIndex - 1)] || state.trips[0];
+    state.currentTripId = nextTrip.id;
+    state.currentReceiptId = getTripReceiptList(nextTrip.id)[0]?.id || null;
+  }
+
+  if (els.receiptPreview) els.receiptPreview.hidden = true;
+  if (els.receiptFile) els.receiptFile.value = "";
+  if (els.ocrStatus) els.ocrStatus.textContent = "Čekám na účtenku.";
+  saveState();
+  renderAll();
+}
+
+renderTripList = function renderTripListWithDelete() {
+  els.tripList.innerHTML = "";
+  state.trips.forEach((trip) => {
+    const receipts = getTripReceiptList(trip.id);
+    const card = document.createElement("article");
+    card.className = `trip-card trip-card-shell ${trip.id === state.currentTripId ? "active" : ""}`;
+    card.innerHTML = `
+      <button class="trip-card-main" type="button" data-open-trip="${trip.id}" aria-label="Otevřít vyjížďku ${trip.title}">
+        <strong>${trip.title}</strong>
+        <span>${formatDate(trip.date)}</span>
+        <span>${trip.start || "Start není vyplněný"}</span>
+        <div class="trip-meta">
+          <span>${state.tripRiders[trip.id]?.length || 0} jezdců</span>
+          <span>${receipts.length} účtenek</span>
+        </div>
+      </button>
+      <button class="delete-trip" type="button" data-delete-trip="${trip.id}" title="Smazat vyjížďku" aria-label="Smazat vyjížďku ${trip.title}">Smazat</button>
+    `;
+    card.querySelector("[data-open-trip]").addEventListener("click", () => {
+      state.currentTripId = trip.id;
+      state.currentReceiptId = getTripReceiptList(trip.id)[0]?.id || null;
+      els.receiptPreview.hidden = true;
+      els.receiptFile.value = "";
+      els.ocrStatus.textContent = "Čekám na účtenku.";
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      renderAll();
+    });
+    card.querySelector("[data-delete-trip]").addEventListener("click", () => deleteTrip(trip.id));
+    els.tripList.append(card);
+  });
+};
+
 const addTripButton = document.querySelector("#add-trip");
 if (addTripButton) {
   addTripButton.addEventListener("click", addWednesdayTrip, true);
