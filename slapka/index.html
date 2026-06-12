@@ -21,6 +21,17 @@
         <button class="icon-button" id="reset-demo" type="button" title="Obnovit demo data" aria-label="Obnovit demo data">↻</button>
       </header>
 
+      <section class="section-block trip-browser" aria-labelledby="trip-list-heading">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Plán</p>
+            <h2 id="trip-list-heading">Vyjížďky</h2>
+          </div>
+          <button class="primary-button" id="add-trip" type="button">Nová vyjížďka</button>
+        </div>
+        <div id="trip-list" class="trip-list"></div>
+      </section>
+
       <section class="hero-panel" aria-labelledby="trip-title">
         <div class="trip-main">
           <div class="date-pill">
@@ -58,7 +69,7 @@
         <div class="section-heading">
           <div>
             <p class="eyebrow">Kdo pojede</p>
-            <h2 id="riders-heading">Jezdci</h2>
+            <h2 id="riders-heading">Jezdci pro vybraný den</h2>
           </div>
           <form id="add-rider-form" class="inline-form">
             <input id="new-rider-name" type="text" placeholder="Nový jezdec" aria-label="Nový jezdec" />
@@ -71,10 +82,12 @@
       <section class="section-block receipt-workflow" aria-labelledby="receipt-heading">
         <div class="section-heading">
           <div>
-            <p class="eyebrow">Hlavní věc</p>
-            <h2 id="receipt-heading">Účtenka a rozdělení</h2>
+            <p class="eyebrow">Útraty</p>
+            <h2 id="receipt-heading">Účtenky</h2>
           </div>
+          <button class="primary-button" id="add-receipt" type="button">Nová účtenka</button>
         </div>
+        <div id="receipt-list" class="receipt-list"></div>
 
         <div class="receipt-layout">
           <div class="upload-panel">
@@ -124,7 +137,7 @@
         <div class="section-heading">
           <div>
             <p class="eyebrow">QR platby</p>
-            <h2 id="payment-heading">Vyrovnání</h2>
+            <h2 id="payment-heading">Vyrovnání vybrané účtenky</h2>
           </div>
           <div class="per-person" id="per-person">0 Kč / osoba</div>
         </div>
