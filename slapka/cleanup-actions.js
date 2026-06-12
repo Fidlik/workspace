@@ -77,6 +77,49 @@ function setRiderAccount(riderId) {
   renderAll();
 }
 
+function toggleReceiptShare(riderId) {
+  const receipt = getCurrentReceipt();
+  if (!receipt) return;
+
+  const ids = new Set(receipt.shareIds || []);
+  if (ids.has(riderId)) ids.delete(riderId);
+  else ids.add(riderId);
+  receipt.shareIds = [...ids];
+  saveState();
+  renderAll();
+}
+
+function renderShareButtons(receipt) {
+  const goingIds = getGoingRiderIds();
+  els.shareRiders.innerHTML = "";
+
+  const allButton = document.createElement("button");
+  allButton.type = "button";
+  allButton.className = "share-toggle share-all-button";
+  allButton.innerHTML = `<span class="share-check">✓</span><span>Všichni co jeli</span>`;
+  allButton.addEventListener("click", () => {
+    receipt.shareIds = [...goingIds];
+    saveState();
+    renderAll();
+  });
+  els.shareRiders.append(allButton);
+
+  state.riders.forEach((rider) => {
+    const selected = receipt.shareIds.includes(rider.id);
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = `share-toggle ${selected ? "selected" : ""}`;
+    button.setAttribute("aria-pressed", selected ? "true" : "false");
+    button.dataset.shareToggle = rider.id;
+    button.innerHTML = `
+      <span class="share-check" aria-hidden="true">${selected ? "✓" : ""}</span>
+      <span>${rider.name}${goingIds.includes(rider.id) ? "" : " · nejede"}</span>
+    `;
+    button.addEventListener("click", () => toggleReceiptShare(rider.id));
+    els.shareRiders.append(button);
+  });
+}
+
 renderTripList = function renderTripListWithCornerDelete() {
   els.tripList.innerHTML = "";
   state.trips.forEach((trip) => {
@@ -199,22 +242,12 @@ renderReceiptList = function renderReceiptListWithDelete() {
 };
 
 const renderReceiptBase = renderReceipt;
-renderReceipt = function renderReceiptWithGoingShortcut() {
+renderReceipt = function renderReceiptWithReliableShares() {
   renderReceiptBase();
 
   const receipt = getCurrentReceipt();
   if (!receipt) return;
-
-  const shortcut = document.createElement("button");
-  shortcut.type = "button";
-  shortcut.className = "share-chip share-all-button";
-  shortcut.innerHTML = `<span class="share-all-check">✓</span><span>Všichni co jeli</span>`;
-  shortcut.addEventListener("click", () => {
-    receipt.shareIds = [...getGoingRiderIds()];
-    saveState();
-    renderAll();
-  });
-  els.shareRiders.prepend(shortcut);
+  renderShareButtons(receipt);
 };
 
 setTimeout(renderAll, 0);
