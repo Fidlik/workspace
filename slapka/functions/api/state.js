@@ -11,36 +11,71 @@ const cents = (value) => Math.round(Number(value || 0) * 100);
 const amount = (value) => Math.round(Number(value || 0)) / 100;
 
 const defaultState = {
-  trip: {
-    id: "current-trip",
-    title: "Středeční šlapka",
-    date: "2026-06-17",
-    start: "Kompotex, parkoviště u skladu",
-    map: "https://mapy.com/"
-  },
-  riders: [
-    { id: "petr", name: "Petr", going: true, account: "CZ6508000000192000145399" },
-    { id: "martin", name: "Martin", going: true, account: "CZ2401000000001234567899" },
-    { id: "jana", name: "Jana", going: true, account: "CZ5503000000001234567899" },
-    { id: "tomas", name: "Tomáš", going: true, account: "CZ5806000000009876543210" }
+  currentTripId: "trip-2026-06-17",
+  currentReceiptId: "receipt-2026-06-17-1",
+  trips: [
+    {
+      id: "trip-2026-06-17",
+      title: "Středeční šlapka",
+      date: "2026-06-17",
+      start: "Kompotex, parkoviště u skladu",
+      map: "https://mapy.com/"
+    }
   ],
-  receipt: {
-    id: "current-receipt",
-    payerId: "petr",
-    amount: 842,
-    currency: "CZK",
-    candidates: [842, 842.5, 824],
-    shareIds: ["petr", "martin", "jana", "tomas"],
-    receiverAccount: "CZ6508000000192000145399",
-    message: "Šlapka 17.6."
-  }
+  riders: [
+    { id: "petr", name: "Petr", account: "CZ6508000000192000145399" },
+    { id: "martin", name: "Martin", account: "CZ2401000000001234567899" },
+    { id: "jana", name: "Jana", account: "CZ5503000000001234567899" },
+    { id: "tomas", name: "Tomáš", account: "CZ5806000000009876543210" }
+  ],
+  tripRiders: {
+    "trip-2026-06-17": ["petr", "martin", "jana", "tomas"]
+  },
+  receipts: [
+    {
+      id: "receipt-2026-06-17-1",
+      tripId: "trip-2026-06-17",
+      payerId: "petr",
+      amount: 842,
+      currency: "CZK",
+      candidates: [842, 842.5, 824],
+      shareIds: ["petr", "martin", "jana", "tomas"],
+      receiverAccount: "CZ6508000000192000145399",
+      message: "Šlapka 17.6."
+    }
+  ]
 };
 
 function requireDb(env) {
-  if (!env.DB) {
-    throw new Error("Missing D1 binding DB");
-  }
+  if (!env.DB) throw new Error("Missing D1 binding DB");
   return env.DB;
+}
+
+function normalizeIncoming(raw) {
+  if (Array.isArray(raw?.trips)) {
+    return {
+      ...defaultState,
+      ...raw,
+      trips: raw.trips.length ? raw.trips : defaultState.trips,
+      riders: Array.isArray(raw.riders) && raw.riders.length ? raw.riders : defaultState.riders,
+      tripRiders: raw.tripRiders || defaultState.tripRiders,
+      receipts: Array.isArray(raw.receipts) ? raw.receipts : []
+    };
+  }
+
+  const trip = raw?.trip || defaultState.trips[0];
+  const riders = Array.isArray(raw?.riders) && raw.riders.length ? raw.riders : defaultState.riders;
+  const receipt = raw?.receipt || defaultState.receipts[0];
+  return {
+    currentTripId: trip.id || "current-trip",
+    currentReceiptId: receipt.id || "current-receipt",
+    trips: [trip],
+    riders: riders.map(({ going, ...rider }) => rider),
+    tripRiders: {
+      [trip.id || "current-trip"]: riders.filter((rider) => rider.going !== false).map((rider) => rider.id)
+    },
+    receipts: [{ ...receipt, tripId: trip.id || "current-trip" }]
+  };
 }
 
 async function hasRows(db) {
@@ -48,170 +83,144 @@ async function hasRows(db) {
   return Number(result?.count || 0) > 0;
 }
 
-async function saveState(db, state) {
-  const trip = state.trip || defaultState.trip;
-  const riders = Array.isArray(state.riders) ? state.riders : defaultState.riders;
-  const receipt = state.receipt || defaultState.receipt;
-  const receiptId = receipt.id || "current-receipt";
-  const tripId = trip.id || "current-trip";
-  const payerId = receipt.payerId || riders[0]?.id || "petr";
-  const shareIds = Array.isArray(receipt.shareIds) ? receipt.shareIds : riders.filter((r) => r.going).map((r) => r.id);
-  const shareCents = shareIds.length ? Math.round(cents(receipt.amount) / shareIds.length) : 0;
+async function saveState(db, rawState) {
+  const state = normalizeIncoming(rawState);
+  const statements = [
+    db.prepare("DELETE FROM receipt_shares"),
+    db.prepare("DELETE FROM receipts"),
+    db.prepare("DELETE FROM trip_riders"),
+    db.prepare("DELETE FROM trips"),
+    db.prepare("DELETE FROM users")
+  ];
 
-  const statements = [];
-
-  for (const rider of riders) {
+  for (const rider of state.riders) {
     statements.push(
       db
         .prepare(
           `INSERT INTO users (id, name, bank_account, payment_message, updated_at)
-           VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
-           ON CONFLICT(id) DO UPDATE SET
-             name = excluded.name,
-             bank_account = excluded.bank_account,
-             payment_message = excluded.payment_message,
-             updated_at = CURRENT_TIMESTAMP`
+           VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)`
         )
         .bind(rider.id, rider.name, rider.account || null, rider.paymentMessage || null)
     );
   }
 
-  statements.push(
-    db
-      .prepare(
-        `INSERT INTO trips (id, title, trip_date, start_place, map_url, updated_at)
-         VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
-         ON CONFLICT(id) DO UPDATE SET
-           title = excluded.title,
-           trip_date = excluded.trip_date,
-           start_place = excluded.start_place,
-           map_url = excluded.map_url,
-           updated_at = CURRENT_TIMESTAMP`
-      )
-      .bind(tripId, trip.title, trip.date, trip.start, trip.map || null)
-  );
-
-  statements.push(db.prepare("DELETE FROM trip_riders WHERE trip_id = ?").bind(tripId));
-  for (const rider of riders) {
+  for (const trip of state.trips) {
     statements.push(
       db
-        .prepare("INSERT INTO trip_riders (trip_id, user_id, is_going) VALUES (?, ?, ?)")
-        .bind(tripId, rider.id, rider.going ? 1 : 0)
+        .prepare(
+          `INSERT INTO trips (id, title, trip_date, start_place, map_url, note, updated_at)
+           VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)`
+        )
+        .bind(trip.id, trip.title, trip.date, trip.start || "", trip.map || null, trip.note || null)
     );
+
+    const riderIds = state.tripRiders?.[trip.id] || [];
+    for (const userId of riderIds) {
+      statements.push(
+        db.prepare("INSERT INTO trip_riders (trip_id, user_id, is_going) VALUES (?, ?, 1)").bind(trip.id, userId)
+      );
+    }
   }
 
-  statements.push(
-    db
-      .prepare(
-        `INSERT INTO receipts (
-          id, trip_id, paid_by, amount_cents, currency, ocr_candidates_json,
-          selected_amount_cents, payment_account, payment_message, updated_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
-        ON CONFLICT(id) DO UPDATE SET
-          paid_by = excluded.paid_by,
-          amount_cents = excluded.amount_cents,
-          currency = excluded.currency,
-          ocr_candidates_json = excluded.ocr_candidates_json,
-          selected_amount_cents = excluded.selected_amount_cents,
-          payment_account = excluded.payment_account,
-          payment_message = excluded.payment_message,
-          updated_at = CURRENT_TIMESTAMP`
-      )
-      .bind(
-        receiptId,
-        tripId,
-        payerId,
-        cents(receipt.amount),
-        receipt.currency || "CZK",
-        JSON.stringify(receipt.candidates || []),
-        cents(receipt.amount),
-        receipt.receiverAccount || null,
-        receipt.message || null
-      )
-  );
-
-  statements.push(db.prepare("DELETE FROM receipt_shares WHERE receipt_id = ?").bind(receiptId));
-  for (const userId of shareIds) {
+  for (const receipt of state.receipts) {
+    const payerId = receipt.payerId || state.riders[0]?.id;
+    if (!payerId || !receipt.tripId) continue;
     statements.push(
       db
-        .prepare("INSERT INTO receipt_shares (receipt_id, user_id, share_cents) VALUES (?, ?, ?)")
-        .bind(receiptId, userId, shareCents)
+        .prepare(
+          `INSERT INTO receipts (
+            id, trip_id, paid_by, amount_cents, currency, ocr_candidates_json,
+            selected_amount_cents, payment_account, payment_message, updated_at
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)`
+        )
+        .bind(
+          receipt.id,
+          receipt.tripId,
+          payerId,
+          cents(receipt.amount),
+          receipt.currency || "CZK",
+          JSON.stringify(receipt.candidates || []),
+          cents(receipt.amount),
+          receipt.receiverAccount || null,
+          receipt.message || null
+        )
     );
+
+    const shareIds = Array.isArray(receipt.shareIds) ? receipt.shareIds : [];
+    const shareCents = shareIds.length ? Math.round(cents(receipt.amount) / shareIds.length) : 0;
+    for (const userId of shareIds) {
+      statements.push(
+        db.prepare("INSERT INTO receipt_shares (receipt_id, user_id, share_cents) VALUES (?, ?, ?)").bind(receipt.id, userId, shareCents)
+      );
+    }
   }
 
   await db.batch(statements);
 }
 
 async function loadState(db) {
-  if (!(await hasRows(db))) {
-    await saveState(db, defaultState);
-  }
+  if (!(await hasRows(db))) await saveState(db, defaultState);
 
-  const trip = await db
+  const tripsResult = await db
     .prepare(
-      `SELECT id, title, trip_date AS date, start_place AS start, map_url AS map
+      `SELECT id, title, trip_date AS date, start_place AS start, map_url AS map, note
        FROM trips
-       ORDER BY trip_date DESC, created_at DESC
-       LIMIT 1`
+       ORDER BY trip_date DESC, created_at DESC`
     )
-    .first();
-
-  const ridersResult = await db
-    .prepare(
-      `SELECT users.id, users.name, users.bank_account AS account, trip_riders.is_going AS going
-       FROM trip_riders
-       JOIN users ON users.id = trip_riders.user_id
-       WHERE trip_riders.trip_id = ?
-       ORDER BY users.name COLLATE NOCASE`
-    )
-    .bind(trip.id)
     .all();
 
-  const receipt = await db
+  const ridersResult = await db
+    .prepare("SELECT id, name, bank_account AS account, payment_message AS paymentMessage FROM users ORDER BY name COLLATE NOCASE")
+    .all();
+
+  const tripRidersResult = await db.prepare("SELECT trip_id, user_id FROM trip_riders WHERE is_going = 1").all();
+
+  const receiptsResult = await db
     .prepare(
-      `SELECT id, paid_by AS payerId, amount_cents, currency, ocr_candidates_json,
-              payment_account AS receiverAccount, payment_message AS message
+      `SELECT id, trip_id AS tripId, paid_by AS payerId, amount_cents, currency,
+              ocr_candidates_json, payment_account AS receiverAccount, payment_message AS message
        FROM receipts
-       WHERE trip_id = ?
-       ORDER BY created_at DESC
-       LIMIT 1`
+       ORDER BY created_at ASC`
     )
-    .bind(trip.id)
-    .first();
+    .all();
 
-  const shareResult = receipt
-    ? await db
-        .prepare("SELECT user_id FROM receipt_shares WHERE receipt_id = ?")
-        .bind(receipt.id)
-        .all()
-    : { results: [] };
+  const sharesResult = await db.prepare("SELECT receipt_id, user_id FROM receipt_shares").all();
 
-  return {
-    trip,
-    riders: (ridersResult.results || []).map((rider) => ({
-      ...rider,
-      going: Boolean(rider.going),
-      account: rider.account || ""
-    })),
-    receipt: receipt
-      ? {
-          id: receipt.id,
-          payerId: receipt.payerId,
-          amount: amount(receipt.amount_cents),
-          currency: receipt.currency,
-          candidates: JSON.parse(receipt.ocr_candidates_json || "[]"),
-          shareIds: (shareResult.results || []).map((row) => row.user_id),
-          receiverAccount: receipt.receiverAccount || "",
-          message: receipt.message || ""
-        }
-      : defaultState.receipt
-  };
+  const trips = tripsResult.results || [];
+  const riders = (ridersResult.results || []).map((rider) => ({ ...rider, account: rider.account || "" }));
+  const tripRiders = {};
+  for (const row of tripRidersResult.results || []) {
+    tripRiders[row.trip_id] ||= [];
+    tripRiders[row.trip_id].push(row.user_id);
+  }
+
+  const receiptShares = {};
+  for (const row of sharesResult.results || []) {
+    receiptShares[row.receipt_id] ||= [];
+    receiptShares[row.receipt_id].push(row.user_id);
+  }
+
+  const receipts = (receiptsResult.results || []).map((receipt) => ({
+    id: receipt.id,
+    tripId: receipt.tripId,
+    payerId: receipt.payerId,
+    amount: amount(receipt.amount_cents),
+    currency: receipt.currency,
+    candidates: JSON.parse(receipt.ocr_candidates_json || "[]"),
+    shareIds: receiptShares[receipt.id] || [],
+    receiverAccount: receipt.receiverAccount || "",
+    message: receipt.message || ""
+  }));
+
+  const currentTripId = trips[0]?.id || defaultState.currentTripId;
+  const currentReceiptId = receipts.find((receipt) => receipt.tripId === currentTripId)?.id || receipts[0]?.id || null;
+
+  return { currentTripId, currentReceiptId, trips, riders, tripRiders, receipts };
 }
 
 export async function onRequestGet({ env }) {
   try {
-    const db = requireDb(env);
-    return json(await loadState(db));
+    return json(await loadState(requireDb(env)));
   } catch (error) {
     return json({ error: error.message }, { status: 500 });
   }
@@ -220,8 +229,7 @@ export async function onRequestGet({ env }) {
 export async function onRequestPut({ request, env }) {
   try {
     const db = requireDb(env);
-    const state = await request.json();
-    await saveState(db, state);
+    await saveState(db, await request.json());
     return json(await loadState(db));
   } catch (error) {
     return json({ error: error.message }, { status: 500 });
