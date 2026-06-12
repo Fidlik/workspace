@@ -78,7 +78,7 @@ function normalizeState(raw) {
     const tripRiders = raw.tripRiders || {};
     const receipts = Array.isArray(raw.receipts) ? raw.receipts : [];
     const currentTripId = trips.some((trip) => trip.id === raw.currentTripId) ? raw.currentTripId : trips[0].id;
-    let currentReceiptId = receipts.some((receipt) => receipt.id === raw.currentReceiptId && receipt.tripId === currentTripId)
+    const currentReceiptId = receipts.some((receipt) => receipt.id === raw.currentReceiptId && receipt.tripId === currentTripId)
       ? raw.currentReceiptId
       : receipts.find((receipt) => receipt.tripId === currentTripId)?.id || null;
 
@@ -114,6 +114,27 @@ function saveState() {
   scheduleRemoteSave();
 }
 
+function mergeRemoteState(remoteRaw, previousState) {
+  const remote = normalizeState(remoteRaw);
+  const localOrder = new Map(previousState.trips.map((trip, index) => [trip.id, index]));
+  remote.trips.sort((a, b) => {
+    const aOrder = localOrder.has(a.id) ? localOrder.get(a.id) : Number.MAX_SAFE_INTEGER;
+    const bOrder = localOrder.has(b.id) ? localOrder.get(b.id) : Number.MAX_SAFE_INTEGER;
+    if (aOrder !== bOrder) return aOrder - bOrder;
+    return a.date.localeCompare(b.date) || a.title.localeCompare(b.title, "cs");
+  });
+
+  if (remote.trips.some((trip) => trip.id === previousState.currentTripId)) {
+    remote.currentTripId = previousState.currentTripId;
+  }
+  if (remote.receipts.some((receipt) => receipt.id === previousState.currentReceiptId && receipt.tripId === remote.currentTripId)) {
+    remote.currentReceiptId = previousState.currentReceiptId;
+  } else {
+    remote.currentReceiptId = remote.receipts.find((receipt) => receipt.tripId === remote.currentTripId)?.id || null;
+  }
+  return remote;
+}
+
 async function loadRemoteState() {
   try {
     els.autosaveNote.textContent = "Načítám databázi";
@@ -134,6 +155,7 @@ function scheduleRemoteSave() {
 }
 
 async function saveRemoteState() {
+  const previousState = structuredClone(state);
   try {
     const response = await fetch(API_STATE_URL, {
       method: "PUT",
@@ -141,7 +163,7 @@ async function saveRemoteState() {
       body: JSON.stringify(state)
     });
     if (!response.ok) throw new Error("Uložení selhalo");
-    state = normalizeState(await response.json());
+    state = mergeRemoteState(await response.json(), previousState);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     els.autosaveNote.textContent = "Uloženo do databáze";
     renderTripList();
@@ -151,8 +173,12 @@ async function saveRemoteState() {
   }
 }
 
-function todayIso() {
-  return new Date().toISOString().slice(0, 10);
+function nextSundayIso() {
+  const date = new Date();
+  date.setHours(12, 0, 0, 0);
+  const daysUntilSunday = (7 - date.getDay()) % 7 || 7;
+  date.setDate(date.getDate() + daysUntilSunday);
+  return date.toISOString().slice(0, 10);
 }
 
 function uid(prefix) {
@@ -254,7 +280,7 @@ function renderTripList() {
       els.receiptPreview.hidden = true;
       els.receiptFile.value = "";
       els.ocrStatus.textContent = "Čekám na účtenku.";
-      saveState();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
       renderAll();
     });
     els.tripList.append(button);
@@ -344,7 +370,7 @@ function renderReceiptList() {
       els.receiptPreview.hidden = true;
       els.receiptFile.value = "";
       els.ocrStatus.textContent = "Čekám na účtenku.";
-      saveState();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
       renderAll();
     });
     els.receiptList.append(button);
@@ -537,10 +563,10 @@ async function runReceiptOcr(file) {
 }
 
 function addTrip() {
-  const date = todayIso();
+  const date = nextSundayIso();
   const id = uid("trip");
   const trip = { id, title: "Nová vyjížďka", date, start: "", map: "https://mapy.com/" };
-  state.trips.unshift(trip);
+  state.trips.push(trip);
   state.currentTripId = id;
   state.tripRiders[id] = state.riders.map((rider) => rider.id);
   addReceipt(false);
