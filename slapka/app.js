@@ -1,7 +1,9 @@
 const STORAGE_KEY = "slapka-demo-state-v1";
+const API_STATE_URL = "/api/state";
 
 const initialState = {
   trip: {
+    id: "current-trip",
     title: "Středeční šlapka",
     date: "2026-06-17",
     start: "Kompotex, parkoviště u skladu",
@@ -14,6 +16,7 @@ const initialState = {
     { id: "tomas", name: "Tomáš", going: true, account: "CZ5806000000009876543210" }
   ],
   receipt: {
+    id: "current-receipt",
     payerId: "petr",
     amount: 842,
     currency: "CZK",
@@ -25,6 +28,7 @@ const initialState = {
 };
 
 let state = loadState();
+let remoteSaveTimer;
 
 const els = {
   resetDemo: document.querySelector("#reset-demo"),
@@ -53,10 +57,18 @@ const els = {
   settlementList: document.querySelector("#settlement-list")
 };
 
+function normalizeState(nextState) {
+  return {
+    trip: { ...initialState.trip, ...(nextState?.trip || {}) },
+    riders: Array.isArray(nextState?.riders) && nextState.riders.length ? nextState.riders : structuredClone(initialState.riders),
+    receipt: { ...initialState.receipt, ...(nextState?.receipt || {}) }
+  };
+}
+
 function loadState() {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
-    return saved ? JSON.parse(saved) : structuredClone(initialState);
+    return saved ? normalizeState(JSON.parse(saved)) : structuredClone(initialState);
   } catch {
     return structuredClone(initialState);
   }
@@ -65,6 +77,42 @@ function loadState() {
 function saveState() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   els.autosaveNote.textContent = "Uloženo lokálně";
+  scheduleRemoteSave();
+}
+
+async function loadRemoteState() {
+  try {
+    els.autosaveNote.textContent = "Načítám databázi";
+    const response = await fetch(API_STATE_URL, { headers: { accept: "application/json" }, cache: "no-store" });
+    if (!response.ok) throw new Error("API není dostupné");
+    state = normalizeState(await response.json());
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    els.autosaveNote.textContent = "Načteno z databáze";
+    renderAll();
+  } catch {
+    els.autosaveNote.textContent = "Lokální režim";
+  }
+}
+
+function scheduleRemoteSave() {
+  clearTimeout(remoteSaveTimer);
+  remoteSaveTimer = setTimeout(saveRemoteState, 650);
+}
+
+async function saveRemoteState() {
+  try {
+    const response = await fetch(API_STATE_URL, {
+      method: "PUT",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(state)
+    });
+    if (!response.ok) throw new Error("Uložení selhalo");
+    state = normalizeState(await response.json());
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    els.autosaveNote.textContent = "Uloženo do databáze";
+  } catch {
+    els.autosaveNote.textContent = "Uloženo jen lokálně";
+  }
 }
 
 function money(value, currency = state.receipt.currency) {
@@ -411,4 +459,5 @@ function bindEvents() {
 
 bindEvents();
 renderAll();
+loadRemoteState();
 setTimeout(renderQrCodes, 500);
