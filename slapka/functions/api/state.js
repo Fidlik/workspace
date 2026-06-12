@@ -51,14 +51,31 @@ function requireDb(env) {
   return env.DB;
 }
 
-function requireAdmin(request, env) {
-  if (!env.ADMIN_PASSWORD) {
-    return json({ error: "ADMIN_PASSWORD is not configured" }, { status: 403 });
+function getCookie(request, name) {
+  const cookie = request.headers.get("cookie") || "";
+  return (
+    cookie
+      .split(";")
+      .map((part) => part.trim())
+      .find((part) => part.startsWith(`${name}=`))
+      ?.slice(name.length + 1) || ""
+  );
+}
+
+function accessPassword(env) {
+  return env.ACCESS_PASSWORD || env.ADMIN_PASSWORD || "";
+}
+
+function requireAccess(request, env) {
+  const password = accessPassword(env);
+  if (!password) {
+    return json({ error: "ACCESS_PASSWORD is not configured" }, { status: 403 });
   }
 
-  const password = request.headers.get("x-slapka-admin") || "";
-  if (password !== env.ADMIN_PASSWORD) {
-    return json({ error: "Admin password required" }, { status: 401 });
+  const cookiePassword = decodeURIComponent(getCookie(request, "slapka_access"));
+  const headerPassword = request.headers.get("x-slapka-admin") || "";
+  if (cookiePassword !== password && headerPassword !== password) {
+    return json({ error: "Access password required" }, { status: 401 });
   }
 
   return null;
@@ -246,7 +263,7 @@ export async function onRequestGet({ env }) {
 
 export async function onRequestPut({ request, env }) {
   try {
-    const authError = requireAdmin(request, env);
+    const authError = requireAccess(request, env);
     if (authError) return authError;
 
     const db = requireDb(env);
