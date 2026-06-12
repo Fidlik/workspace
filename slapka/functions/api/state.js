@@ -66,15 +66,20 @@ function accessPassword(env) {
   return env.ACCESS_PASSWORD || env.ADMIN_PASSWORD || "";
 }
 
-function requireAccess(request, env) {
+async function accessToken(password) {
+  const bytes = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(`slapka:${password}`));
+  return Array.from(new Uint8Array(bytes), (byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
+async function requireAccess(request, env) {
   const password = accessPassword(env);
   if (!password) {
     return json({ error: "ACCESS_PASSWORD is not configured" }, { status: 403 });
   }
 
-  const cookiePassword = decodeURIComponent(getCookie(request, "slapka_access"));
+  const cookieToken = decodeURIComponent(getCookie(request, "slapka_access"));
   const headerPassword = request.headers.get("x-slapka-admin") || "";
-  if (cookiePassword !== password && headerPassword !== password) {
+  if (cookieToken !== await accessToken(password) && headerPassword !== password) {
     return json({ error: "Access password required" }, { status: 401 });
   }
 
@@ -263,7 +268,7 @@ export async function onRequestGet({ env }) {
 
 export async function onRequestPut({ request, env }) {
   try {
-    const authError = requireAccess(request, env);
+    const authError = await requireAccess(request, env);
     if (authError) return authError;
 
     const db = requireDb(env);
