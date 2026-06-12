@@ -95,7 +95,7 @@ function renderShareButtons(receipt) {
 
   const allButton = document.createElement("button");
   allButton.type = "button";
-  allButton.className = "share-toggle share-all-button";
+  allButton.className = "share-toggle share-all-button selected";
   allButton.innerHTML = `<span class="share-check">✓</span><span>Všichni co jeli</span>`;
   allButton.addEventListener("click", () => {
     receipt.shareIds = [...goingIds];
@@ -106,14 +106,15 @@ function renderShareButtons(receipt) {
 
   state.riders.forEach((rider) => {
     const selected = receipt.shareIds.includes(rider.id);
+    const going = goingIds.includes(rider.id);
     const button = document.createElement("button");
     button.type = "button";
-    button.className = `share-toggle ${selected ? "selected" : ""}`;
+    button.className = `share-toggle ${selected ? "selected" : ""} ${going ? "going" : "not-going"}`;
     button.setAttribute("aria-pressed", selected ? "true" : "false");
     button.dataset.shareToggle = rider.id;
     button.innerHTML = `
       <span class="share-check" aria-hidden="true">${selected ? "✓" : ""}</span>
-      <span>${rider.name}${goingIds.includes(rider.id) ? "" : " · nejede"}</span>
+      <span>${rider.name}${going ? "" : " · nejede"}</span>
     `;
     button.addEventListener("click", () => toggleReceiptShare(rider.id));
     els.shareRiders.append(button);
