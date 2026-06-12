@@ -2,37 +2,45 @@
 
 Česká webová aplikace pro plánování středečních vyjížděk na kole a rozdělení společných útrat.
 
-## Co je hotové v prototypu
+## Co je hotové
 
-- Úprava plánované vyjížďky: název, datum, start a odkaz na mapy.com
-- Seznam jezdců a výběr, kdo v daný den jede
+- Seznam vyjížděk s možností přidat novou vyjížďku
+- Kliknutí na vyjížďku přepne celý detail: plán, jezdce, účtenky a QR platby
+- Úprava vyjížďky: název, datum, start a odkaz na mapy.com
+- Seznam jezdců a výběr, kdo jede v konkrétní den
+- Více účtenek na jednu vyjížďku
 - Nahrání fotky účtenky s náhledem
 - OCR pokus o přečtení celkové částky přes Tesseract.js v prohlížeči
 - Nabídka nalezených částek a ruční úprava částky
-- Rozdělení stejným dílem mezi vybrané jezdce
+- Rozdělení vybrané účtenky stejným dílem mezi vybrané jezdce
 - Výchozí příjemce podle člověka, který platil
 - Editovatelný účet příjemce a zpráva pro platbu
 - QR platby ve formátu SPD pro vyrovnání
-- Lokální ukládání demo dat do prohlížeče
-
-## Otevření
-
-Prototyp je statický web. Stačí otevřít `index.html` nebo nasadit složku `slapka` jako statický projekt.
+- Ukládání do Cloudflare D1 přes Pages Function `/api/state`
+- Lokální fallback do prohlížeče, pokud API není dostupné
 
 ## Cloudflare Pages
 
-Pro první nasazení na Cloudflare Pages použij:
+Nastavení projektu:
 
 - Framework preset: žádný / static site
 - Root directory: `slapka`
-- Build command: nechat prázdné
+- Build command: nechat prázdné nebo `exit 0`
 - Build output directory: `.`
 
-Později přidáme backend:
+## Cloudflare D1
 
-- Cloudflare D1 pro uživatele, vyjížďky a účtenky
-- Cloudflare R2 pro fotky účtenek
-- Cloudflare Pages Functions nebo Workers pro login, OCR pipeline a ukládání
+Aplikace očekává D1 binding:
+
+```text
+DB
+```
+
+Schéma databáze je v:
+
+```text
+migrations/0001_initial_schema.sql
+```
 
 ## Technický název
 
