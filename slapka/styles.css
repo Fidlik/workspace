@@ -498,7 +498,8 @@ select:focus {
   overflow: hidden;
 }
 
-.qr-box canvas {
+.qr-box canvas,
+.qr-box svg {
   width: 164px !important;
   height: 164px !important;
 }
