@@ -5,13 +5,13 @@ body::before {
   z-index: 0;
   pointer-events: none;
   background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='220' viewBox='0 0 360 220'%3E%3Cg fill='none' stroke='%23276749' stroke-width='4' stroke-linecap='round' stroke-linejoin='round' opacity='.18'%3E%3Ccircle cx='92' cy='138' r='34'/%3E%3Ccircle cx='238' cy='138' r='34'/%3E%3Cpath d='M92 138h54l34-58 58 58h-92l-28-44h50'/%3E%3Cpath d='M180 80l-12-26h34'/%3E%3Cpath d='M228 68h34'/%3E%3Cpath d='M262 68l-24 70'/%3E%3C/g%3E%3Cpath d='M18 186c46-18 83-18 132 0s85 18 132 0 65-17 92-6' fill='none' stroke='%23d67832' stroke-width='3' stroke-linecap='round' opacity='.16'/%3E%3C/svg%3E"),
-    linear-gradient(135deg, rgba(39, 103, 73, 0.12), transparent 36%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='520' height='340' viewBox='0 0 520 340'%3E%3Cg fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cg stroke='%23276749' stroke-width='8' opacity='.16'%3E%3Ccircle cx='150' cy='228' r='58'/%3E%3Ccircle cx='370' cy='228' r='58'/%3E%3Cpath d='M150 228h84l58-104 78 104H234l-45-74h100'/%3E%3Cpath d='M292 124l-20-50h48'/%3E%3Cpath d='M358 92h64'/%3E%3Cpath d='M422 92c-31 32-44 78-52 136'/%3E%3Cpath d='M230 154l-32 74'/%3E%3Cpath d='M198 228l-48 0'/%3E%3Cpath d='M320 74h28'/%3E%3C/g%3E%3Cpath d='M8 294c58-24 104-25 170 0s112 25 178 0 104-25 156 0' stroke='%23d67832' stroke-width='5' opacity='.16'/%3E%3Cpath d='M42 310c45-14 80-14 132 0s88 14 140 0 82-14 126 0' stroke='%23276749' stroke-width='3' opacity='.08'/%3E%3C/g%3E%3C/svg%3E"),
+    linear-gradient(135deg, rgba(39, 103, 73, 0.1), transparent 36%),
     radial-gradient(circle at 90% 8%, rgba(214, 120, 50, 0.16), transparent 32%);
-  background-position: right 36px top 110px, 0 0, 0 0;
+  background-position: right -42px top 72px, 0 0, 0 0;
   background-repeat: repeat-y, no-repeat, no-repeat;
-  background-size: 360px 220px, auto, auto;
-  opacity: 0.9;
+  background-size: 520px 340px, auto, auto;
+  opacity: 0.95;
 }
 
 .shell {
@@ -238,8 +238,9 @@ body::before {
 
 @media (max-width: 760px) {
   body::before {
-    background-position: right -120px top 90px, 0 0, 0 0;
-    opacity: 0.55;
+    background-position: right -210px top 76px, 0 0, 0 0;
+    background-size: 480px 314px, auto, auto;
+    opacity: 0.58;
   }
 }
 
