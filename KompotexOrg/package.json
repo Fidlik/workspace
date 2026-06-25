@@ -1,0 +1,13 @@
+{
+  "name": "kompotex-org",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler pages dev .",
+    "deploy": "wrangler pages deploy . --project-name kompotex-org"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}
