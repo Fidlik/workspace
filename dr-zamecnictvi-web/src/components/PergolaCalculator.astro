@@ -18,12 +18,19 @@ const rows=[['structure','Ocelová konstrukce'],['roofing','Střešní krytina']
       <fieldset class="calc-group"><legend>Barva konstrukce <span class="calc-group__hint">Komaxit je zahrnutý ve všech variantách</span></legend><div class="calc-color-grid">{config.colors.map(color => <label class="calc-color"><input type="radio" name="color" value={color.id} checked={color.id===defaults.color} /><span><i style={`--swatch:${color.swatch}`} aria-hidden="true"></i><span>{color.label}<small>{color.ral}</small></span></span></label>)}</div></fieldset>
       {groups.map(group => <fieldset class="calc-group"><legend>{group.title}</legend><div class="calc-segmented">{group.options.map(([value,label])=><label class="calc-option"><input type="radio" name={group.name} value={value} checked={defaults[group.name]===value} /><span>{label}</span></label>)}</div></fieldset>)}
     </div>
-    <aside class="pergola-summary" aria-label="Shrnutí vaší pergoly">
-      <svg class="pergola-drawing" viewBox="0 0 480 290" role="img" aria-label="Schematický náhled zvoleného rozměru a barvy pergoly" data-drawing>
-        <defs><pattern id="roof-lines" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(12)"><path d="M0 0V12" stroke="currentColor" stroke-opacity=".2" /></pattern></defs>
-        <g data-drawing-frame></g><text x="240" y="273" text-anchor="middle" fill="#52614c" font-family="Manrope,sans-serif" font-size="15" data-drawing-size>3 × 4 m</text>
-      </svg>
-      <p class="pergola-drawing__caption">Schematický náhled · řešení kotvení domluvíme individuálně</p>
+    <div class="pergola-calculator__aside">
+      <figure class="pergola-preview" data-pergola-preview hidden>
+        <div class="pergola-preview__scene">
+          <img src="/images/pergola-terrace.webp" alt="" width="1080" height="720" loading="lazy" decoding="async" />
+          <canvas width="1080" height="720" role="img" aria-label="Ilustrační vizualizace pergoly" data-pergola-canvas></canvas>
+          <span class="pergola-preview__label">Ilustrační vizualizace</span>
+        </div>
+        <figcaption class="pergola-preview__caption">
+          <strong data-preview-size>{initial.size.label}</strong>
+          <span><span data-preview-color>{initial.color.ral}</span> · <span data-preview-roof>Polykarbonát</span></span>
+        </figcaption>
+      </figure>
+      <aside class="pergola-summary" aria-label="Shrnutí vaší pergoly">
       <div class="pergola-summary__rows">
         <span class="pergola-summary__eyebrow">Vaše orientační cena</span>
         <strong class="pergola-summary__total" data-total aria-live="polite" aria-atomic="true">{currency(initial.total)}</strong>
@@ -35,14 +42,31 @@ const rows=[['structure','Ocelová konstrukce'],['roofing','Střešní krytina']
       <a class="button" data-inquiry-link href="/poptavka?produkt=pergola-kalkulace">Poptat tuto pergolu</a>
       <button class="calc-share" type="button" data-share>Zkopírovat konfiguraci</button><span class="calc-share-status" data-share-status role="status"></span>
       <p class="pergola-summary__note">Kalkulace je nezávazná. Aktuální cenu a rozsah dodávky potvrdíme po upřesnění podkladu, kotvení a místa realizace.</p>
-    </aside>
+      </aside>
+    </div>
   </div>
 </div>
 <script>
   import { calculate, currency, defaults, parseSelection, selectionParams } from '../lib/pergola.mjs';
   import { pergolaCalculatorSettings as config } from '../data/pergola.mjs';
+  import { renderPergola } from '../lib/pergola-preview.mjs';
   const root = document.querySelector<HTMLElement>('[data-pergola-calculator-root]');
   if (root) {
+    const preview = root.querySelector<HTMLElement>('[data-pergola-preview]')!;
+    const canvas = root.querySelector<HTMLCanvasElement>('[data-pergola-canvas]')!;
+    let lastPreview = '';
+    const updatePreview = (result: ReturnType<typeof calculate>, hasRoof: boolean) => {
+      const key = `${result.size.id}:${result.color.id}:${hasRoof}`;
+      if (key === lastPreview || !canvas.getContext('2d')) return;
+      renderPergola(canvas, { size: result.size.id, color: result.color.swatch, hasRoof });
+      lastPreview = key;
+      const roof = hasRoof ? 'Polykarbonát' : 'Bez krytiny';
+      preview.querySelector('[data-preview-size]')!.textContent = result.size.label;
+      preview.querySelector('[data-preview-color]')!.textContent = result.color.ral;
+      preview.querySelector('[data-preview-roof]')!.textContent = roof;
+      canvas.setAttribute('aria-label', `Ilustrační vizualizace pergoly ${result.size.label}, ${result.color.label}, ${roof.toLowerCase()}`);
+      preview.hidden = false;
+    };
     const initial = parseSelection(new URLSearchParams(location.search));
     for (const key of Object.keys(defaults)) for (const input of root.querySelectorAll<HTMLInputElement>(`input[name="${key}"]`)) input.checked=input.value===initial[key];
     const read = () => Object.fromEntries(Object.keys(defaults).map(key=>[key,root.querySelector<HTMLInputElement>(`input[name="${key}"]:checked`)?.value??defaults[key]]));
@@ -57,17 +81,7 @@ const rows=[['structure','Ocelová konstrukce'],['roofing','Střešní krytina']
       history.replaceState(null,'',url);
       params.set('produkt','pergola-kalkulace');
       root.querySelector<HTMLAnchorElement>('[data-inquiry-link]')!.href=`/poptavka?${params}`;
-      const drawing=root.querySelector<SVGElement>('[data-drawing]')!;
-      drawing.style.color=result.color.swatch;
-      const [width,depth]=result.size.id.split('x').map(Number);
-      const w=width/1000*28, d=depth/1000*18, x=240-(w+d)/2;
-      const a=[x,45],b=[x+w,45-12],c=[x+w+d,45-12+d*.5],e=[x+d,45+d*.5];
-      const point=(p:number[])=>p.join(',');const points=[a,b,c,e].map(point).join(' ');
-      const roof=selection.roofing==='polycarbonate'?`<polygon points="${points}" fill="url(#roof-lines)"/><polygon points="${points}" fill="currentColor" fill-opacity=".1"/>`:'';
-      const posts=[a,b,c,e].map(p=>`<path d="M${point(p)}v118"/>`).join('');
-      const inner=[.25,.5,.75].map(t=>`<path d="M${a[0]+w*t},${a[1]-12*t}l${d},${d*.5}"/>`).join('');
-      root.querySelector('[data-drawing-frame]')!.innerHTML=`${roof}<g fill="none" stroke="currentColor" stroke-width="7" stroke-linejoin="miter">${posts}<polygon points="${points}"/>${inner}</g><path d="M${x+d-10},${45+d*.5+141}l${w},-12" stroke="#8fa184" stroke-width="1"/>`;
-      root.querySelector('[data-drawing-size]')!.textContent=result.size.label;
+      updatePreview(result, selection.roofing === 'polycarbonate');
       root.querySelector('[data-share-status]')!.textContent='';
     };
     root.addEventListener('change',render);render();
