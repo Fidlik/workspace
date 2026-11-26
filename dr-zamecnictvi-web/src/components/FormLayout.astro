@@ -1,11 +1,11 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { company } from '../data/site';
-type Props = {title:string;eyebrow:string;description:string;formType:'poptavka'|'objednavka'};
-const {title,eyebrow,description,formType}=Astro.props as Props;
+type Props = {title:string;description:string;formType:'poptavka'|'objednavka'};
+const {title,description,formType}=Astro.props as Props;
 ---
 <Layout title={`${title} | DR zámečnictví`} description={description}>
-  <section class="page-hero"><div class="section"><span class="eyebrow">{eyebrow}</span><h1>{title}</h1><p>{description}</p></div></section>
+  <section class="page-hero"><div class="section"><h1>{title}</h1><p>{description}</p></div></section>
   <section class="section"><div class="form-shell"><article class="page-card">
     <div class="inquiry-config" data-inquiry-config hidden><h3>Vaše konfigurace pergoly</h3><pre data-config-summary></pre><a class="text-link" data-edit-config href="/pergoly#kalkulacka">Upravit konfiguraci</a></div>
     <h2>Řekněte mi o svém nápadu.</h2>

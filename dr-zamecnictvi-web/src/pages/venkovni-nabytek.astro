@@ -3,25 +3,11 @@ import Layout from '../layouts/Layout.astro';
 import DetailSection from '../components/DetailSection.astro';
 import { venkovniNabytekSections } from '../data/site';
 ---
-
-<Layout
-  title="Venkovní nábytek | DR zámečnictví a kovovýroba"
-  description="Venkovní kuchyně a stoly s orientační cenou, produktem a objednávkovým formulářem."
->
-  <section class="page-hero">
-    <div class="section">
-      <span class="eyebrow">Venkovní nábytek</span>
-      <h1>Uvařit. Posedět.<br /><em>Být spolu venku.</em></h1>
-      <p>
-        Venkovní kuchyně, stoly a podnože z kovu. Pevné konstrukce a čisté detaily, které dotvoří terasu
-        i prostor pod pergolou. Rozměry a provedení přizpůsobím vašemu místu.
-      </p>
-    </div>
-  </section>
-
-  <section class="section page-stack">
+<Layout title="Venkovní kuchyně a stoly | DR zámečnictví a kovovýroba" description="Venkovní kuchyně, stoly, lavice a podnože na míru pro terasu, zahradu i interiér.">
+  <div class="section catalog-stack">
     {venkovniNabytekSections.map((section, index) => (
-      <DetailSection section={section} reverse={index % 2 === 1} />
+      <DetailSection section={section} first={index === 0} topHeading={index === 0} fit="contain" />
     ))}
-  </section>
+    <p class="catalog-note">Při atypických rozměrech nebo jiném materiálovém řešení připravíme individuální nabídku.</p>
+  </div>
 </Layout>

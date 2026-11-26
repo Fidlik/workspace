@@ -1,36 +1,38 @@
 ---
 import '../styles/global.css';
+import '../styles/catalog.css';
 import { company, siteUrl } from '../data/site';
 type Props = { title?: string; description?: string };
 const { title = `${company.name} | Kovovýroba na míru ve Studénce`, description = company.description } = Astro.props as Props;
 const canonical = new URL(Astro.url.pathname, siteUrl).toString();
-const nav = [{href:'/pergoly',label:'Pergoly'},{href:'/venkovni-nabytek',label:'Venkovní nábytek'},{href:'/oploceni',label:'Brány a ploty'},{href:'/fotogalerie',label:'Realizace'},{href:'/kontakty',label:'Kontakt'}];
-const schema = {'@context':'https://schema.org','@type':'LocalBusiness',name:company.name,url:siteUrl,telephone:`+420${company.phones[0].href}`,email:company.email,address:{'@type':'PostalAddress',streetAddress:'Požárnická 261',addressLocality:'Studénka',postalCode:'742 13',addressCountry:'CZ'},sameAs:[company.facebook]};
+const nav = [{href:'/pergoly',label:'Pergoly'},{href:'/venkovni-nabytek',label:'Venkovní nábytek'},{href:'/oploceni',label:'Oplocení'},{href:'/ostatni',label:'Další realizace'},{href:'/kontakty',label:'Kontakt'}];
+const schema = {'@context':'https://schema.org','@type':'LocalBusiness',name:company.name,url:siteUrl,telephone:company.phones.map(phone => '+420' + phone.href),email:company.email,address:{'@type':'PostalAddress',streetAddress:'Požárnická 261',addressLocality:'Studénka',postalCode:'742 13',addressCountry:'CZ'},sameAs:[company.facebook]};
 ---
 <!doctype html>
 <html lang="cs">
   <head>
     <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <meta name="description" content={description} /><meta name="theme-color" content="#20352f" />
+    <meta name="description" content={description} /><meta name="theme-color" content="#151410" />
     <link rel="canonical" href={canonical} />
     <meta property="og:title" content={title} /><meta property="og:description" content={description} />
     <meta property="og:type" content="website" /><meta property="og:locale" content="cs_CZ" />
-    <meta property="og:url" content={canonical} /><meta property="og:image" content={`${siteUrl}/images/portfolio/pristresek-1-2023.webp`} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content="https://dr-zamecnictvi.kompotex.org/images/pergola-vecer.webp" />
     <title>{title}</title><script type="application/ld+json" set:html={JSON.stringify(schema)} />
   </head>
   <body>
     <a class="skip-link" href="#obsah">Přejít na obsah</a>
     <header class="topbar"><div class="topbar__inner">
-      <a class="brand" href="/" aria-label="DR zámečnictví – úvod"><img src="/images/logo.png" alt="" width="48" height="48" /><span class="brand__text"><strong>DR zámečnictví</strong><span>& kovovýroba · Studénka</span></span></a>
+      <a class="brand" href="/" aria-label="DR zámečnictví a kovovýroba – úvod"><img src="/images/logo.png" alt="" width="78" height="64" /><span class="brand__text"><strong>Zámečnictví<br />a kovovýroba</strong></span></a>
       <button class="menu-toggle" aria-expanded="false" aria-controls="hlavni-navigace">Menu <span aria-hidden="true">☰</span></button>
       <nav class="nav" id="hlavni-navigace" aria-label="Hlavní navigace">{nav.map(item => <a class="nav__link" href={item.href} aria-current={Astro.url.pathname.replace(/\/$/,'')===item.href?'page':undefined}>{item.label}</a>)}<a class="button button--small" href="/pergoly#kalkulacka">Kalkulačka pergoly</a></nav>
     </div></header>
     <main id="obsah"><slot /></main>
     <footer class="footer"><div class="section footer__top">
       <div><a class="footer__brand" href="/">DR zámečnictví<span>& kovovýroba</span></a><p>Poctivé řemeslo. Čisté linie.<br />Vyrobeno ve Studénce.</p></div>
-      <div><h2>Co pro vás vyrobím</h2><a href="/pergoly">Ocelové pergoly</a><a href="/venkovni-nabytek">Venkovní nábytek</a><a href="/oploceni">Brány a oplocení</a><a href="/ostatni">Schodiště a zábradlí</a></div>
-      <div><h2>Ozvěte se mi</h2><a href={`tel:+420${company.phones[0].href}`}>{company.phones[0].display}</a><a href={`mailto:${company.email}`}>{company.email}</a><a href={company.mapUrl} target="_blank" rel="noreferrer">Požárnická 261, Studénka</a><a href={company.facebook} target="_blank" rel="noreferrer">Najdete mě i na Facebooku</a></div>
+      <div><h2>Služby a realizace</h2><a href="/pergoly">Ocelové pergoly</a><a href="/venkovni-nabytek">Venkovní nábytek</a><a href="/oploceni">Brány a oplocení</a><a href="/ostatni">Další realizace</a><a href="/fotogalerie">Fotogalerie</a></div>
+      <div><h2>Kontakty</h2>{company.phones.map(phone => <a href={'tel:+420' + phone.href}>{phone.label} · {phone.display}</a>)}<a href={`mailto:${company.email}`}>{company.email}</a><a href={company.mapUrl} target="_blank" rel="noreferrer">Požárnická 261, Studénka</a><a href={company.facebook} target="_blank" rel="noreferrer">Facebook</a></div>
     </div><div class="section footer__bottom"><span>© {new Date().getFullYear()} Daniel Richter · IČ {company.ico}</span><a href="/ochrana-udaju">Ochrana osobních údajů</a><span>Řemeslo s citem pro detail.</span></div></footer>
     <script>
       const toggle = document.querySelector<HTMLButtonElement>('.menu-toggle');

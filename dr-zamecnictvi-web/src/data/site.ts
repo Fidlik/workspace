@@ -23,387 +23,125 @@ export const company = {
   intro:
     'Jmenuji se Daniel Richter a v rodinné dílně ve Studénce vyrábím pergoly, venkovní nábytek, oplocení i další kovové prvky na míru. Každou zakázku řeším osobně od konzultace a zaměření až po finální montáž.',
   phones: [
-    { label: 'Telefon', display: '724 556 144', href: '724556144' },
+    { label: 'Daniel Richter', display: '724 556 144', href: '724556144' },
+    { label: 'Zdeněk Richter', display: '724 588 754', href: '724588754' },
   ],
   facebook: 'https://www.facebook.com/DR.zamecnictvi.a.kovovyroba',
 };
 
-export type NavItem = {
-  href: string;
-  label: string;
-};
-
-export type FeatureCard = {
-  href: string;
-  title: string;
-  eyebrow: string;
-  summary: string;
-  image: string;
-};
-
-export type PriceRow = {
-  label: string;
-  value: string;
-};
-
-export type ProductImage = {
-  src: string;
-  alt: string;
-};
-
-export type PergolaCalculatorSize = {
-  id: string;
-  label: string;
-  structure: number;
-  assembly: number;
-};
-
-export type PergolaCalculatorColor = {
-  id: string;
-  label: string;
-  swatch: string;
-};
+export type Photo = {src: string; alt: string; caption?: string};
 
 export type SectionBlock = {
   id: string;
   title: string;
-  image: string;
-  plainMedia?: boolean;
-  intro: string;
   text: string;
+  intro?: string;
   price?: string;
-  priceNote?: string;
-  fieldTypesTitle?: string;
-  fieldTypesText?: string;
-  variants?: string[];
-  gallery?: ProductImage[];
-  ctaLabel: string;
+  photos: Photo[];
   ctaHref: string;
 };
 
-export const navItems: NavItem[] = [
-  { href: '/pergoly', label: 'Pergoly' },
-  { href: '/venkovni-nabytek', label: 'Venkovní nábytek' },
-  { href: '/oploceni', label: 'Oplocení' },
-  { href: '/ostatni', label: 'Ostatní' },
-  { href: '/kontakty', label: 'Kontakt' },
+const photo = (file: string, alt: string): Photo => ({src: '/images/' + file, alt, caption: alt});
+
+export const pergolaPhotos = [
+  photo('portfolio/pristresek-1-2023.webp', 'Ocelový přístřešek s polykarbonátovou krytinou'),
+  photo('legacy/pristresek-a.webp', 'Ocelový přístřešek u domu'),
+  photo('legacy/pristresek-b.webp', 'Přístřešek nad vstupem'),
+  photo('legacy/pristresek-c.webp', 'Přístřešek přes celou šířku vjezdu'),
 ];
 
-export const strengths = [
-  'Férové jednání',
-  'Osobní konzultace, návrh a zaměření',
-  'Dodržení smluveného termínu',
-  'Poctivá řemeslná práce s citem pro detail',
+const fencePhotos = [
+  photo('portfolio/plot-tahokov-2023.webp', 'Oplocení s tahokovovou výplní'),
+  photo('legacy/kovany-plot.webp', 'Kovaný plot'),
+  photo('legacy/tahokov.webp', 'Plot z tahokovu'),
+];
+const gatePhotos = [
+  photo('legacy/vjezdova-brana.webp', 'Vjezdová brána s oplocením'),
+  photo('legacy/brana.webp', 'Vjezdová brána na míru'),
+];
+const kitchenPhotos = [
+  photo('products/kuchyne-1505.webp', 'Venkovní kuchyně na míru'),
+  photo('products/kuchyne-1544.webp', 'Venkovní kuchyně s kovovým rámem a dřevěnou výplní'),
+  photo('products/kuchyne-1487.webp', 'Venkovní kuchyně s dřezem'),
+  photo('products/kuchyne-1619.webp', 'Detail úložného prostoru venkovní kuchyně'),
+  photo('products/kuchyne-1664.webp', 'Detail zpracování kuchyňské linky'),
+];
+const tablePhotos = [
+  photo('products/stul-1703.webp', 'Stůl na míru'),
+  photo('products/stul-1739.webp', 'Stůl z čelního pohledu'),
+  photo('products/stul-1793.webp', 'Stůl z bočního pohledu'),
+  photo('products/stul-1907.webp', 'Detail hrany stolu'),
+  photo('portfolio/image0-scaled.webp', 'Jídelní stůl a lavice s kovovou podnoží'),
+];
+const stairPhotos = [
+  photo('portfolio/schodiste-3-2023.webp', 'Venkovní kovové schodiště'),
+  photo('legacy/schodiste.webp', 'Schodiště s kovovým zábradlím'),
+];
+const railingPhotos = [
+  photo('portfolio/zabradli-1-2023.webp', 'Kovové zábradlí na míru'),
+  photo('legacy/zabradli.webp', 'Zábradlí na míru'),
+  photo('legacy/kovane-zabradli.webp', 'Ručně kované zábradlí'),
+];
+const artPhotos = [
+  photo('legacy/socha.webp', 'Kovová plastika'),
+  photo('legacy/obraz.webp', 'Kovový obraz'),
+  photo('legacy/gril.webp', 'Zahradní gril na míru'),
 ];
 
-export const process = [
-  {
-    title: 'Konzultace',
-    text: 'Projdeme představu, místo realizace i rozpočet. Každá zakázka má své specifické požadavky.',
-  },
-  {
-    title: 'Návrh a zaměření',
-    text: 'Navrhnu vhodné technické řešení, materiál i povrchovou úpravu tak, aby výsledek fungoval dlouhodobě.',
-  },
-  {
-    title: 'Výroba',
-    text: 'V dílně vznikne přesná konstrukce s důrazem na pevnost, detaily a čistý vzhled.',
-  },
-  {
-    title: 'Montáž',
-    text: 'Realizaci dokončím montáží a finálním doladěním na místě, aby vše sedělo přesně podle domluvy.',
-  },
+export const services = [
+  { title: 'Pergoly', href: '/pergoly', photo: pergolaPhotos[0],
+    text: 'Ocelové pergoly na míru s důrazem na pevnost, čisté provedení a dlouhou životnost.' },
+  { title: 'Venkovní nábytek', href: '/venkovni-nabytek', photo: kitchenPhotos[0],
+    text: 'Venkovní kuchyně a stoly z odolných materiálů, navržené pro konkrétní prostor a každodenní používání.' },
+  { title: 'Brány a oplocení', href: '/oploceni', photo: fencePhotos[0],
+    text: 'Brány, ploty a oplocení na míru. Od návrhu až po montáž včetně případného pohonu.' },
+  { title: 'Další realizace', href: '/ostatni', photo: stairPhotos[0],
+    text: 'Atypická kovovýroba pro domácnosti i firmy. Od jednotlivých prvků po rozsáhlé realizace.' },
 ];
-
-export const stats = [
-  { value: '10+', label: 'let zkušeností v oboru' },
-  { value: '5', label: 'hlavních sekcí nabídky' },
-  { value: '1:1', label: 'osobní vedení zakázky' },
-];
-
-export const featuredSections: FeatureCard[] = [
-  {
-    href: '/pergoly',
-    title: 'Pergoly',
-    eyebrow: 'Úvodní foto, kalkulačka, poptávka',
-    summary: 'Ocelové pergoly na míru s cenovým přehledem, rozměry a nezávaznou poptávkou.',
-    image: '/images/portfolio/pristresek-1-2023.webp',
-  },
-  {
-    href: '/venkovni-nabytek',
-    title: 'Venkovní nábytek',
-    eyebrow: 'Kuchyně a stoly',
-    summary: 'Venkovní kuchyně a stoly s orientační cenou a objednávkovým formulářem.',
-    image: '/images/products/kuchyne-1505.webp',
-  },
-  {
-    href: '/oploceni',
-    title: 'Brány a oplocení',
-    eyebrow: 'Ploty, výplně, brány',
-    summary: 'Kované ploty, tahokov, hliníkové i ocel-dřevo kombinace a různé typy bran.',
-    image: '/images/portfolio/plot-tahokov-2023.webp',
-  },
-  {
-    href: '/ostatni',
-    title: 'Ostatní',
-    eyebrow: 'Schodiště, zábradlí, umělecké projekty',
-    summary: 'Zakázkové realizace, které stojí na přesném detailu a individuálním návrhu.',
-    image: '/images/portfolio/schodiste-3-2023.webp',
-  },
-];
-
-export const gallery = [
-  {
-    src: '/images/portfolio/pristresek-1-2023.webp',
-    alt: 'Ocelová pergola na míru',
-    caption: 'Pergoly a venkovní realizace s důrazem na pevnost a čisté linie',
-  },
-  {
-    src: '/images/portfolio/plot-tahokov-2023.webp',
-    alt: 'Tahokovové oplocení',
-    caption: 'Oplocení navržené podle domu, pozemku a potřeb soukromí',
-  },
-  {
-    src: '/images/products/kuchyne-1544.webp',
-    alt: 'Venkovní kuchyně na míru',
-    caption: 'Venkovní kuchyně a nábytek s důrazem na detail, odolnost a čisté proporce',
-  },
-  {
-    src: '/images/portfolio/schodiste-3-2023.webp',
-    alt: 'Kovové schodiště',
-    caption: 'Schodiště a zábradlí pro interiér i exteriér',
-  },
-  {
-    src: '/images/portfolio/industrialni-stul-2.webp',
-    alt: 'Industriální stůl s masivní deskou',
-    caption: 'Masivní stoly a atypické kusy s výrazným charakterem',
-  },
-];
-
-export const references = [
-  {
-    quote:
-      'S prací DR zámečnictví a kovovýroba jsme byli maximálně spokojeni. Daniel nám věcně poradil a pomohl zvolit nejlepší variantu plotové výplně po praktické i estetické stránce.',
-    author: 'Spokojený zákazník',
-  },
-];
-
-export const pergolaBasePriceRows: PriceRow[] = [
-  { label: 'Konstrukce 3000/4000', value: '35 500 Kč' },
-  { label: 'Střešní krytina (16 komůrkový polykarbonát)', value: '12 545 Kč' },
-  { label: 'Barva (komaxit)', value: '5 000 Kč' },
-  { label: 'Žárový zinek', value: '4 500 Kč' },
-  { label: 'Montáž', value: '8 000 Kč' },
-  { label: 'Doprava', value: 'Dle adresy' },
-  { label: 'Celkem', value: '65 545 Kč' },
-];
-
-export { pergolaCalculatorSettings } from './pergola.mjs';
 
 export const venkovniNabytekSections: SectionBlock[] = [
-  {
-    id: 'kuchyne',
-    title: 'Kuchyně',
-    image: '/images/products/kuchyne-1505.webp',
-    plainMedia: true,
-    intro: 'Venkovní kuchyně na míru podle prostoru a způsobu používání.',
-    text:
-      'Venkovní kuchyně navrhuji jako praktický a odolný prvek pro pergolu, terasu nebo zahradu. Důležitá je správná pracovní výška, stabilita konstrukce a sladění s okolním prostorem.',
-    price: 'Základní rozměr kuchyně dle vzorové fotografie 1800 / 600 / 900: 40 615 Kč',
-    priceNote: 'Konečná cena se může upravit podle konkrétního provedení, vybavení a místa realizace.',
-    gallery: [
-      { src: '/images/products/kuchyne-1544.webp', alt: 'Venkovní kuchyně v šikmém pohledu' },
-      { src: '/images/products/kuchyne-1487.webp', alt: 'Venkovní kuchyně s dřezem' },
-      { src: '/images/products/kuchyne-1619.webp', alt: 'Detail zásuvek venkovní kuchyně' },
-      { src: '/images/products/kuchyne-1664.webp', alt: 'Detail rohu a loga venkovní kuchyně' },
-    ],
-    ctaLabel: 'Poptat tento kus',
-    ctaHref: '/objednavka?produkt=venkovni-kuchyne',
-  },
-  {
-    id: 'stoly',
-    title: 'Stoly',
-    image: '/images/products/stul-1703.webp',
-    plainMedia: true,
-    intro: 'Kovové stoly a podnože pro venkovní i interiérové použití.',
-    text:
-      'Stůl nebo podnož vyrábím vždy s ohledem na konkrétní desku, zatížení a styl prostoru. Důležitá je tuhost konstrukce, čisté napojení a proporce, které fungují i vizuálně.',
-    price: 'Stůl 1500 / 900: 20 000 Kč',
-    priceNote: 'Při atypických rozměrech nebo jiném materiálovém řešení připravím individuální nabídku.',
-    gallery: [
-      { src: '/images/products/stul-1739.webp', alt: 'Kovový stůl z čelního pohledu' },
-      { src: '/images/products/stul-1793.webp', alt: 'Kovový stůl v šikmém pohledu' },
-      { src: '/images/products/stul-1907.webp', alt: 'Detail hrany stolu s logem' },
-    ],
-    ctaLabel: 'Poptat tento kus',
-    ctaHref: '/objednavka?produkt=stul',
-  },
+  { id: 'kuchyne', title: 'Kuchyně',
+    intro: 'Venkovní vaření bez kompromisů.',
+    text: 'Navrhujeme a vyrábíme kuchyně a stoly, které mají originální design, jsou funkční a odolné. Venkovní kuchyně přizpůsobíme vašemu prostoru a způsobu používání, aby dobře sloužila na zahradě i na terase.',
+    price: 'Vzorová kuchyně 1 800 × 600 × 900 mm: 40 615 Kč',
+    photos: kitchenPhotos, ctaHref: '/objednavka?produkt=venkovni-kuchyne' },
+  { id: 'stoly', title: 'Stoly',
+    text: 'Kovové stoly a podnože pro venkovní i interiérové použití. Konstrukce je pevná a stabilní, ke stolu vám rádi vyrobíme i lavice ve stejném designu.',
+    photos: tablePhotos, ctaHref: '/objednavka?produkt=stul' },
 ];
 
 export const oploceniSections: SectionBlock[] = [
-  {
-    id: 'kovane-ploty',
-    title: 'Kované ploty',
-    image: '/images/portfolio/plot-tahokov-2023.webp',
-    intro: 'Reprezentativní ploty s poctivým detailem a klasickým charakterem.',
-    text:
-      'Kované ploty vyrábím s důrazem na rytmus, proporce a řemeslné zpracování detailu. Každý návrh přizpůsobuji domu, okolí i požadované míře zdobnosti.',
-    fieldTypesTitle: 'Typy polí',
-    fieldTypesText:
-      'Typy polí řeším individuálně podle stylu domu, šířky polí a návaznosti na bránu nebo branku.',
-    variants: [
-      'Rovná pole s čistým rytmem',
-      'Dekorativnější pole s kovaným detailem',
-      'Kombinace s bránou a vstupní brankou',
-    ],
-    ctaLabel: 'Nezávazný formulář',
-    ctaHref: '/poptavka?produkt=kovane-ploty',
-  },
-  {
-    id: 'tahokov-ploty',
-    title: 'Tahokov ploty',
-    image: '/images/ploty.webp',
-    intro: 'Současné oplocení s čistou linií a vyšší mírou soukromí.',
-    text:
-      'Tahokov je vhodný tam, kde chcete moderní vzhled, pevnost a zároveň technicky čisté řešení. Výplň působí současně a dobře funguje i u novostaveb.',
-    fieldTypesTitle: 'Typy polí',
-    fieldTypesText:
-      'Volím různé hustoty a členění výplní podle požadovaného soukromí, rytmu a vzhledu fasády.',
-    variants: [
-      'Jemnější výplně s větší průhledností',
-      'Hustší pole pro více soukromí',
-      'Jednoduché moderní rámy a sloupky',
-    ],
-    ctaLabel: 'Nezávazný formulář',
-    ctaHref: '/poptavka?produkt=tahokov-ploty',
-  },
-  {
-    id: 'hlinikove',
-    title: 'Hliníkové',
-    image: '/images/brany.webp',
-    intro: 'Lehké a snadno udržovatelné oplocení pro současné domy.',
-    text:
-      'Hliníkové řešení je vhodné tam, kde je důležitá jednoduchá údržba, čistý detail a lehčí vizuální výraz. Důležitá je správná skladba lamel a jejich návaznost na vstupy.',
-    fieldTypesTitle: 'Typy polí',
-    fieldTypesText:
-      'Nabídku přizpůsobuji rozestupům lamel, požadované průhlednosti a celkovému stylu domu.',
-    variants: [
-      'Vodorovné lamelové pole',
-      'Svislé členění',
-      'Kombinace s hliníkovou brankou nebo bránou',
-    ],
-    ctaLabel: 'Nezávazný formulář',
-    ctaHref: '/poptavka?produkt=hlinikove-oploceni',
-  },
-  {
-    id: 'ocel-drevo',
-    title: 'Ocel / dřevo kombinace',
-    image: '/images/ploty.webp',
-    intro: 'Kombinace pevné ocelové konstrukce a teplejšího přírodního výrazu.',
-    text:
-      'Spojení oceli a dřeva funguje tam, kde chcete zachovat technickou pevnost, ale zároveň dodat realizaci měkčí a příjemnější vzhled. Návrh vždy řeším podle konkrétní stavby.',
-    fieldTypesTitle: 'Typy polí',
-    fieldTypesText:
-      'Kombinace materiálů umožňuje různé rytmy latí, hustotu výplně i návaznost na ostatní prvky kolem domu.',
-    variants: [
-      'Svislé dřevěné latě v ocelovém rámu',
-      'Vodorovné členění',
-      'Kombinace s brankou a bránou ve stejném stylu',
-    ],
-    ctaLabel: 'Nezávazný formulář',
-    ctaHref: '/poptavka?produkt=ocel-drevo',
-  },
-  {
-    id: 'samonosne-brany',
-    title: 'Brány - samonosné',
-    image: '/images/brany.webp',
-    intro: 'Samonosné brány pro pohodlný a spolehlivý vjezd.',
-    text:
-      'Samonosné brány navrhuji tak, aby dobře fungovaly v každodenním provozu, měly čistý chod a byly vizuálně sladěné s celým oplocením. Důležitý je detail i konstrukční tuhost.',
-    fieldTypesTitle: 'Typy polí',
-    fieldTypesText:
-      'Výplň brány může navazovat na kované, tahokovové, hliníkové i kombinované oplocení.',
-    variants: [
-      'Výplň sladěná s plotem',
-      'Plnější řešení pro větší soukromí',
-      'Moderní i klasický výraz',
-    ],
-    ctaLabel: 'Nezávazný formulář',
-    ctaHref: '/poptavka?produkt=samonosna-brana',
-  },
-  {
-    id: 'dvoukridle-brany',
-    title: 'Brány - dvoukřídlé',
-    image: '/images/brany.webp',
-    intro: 'Dvoukřídlé brány pro vstupy, kde dává tradiční otevírání nejlepší smysl.',
-    text:
-      'Dvoukřídlé brány jsou vhodné tam, kde prostor a provoz lépe vyhovuje klasickému řešení. Důležité je přesné osazení, tuhost konstrukce a napojení na okolní oplocení.',
-    fieldTypesTitle: 'Typy polí',
-    fieldTypesText:
-      'Stejně jako u ostatních realizací řeším výplň a rytmus polí podle charakteru domu a oplocení.',
-    variants: [
-      'Symetrické křídlo',
-      'Kombinace s brankou',
-      'Navázání na kovaný i moderní výraz',
-    ],
-    ctaLabel: 'Nezávazný formulář',
-    ctaHref: '/poptavka?produkt=dvoukridla-brana',
-  },
+  { id: 'ploty', title: 'Ploty',
+    text: 'Oplocení vyrábíme na míru konkrétnímu prostoru i vašim požadavkům. Od návrhu konstrukce až po poslední detail dbáme na přesné zpracování, pevnost a dlouhou životnost.',
+    photos: fencePhotos, ctaHref: '/poptavka?produkt=oploceni' },
+  { id: 'brany', title: 'Brány',
+    text: 'Každou bránu vyrábíme s ohledem na prostor, způsob otevírání a každodenní provoz. Důraz klademe na pevnou konstrukci, přesné osazení a spolehlivý chod po mnoho let.',
+    photos: gatePhotos, ctaHref: '/poptavka?produkt=brana' },
 ];
 
 export const ostatniSections: SectionBlock[] = [
-  {
-    id: 'schodiste',
-    title: 'Schodiště',
-    image: '/images/portfolio/schodiste-3-2023.webp',
-    intro: 'Schodiště na míru s důrazem na bezpečnost, proporce a čistý detail.',
-    text:
-      'Kovová schodiště navrhuji jako pevný a přirozený prvek prostoru. Každé řešení vzniká podle dispozice stavby, provozu i požadovaného výrazu.',
-    fieldTypesTitle: 'Typy polí',
-    fieldTypesText:
-      'Podobu výplní a detailů řeším podle typu schodiště, stylu interiéru nebo exteriéru a návaznosti na zábradlí.',
-    variants: [
-      'Samonosná i kombinovaná řešení',
-      'Jednodušší technický výraz',
-      'Výraznější designové pojetí',
-    ],
-    ctaLabel: 'Nezávazný formulář',
-    ctaHref: '/poptavka?produkt=schodiste',
-  },
-  {
-    id: 'zabradli',
-    title: 'Zábradlí',
-    image: '/images/portfolio/zabradli-1-2023.webp',
-    intro: 'Interiérové i exteriérové zábradlí navržené podle konkrétní stavby.',
-    text:
-      'Zábradlí musí být bezpečné, pohodlné na úchop a zároveň působit přirozeně v prostoru, kde se nachází. Důležitý je pro mě detail napojení, rytmus i povrchová úprava.',
-    fieldTypesTitle: 'Typy polí',
-    fieldTypesText:
-      'Nabízím různé typy výplní od jemnějších po výraznější, podle charakteru schodiště, balkonu nebo terasy.',
-    variants: [
-      'Svislé členění',
-      'Jednoduché moderní výplně',
-      'Kombinace s dalšími kovovými prvky',
-    ],
-    ctaLabel: 'Nezávazný formulář',
-    ctaHref: '/poptavka?produkt=zabradli',
-  },
-  {
-    id: 'umelecke-projekty',
-    title: 'Umělecké projekty',
-    image: '/images/grily.webp',
-    intro: 'Atypické realizace, kde se potkává řemeslo, nápad a individuální návrh.',
-    text:
-      'Nejzajímavější projekty často vznikají tam, kde neexistuje hotová šablona. Umělecké a atypické realizace řeším individuálně podle zadání, prostoru a hledaného výrazu.',
-    fieldTypesTitle: 'Typy řešení',
-    fieldTypesText:
-      'Každý projekt má jiné zadání, proto zde nevycházím z pevného katalogu, ale z návrhu, funkce a charakteru prostoru.',
-    variants: [
-      'Originální kusy podle návrhu nebo vzoru',
-      'Kovové prvky do interiéru i exteriéru',
-      'Spojení technické přesnosti a kreativního přístupu',
-    ],
-    ctaLabel: 'Nezávazný formulář',
-    ctaHref: '/poptavka?produkt=umelecky-projekt',
-  },
+  { id: 'schodiste', title: 'Schodiště',
+    text: 'Interiérové i venkovní schodiště na míru s důrazem na pevnost konstrukce, bezpečnost i pohodlný pohyb.',
+    photos: stairPhotos, ctaHref: '/poptavka?produkt=schodiste' },
+  { id: 'zabradli', title: 'Zábradlí',
+    text: 'Bezpečné a stabilní řešení pro schodiště, balkony i terasy s důrazem na přesné osazení a čisté linie.',
+    photos: railingPhotos, ctaHref: '/poptavka?produkt=zabradli' },
+  { id: 'umelecke-projekty', title: 'Umělecká a atypická výroba',
+    text: 'Originální kovové objekty, sochy i atypické výrobky, které vznikají podle individuálních představ. I odvážným nápadům dokážeme dát skutečnou podobu.',
+    photos: artPhotos, ctaHref: '/poptavka?produkt=umelecky-projekt' },
+];
+
+export const galleryHighlights = [fencePhotos[0], gatePhotos[0], kitchenPhotos[1], stairPhotos[0], artPhotos[2]];
+export const gallery = [...new Set([...galleryHighlights, ...pergolaPhotos, ...fencePhotos, ...gatePhotos,
+  ...kitchenPhotos, ...tablePhotos, ...stairPhotos, ...railingPhotos, ...artPhotos])];
+
+export const references = [
+  { author: 'Bajtkovi', quote: 'Daniel měl naši plnou důvěru.',
+    description: 'Ocenili pomoc s výběrem plotové výplně, která vyhovovala vzhledem i používáním.' },
+  { author: 'Zbyšek Fiedor', quote: 'Bezproblémová komunikace, vstřícný přístup a velmi profesionální práce.',
+    description: 'Zakázku hodnotil kladně i po předání, kdy vše fungovalo podle očekávání.' },
+  { author: 'Pavel Evják', quote: 'Termín realizace a cena dle dohody.',
+    description: 'Vyzdvihl také kvalitu provedení a domluvu.' },
+  { author: 'Jarmila Bartoníková', quote: 'Máme gril dle našich požadavků.',
+    description: 'Byla spokojená s výsledkem i s domluvou.' },
 ];

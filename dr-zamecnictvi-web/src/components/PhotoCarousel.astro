@@ -1,0 +1,15 @@
+---
+import Carousel from './Carousel.astro';
+import type { Photo } from '../data/site';
+
+type Props = {photos: Photo[]; label: string; eager?: boolean; fit?: 'contain' | 'cover'};
+const { photos, label, eager = false, fit = 'cover' } = Astro.props;
+---
+<Carousel label={label} count={photos.length}>
+  {photos.map((photo, index) => (
+    <figure class:list={['photo-slide', fit === 'contain' && 'photo-slide--contain']}>
+      <img src={photo.src} alt={photo.alt} loading={eager && index === 0 ? 'eager' : 'lazy'} decoding="async" />
+      {photo.caption && <figcaption>{photo.caption}</figcaption>}
+    </figure>
+  ))}
+</Carousel>

@@ -18,7 +18,7 @@ try{
   await page.screenshot({path:fileURLToPath(new URL('hero-desktop.png',output))});
   assert.equal(await page.locator('h1').count(),1);
   assert.equal(await page.locator('img').evaluateAll(images=>images.filter(i=>!i.complete||i.naturalWidth===0).length),0);checks.push('Home loads with all photos');
-  await page.getByRole('link',{name:'Spočítat cenu pergoly',exact:true}).click();
+  await page.getByRole('navigation').getByRole('link',{name:'Kalkulačka pergoly',exact:true}).click();
   await page.waitForURL(/\/pergoly\/?(?:\?|#|$)/);await page.waitForSelector('[data-total]');
   assert.match(await page.locator('[data-total]').innerText(),/65\s?545/);
   await page.getByRole('radio',{name:'6 × 4 m',exact:true}).locator('..').click();

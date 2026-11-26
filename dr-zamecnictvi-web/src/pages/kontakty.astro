@@ -5,12 +5,11 @@ import { company } from '../data/site';
 
 <Layout
   title="Kontakty | DR zámečnictví a kovovýroba"
-  description="Kontakt na Daniela Richtera, rodinnou dílnu ve Studénce a další možnosti spojení."
+  description="Kontakty na Daniela a Zdeňka Richterovy, zakázková kovovýroba ve Studénce."
 >
   <section class="page-hero">
     <div class="section">
-      <span class="eyebrow">Kontakty</span>
-      <h1>Domluvme si zakázku</h1>
+      <h1>Kontakty</h1>
       <p>
         Nejrychlejší je telefonát. Pokud už máte představu, můžeme rovnou probrat typ realizace, termín i
         místo zaměření.
@@ -21,9 +20,7 @@ import { company } from '../data/site';
   <section class="section">
     <div class="contact-grid">
       <article class="contact-card contact-card--details">
-        <span class="section__eyebrow">Kontakty</span>
-        <h2>{company.owner}</h2>
-        <p class="contact-subtitle">{company.addressName}</p>
+        <h2>DR zámečnictví a kovovýroba</h2>
 
         <div class="contact-stack">
           <div class="contact-block">
@@ -63,14 +60,9 @@ import { company } from '../data/site';
       </article>
 
       <article class="contact-card contact-card--map">
-        <span class="section__eyebrow">Kde mě najdete</span>
+        <h2>Kde nás najdete</h2>
         <div class="map-frame">
           <a class="location-card" href={company.mapUrl} target="_blank" rel="noreferrer"><span aria-hidden="true">DR</span><h3>Stavte se ve Studénce.</h3><p>Požárnická 261<br />742 13 Studénka</p><span class="text-link">Zobrazit v Google Maps</span></a>
-        </div>
-        <div class="contact-actions">
-          <a class="button button--ghost" href={company.mapUrl} target="_blank" rel="noreferrer">
-            Otevřít mapu
-          </a>
         </div>
       </article>
     </div>
