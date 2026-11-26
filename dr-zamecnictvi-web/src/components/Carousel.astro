@@ -2,20 +2,16 @@
 type Props = {
   label: string;
   count: number;
-  kind?: 'photos' | 'references';
 };
-const { label, count, kind = 'photos' } = Astro.props;
-const item = kind === 'photos' ? 'fotografie' : 'reference';
-const previous = `Předchozí ${item}`;
-const next = `Další ${item}`;
+const { label, count } = Astro.props;
 ---
-<dr-carousel class:list={['dr-carousel', `dr-carousel--${kind}`]} aria-label={label} role="region">
+<dr-carousel class="dr-carousel" aria-label={label} role="region">
   <div class="dr-carousel__viewport" data-carousel-viewport tabindex={count > 1 ? 0 : undefined}>
     <slot />
   </div>
   {count > 1 && <div class="dr-carousel__controls" data-carousel-controls hidden>
-    <button type="button" aria-label={previous} data-carousel-previous><span aria-hidden="true">‹</span></button>
-    <button type="button" aria-label={next} data-carousel-next><span aria-hidden="true">›</span></button>
+    <button type="button" aria-label="Předchozí fotografie" data-carousel-previous><span aria-hidden="true">‹</span></button>
+    <button type="button" aria-label="Další fotografie" data-carousel-next><span aria-hidden="true">›</span></button>
     <span class="dr-carousel__count" data-carousel-count aria-live="polite">1 / {count}</span>
   </div>}
 </dr-carousel>

@@ -134,14 +134,3 @@ export const ostatniSections: SectionBlock[] = [
 export const galleryHighlights = [fencePhotos[0], gatePhotos[0], kitchenPhotos[1], stairPhotos[0], artPhotos[2]];
 export const gallery = [...new Set([...galleryHighlights, ...pergolaPhotos, ...fencePhotos, ...gatePhotos,
   ...kitchenPhotos, ...tablePhotos, ...stairPhotos, ...railingPhotos, ...artPhotos])];
-
-export const references = [
-  { author: 'Bajtkovi', quote: 'Daniel měl naši plnou důvěru.',
-    description: 'Ocenili pomoc s výběrem plotové výplně, která vyhovovala vzhledem i používáním.' },
-  { author: 'Zbyšek Fiedor', quote: 'Bezproblémová komunikace, vstřícný přístup a velmi profesionální práce.',
-    description: 'Zakázku hodnotil kladně i po předání, kdy vše fungovalo podle očekávání.' },
-  { author: 'Pavel Evják', quote: 'Termín realizace a cena dle dohody.',
-    description: 'Vyzdvihl také kvalitu provedení a domluvu.' },
-  { author: 'Jarmila Bartoníková', quote: 'Máme gril dle našich požadavků.',
-    description: 'Byla spokojená s výsledkem i s domluvou.' },
-];
