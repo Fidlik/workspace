@@ -1,0 +1,8 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { company } from '../data/site';
+---
+<Layout title="Ochrana osobních údajů | DR zámečnictví" description="Informace o údajích z poptávkového formuláře a kontakt na Daniela Richtera.">
+<section class="page-hero"><div class="section"><span class="eyebrow">VAŠE ÚDAJE</span><h1>Údaje pro vaši poptávku.</h1><p>Kontakt a informace o tom, co se děje s údaji z formuláře.</p></div></section>
+<section class="section section--spaced privacy-copy"><h2>Kdo poptávku vyřizuje</h2><p>Daniel Richter, IČ {company.ico}, Požárnická 261, 742 13 Studénka. Kontakt: <a href={`mailto:${company.email}`}>{company.email}</a>, telefon <a href="tel:+420724556144">724 556 144</a>.</p><h2>Co odesíláte</h2><p>Formulář předává jméno, telefon a údaje, které doplníte: e-mail, místo realizace, rozměry, zprávu a případnou konfiguraci pergoly. Slouží k vyřízení poptávky a domluvě o zakázce. Neposílejte sem citlivé údaje.</p><h2>Jak zpráva dorazí</h2><p>Web provozuje Cloudflare. Odesílání formuláře zajišťuje služba FormSubmit, která údaje předá e-mailem příjemci poptávky. Podrobnosti zveřejňuje ve <a href="https://formsubmit.co/privacy.pdf" target="_blank" rel="noreferrer">svých pravidlech ochrany údajů</a>.</p><h2>Další dotazy a žádosti</h2><p>Pokud potřebujete své údaje opravit, odstranit nebo se zeptat na jejich zpracování, napište přímo na uvedený e-mail Daniela Richtera.</p><h2>Nastavení webu</h2><p>Tato verze webu nepoužívá analytické ani reklamní skripty. Písmo a fotografie se načítají přímo z webu. Mapa na kontaktní stránce se otevře až po kliknutí na externí odkaz. Výběr pergoly je součástí adresy stránky, takže jej můžete sdílet odkazem.</p></section>
+</Layout>

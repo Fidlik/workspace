@@ -127,54 +127,54 @@ export const featuredSections: FeatureCard[] = [
     title: 'Pergoly',
     eyebrow: 'Úvodní foto, kalkulačka, poptávka',
     summary: 'Ocelové pergoly na míru s cenovým přehledem, rozměry a nezávaznou poptávkou.',
-    image: '/images/portfolio/pristresek-1-2023.jpg',
+    image: '/images/portfolio/pristresek-1-2023.webp',
   },
   {
     href: '/venkovni-nabytek',
     title: 'Venkovní nábytek',
     eyebrow: 'Kuchyně a stoly',
     summary: 'Venkovní kuchyně a stoly s orientační cenou a objednávkovým formulářem.',
-    image: '/images/products/kuchyne-1505.jpg',
+    image: '/images/products/kuchyne-1505.webp',
   },
   {
     href: '/oploceni',
     title: 'Brány a oplocení',
     eyebrow: 'Ploty, výplně, brány',
     summary: 'Kované ploty, tahokov, hliníkové i ocel-dřevo kombinace a různé typy bran.',
-    image: '/images/portfolio/plot-tahokov-2023.jpg',
+    image: '/images/portfolio/plot-tahokov-2023.webp',
   },
   {
     href: '/ostatni',
     title: 'Ostatní',
     eyebrow: 'Schodiště, zábradlí, umělecké projekty',
     summary: 'Zakázkové realizace, které stojí na přesném detailu a individuálním návrhu.',
-    image: '/images/portfolio/schodiste-3-2023.jpg',
+    image: '/images/portfolio/schodiste-3-2023.webp',
   },
 ];
 
 export const gallery = [
   {
-    src: '/images/portfolio/pristresek-1-2023.jpg',
+    src: '/images/portfolio/pristresek-1-2023.webp',
     alt: 'Ocelová pergola na míru',
     caption: 'Pergoly a venkovní realizace s důrazem na pevnost a čisté linie',
   },
   {
-    src: '/images/portfolio/plot-tahokov-2023.jpg',
+    src: '/images/portfolio/plot-tahokov-2023.webp',
     alt: 'Tahokovové oplocení',
     caption: 'Oplocení navržené podle domu, pozemku a potřeb soukromí',
   },
   {
-    src: '/images/products/kuchyne-1544.jpg',
+    src: '/images/products/kuchyne-1544.webp',
     alt: 'Venkovní kuchyně na míru',
     caption: 'Venkovní kuchyně a nábytek s důrazem na detail, odolnost a čisté proporce',
   },
   {
-    src: '/images/portfolio/schodiste-3-2023.jpg',
+    src: '/images/portfolio/schodiste-3-2023.webp',
     alt: 'Kovové schodiště',
     caption: 'Schodiště a zábradlí pro interiér i exteriér',
   },
   {
-    src: '/images/portfolio/industrialni-stul-2.jpg',
+    src: '/images/portfolio/industrialni-stul-2.webp',
     alt: 'Industriální stůl s masivní deskou',
     caption: 'Masivní stoly a atypické kusy s výrazným charakterem',
   },
@@ -198,32 +198,13 @@ export const pergolaBasePriceRows: PriceRow[] = [
   { label: 'Celkem', value: '65 545 Kč' },
 ];
 
-export const pergolaCalculatorSettings = {
-  defaultSizeId: '3000x4000',
-  roofingPrice: 12545,
-  zincPrice: 4500,
-  colorPrice: 5000,
-  deliveryNote: 'Doprava k vám domů se doplní podle adresy realizace.',
-  sizes: [
-    { id: '3000x4000', label: '3000 / 4000', structure: 35500, assembly: 8000 },
-    { id: '3000x5000', label: '3000 / 5000', structure: 45500, assembly: 10000 },
-    { id: '3000x6000', label: '3000 / 6000', structure: 54500, assembly: 13000 },
-    { id: '4000x4000', label: '4000 / 4000', structure: 52500, assembly: 10000 },
-    { id: '5000x4000', label: '5000 / 4000', structure: 65500, assembly: 12000 },
-    { id: '6000x4000', label: '6000 / 4000', structure: 76500, assembly: 14000 },
-  ] satisfies PergolaCalculatorSize[],
-  colors: [
-    { id: '7016', label: 'Antracit 7016', swatch: '#444d56' },
-    { id: '9005', label: 'Černá matná 9005', swatch: '#111017' },
-    { id: '9010', label: 'Bílá 9010', swatch: '#f0f1ec' },
-  ] satisfies PergolaCalculatorColor[],
-};
+export { pergolaCalculatorSettings } from './pergola.mjs';
 
 export const venkovniNabytekSections: SectionBlock[] = [
   {
     id: 'kuchyne',
     title: 'Kuchyně',
-    image: '/images/products/kuchyne-1505.jpg',
+    image: '/images/products/kuchyne-1505.webp',
     plainMedia: true,
     intro: 'Venkovní kuchyně na míru podle prostoru a způsobu používání.',
     text:
@@ -231,18 +212,18 @@ export const venkovniNabytekSections: SectionBlock[] = [
     price: 'Základní rozměr kuchyně dle vzorové fotografie 1800 / 600 / 900: 40 615 Kč',
     priceNote: 'Konečná cena se může upravit podle konkrétního provedení, vybavení a místa realizace.',
     gallery: [
-      { src: '/images/products/kuchyne-1544.jpg', alt: 'Venkovní kuchyně v šikmém pohledu' },
-      { src: '/images/products/kuchyne-1487.jpg', alt: 'Venkovní kuchyně s dřezem' },
-      { src: '/images/products/kuchyne-1619.jpg', alt: 'Detail zásuvek venkovní kuchyně' },
-      { src: '/images/products/kuchyne-1664.jpg', alt: 'Detail rohu a loga venkovní kuchyně' },
+      { src: '/images/products/kuchyne-1544.webp', alt: 'Venkovní kuchyně v šikmém pohledu' },
+      { src: '/images/products/kuchyne-1487.webp', alt: 'Venkovní kuchyně s dřezem' },
+      { src: '/images/products/kuchyne-1619.webp', alt: 'Detail zásuvek venkovní kuchyně' },
+      { src: '/images/products/kuchyne-1664.webp', alt: 'Detail rohu a loga venkovní kuchyně' },
     ],
-    ctaLabel: 'Objednávkový formulář',
+    ctaLabel: 'Poptat tento kus',
     ctaHref: '/objednavka?produkt=venkovni-kuchyne',
   },
   {
     id: 'stoly',
     title: 'Stoly',
-    image: '/images/products/stul-1703.jpg',
+    image: '/images/products/stul-1703.webp',
     plainMedia: true,
     intro: 'Kovové stoly a podnože pro venkovní i interiérové použití.',
     text:
@@ -250,11 +231,11 @@ export const venkovniNabytekSections: SectionBlock[] = [
     price: 'Stůl 1500 / 900: 20 000 Kč',
     priceNote: 'Při atypických rozměrech nebo jiném materiálovém řešení připravím individuální nabídku.',
     gallery: [
-      { src: '/images/products/stul-1739.jpg', alt: 'Kovový stůl z čelního pohledu' },
-      { src: '/images/products/stul-1793.jpg', alt: 'Kovový stůl v šikmém pohledu' },
-      { src: '/images/products/stul-1907.jpg', alt: 'Detail hrany stolu s logem' },
+      { src: '/images/products/stul-1739.webp', alt: 'Kovový stůl z čelního pohledu' },
+      { src: '/images/products/stul-1793.webp', alt: 'Kovový stůl v šikmém pohledu' },
+      { src: '/images/products/stul-1907.webp', alt: 'Detail hrany stolu s logem' },
     ],
-    ctaLabel: 'Objednávkový formulář',
+    ctaLabel: 'Poptat tento kus',
     ctaHref: '/objednavka?produkt=stul',
   },
 ];
@@ -263,7 +244,7 @@ export const oploceniSections: SectionBlock[] = [
   {
     id: 'kovane-ploty',
     title: 'Kované ploty',
-    image: '/images/portfolio/plot-tahokov-2023.jpg',
+    image: '/images/portfolio/plot-tahokov-2023.webp',
     intro: 'Reprezentativní ploty s poctivým detailem a klasickým charakterem.',
     text:
       'Kované ploty vyrábím s důrazem na rytmus, proporce a řemeslné zpracování detailu. Každý návrh přizpůsobuji domu, okolí i požadované míře zdobnosti.',
@@ -281,7 +262,7 @@ export const oploceniSections: SectionBlock[] = [
   {
     id: 'tahokov-ploty',
     title: 'Tahokov ploty',
-    image: '/images/ploty.jpg',
+    image: '/images/ploty.webp',
     intro: 'Současné oplocení s čistou linií a vyšší mírou soukromí.',
     text:
       'Tahokov je vhodný tam, kde chcete moderní vzhled, pevnost a zároveň technicky čisté řešení. Výplň působí současně a dobře funguje i u novostaveb.',
@@ -299,7 +280,7 @@ export const oploceniSections: SectionBlock[] = [
   {
     id: 'hlinikove',
     title: 'Hliníkové',
-    image: '/images/brany.jpg',
+    image: '/images/brany.webp',
     intro: 'Lehké a snadno udržovatelné oplocení pro současné domy.',
     text:
       'Hliníkové řešení je vhodné tam, kde je důležitá jednoduchá údržba, čistý detail a lehčí vizuální výraz. Důležitá je správná skladba lamel a jejich návaznost na vstupy.',
@@ -317,7 +298,7 @@ export const oploceniSections: SectionBlock[] = [
   {
     id: 'ocel-drevo',
     title: 'Ocel / dřevo kombinace',
-    image: '/images/ploty.jpg',
+    image: '/images/ploty.webp',
     intro: 'Kombinace pevné ocelové konstrukce a teplejšího přírodního výrazu.',
     text:
       'Spojení oceli a dřeva funguje tam, kde chcete zachovat technickou pevnost, ale zároveň dodat realizaci měkčí a příjemnější vzhled. Návrh vždy řeším podle konkrétní stavby.',
@@ -335,10 +316,10 @@ export const oploceniSections: SectionBlock[] = [
   {
     id: 'samonosne-brany',
     title: 'Brány - samonosné',
-    image: '/images/brany.jpg',
-    intro: 'Samosnosné brány pro pohodlný a spolehlivý vjezd.',
+    image: '/images/brany.webp',
+    intro: 'Samonosné brány pro pohodlný a spolehlivý vjezd.',
     text:
-      'Samosnosné brány navrhuji tak, aby dobře fungovaly v každodenním provozu, měly čistý chod a byly vizuálně sladěné s celým oplocením. Důležitý je detail i konstrukční tuhost.',
+      'Samonosné brány navrhuji tak, aby dobře fungovaly v každodenním provozu, měly čistý chod a byly vizuálně sladěné s celým oplocením. Důležitý je detail i konstrukční tuhost.',
     fieldTypesTitle: 'Typy polí',
     fieldTypesText:
       'Výplň brány může navazovat na kované, tahokovové, hliníkové i kombinované oplocení.',
@@ -353,7 +334,7 @@ export const oploceniSections: SectionBlock[] = [
   {
     id: 'dvoukridle-brany',
     title: 'Brány - dvoukřídlé',
-    image: '/images/brany.jpg',
+    image: '/images/brany.webp',
     intro: 'Dvoukřídlé brány pro vstupy, kde dává tradiční otevírání nejlepší smysl.',
     text:
       'Dvoukřídlé brány jsou vhodné tam, kde prostor a provoz lépe vyhovuje klasickému řešení. Důležité je přesné osazení, tuhost konstrukce a napojení na okolní oplocení.',
@@ -374,7 +355,7 @@ export const ostatniSections: SectionBlock[] = [
   {
     id: 'schodiste',
     title: 'Schodiště',
-    image: '/images/portfolio/schodiste-3-2023.jpg',
+    image: '/images/portfolio/schodiste-3-2023.webp',
     intro: 'Schodiště na míru s důrazem na bezpečnost, proporce a čistý detail.',
     text:
       'Kovová schodiště navrhuji jako pevný a přirozený prvek prostoru. Každé řešení vzniká podle dispozice stavby, provozu i požadovaného výrazu.',
@@ -392,7 +373,7 @@ export const ostatniSections: SectionBlock[] = [
   {
     id: 'zabradli',
     title: 'Zábradlí',
-    image: '/images/portfolio/zabradli-1-2023.jpg',
+    image: '/images/portfolio/zabradli-1-2023.webp',
     intro: 'Interiérové i exteriérové zábradlí navržené podle konkrétní stavby.',
     text:
       'Zábradlí musí být bezpečné, pohodlné na úchop a zároveň působit přirozeně v prostoru, kde se nachází. Důležitý je pro mě detail napojení, rytmus i povrchová úprava.',
@@ -410,7 +391,7 @@ export const ostatniSections: SectionBlock[] = [
   {
     id: 'umelecke-projekty',
     title: 'Umělecké projekty',
-    image: '/images/grily.jpg',
+    image: '/images/grily.webp',
     intro: 'Atypické realizace, kde se potkává řemeslo, nápad a individuální návrh.',
     text:
       'Nejzajímavější projekty často vznikají tam, kde neexistuje hotová šablona. Umělecké a atypické realizace řeším individuálně podle zadání, prostoru a hledaného výrazu.',

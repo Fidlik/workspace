@@ -1,63 +1,10 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import PergolaCalculator from '../components/PergolaCalculator.astro';
-import { pergolaBasePriceRows } from '../data/site';
 ---
-
-<Layout
-  title="Pergoly | DR zámečnictví a kovovýroba"
-  description="Pergoly na míru včetně cenového přehledu, rozměrů, kalkulačky a nezávazné poptávky."
->
-  <section class="page-hero">
-    <div class="section">
-      <span class="eyebrow">Pergoly</span>
-      <h1>Ocelové pergoly na míru</h1>
-      <p>
-        Pergola musí dobře sedět prostoru, proporčně navazovat na dům a dlouhodobě fungovat v běžném provozu.
-        Níže najdete úvodní přehled, orientační cenové položky i kalkulačku podle základních rozměrů.
-      </p>
-      <div class="contact-actions">
-        <a class="button button--primary" href="#kalkulacka">Kalkulačka s rozměry</a>
-        <a class="button button--ghost" href="/poptavka?produkt=pergola">Nezávazná poptávka</a>
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="page-grid">
-      <figure class="image-card">
-        <img src="/images/portfolio/pristresek-1-2023.jpg" alt="Pergola na míru" loading="eager" />
-      </figure>
-
-      <article class="page-card">
-        <span class="section__eyebrow">Úvodní přehled</span>
-        <h2>Co je v základní kalkulaci</h2>
-        <p>
-          Základní varianta vychází z konstrukce 3000 / 4000 a obsahuje hlavní položky potřebné k výrobě a
-          dokončení pergoly. Dopravu počítám vždy podle konkrétní adresy realizace.
-        </p>
-        <div class="price-list">
-          {pergolaBasePriceRows.map((row) => (
-            <div class="price-list__row">
-              <span>{row.label}</span>
-              <strong>{row.value}</strong>
-            </div>
-          ))}
-        </div>
-      </article>
-    </div>
-  </section>
-
-  <section class="section" id="kalkulacka">
-    <div class="section__header">
-      <span class="section__eyebrow">Kalkulačka s rozměry</span>
-      <h2 class="section__title">Interaktivní kalkulace pro základní varianty pergol</h2>
-      <p class="section__intro">
-        Přehled slouží jako rychlá orientace. Vyberte rozměr, krytinu, zinkování, montáž a barvu. U atypických
-        rozměrů nebo individuálních požadavků připravím samostatnou cenovou nabídku.
-      </p>
-    </div>
-
-    <PergolaCalculator />
-  </section>
+<Layout title="Ocelové pergoly na míru | Kalkulačka ceny | DR zámečnictví" description="Navrhněte si ocelovou pergolu: šest rozměrů, tři barvy, polykarbonátová střecha a volitelná montáž. Okamžitá orientační cena a nezávazná poptávka.">
+  <section class="page-hero"><div class="section"><span class="eyebrow">OCELOVÉ PERGOLY NA MÍRU</span><h1>Více prostoru venku.<br /><em>Přesně podle vás.</em></h1><p>Ranní káva na terase. Večer s přáteli. Pevná ocelová konstrukce dá vašemu místu venku jasný tvar — rozměrem, barvou i provedením.</p><div class="contact-actions"><a class="button" href="#kalkulacka">Spočítat cenu pergoly</a><a class="button button--ghost" href="/poptavka?produkt=atypicka-pergola">Potřebuji atypický rozměr</a></div></div></section>
+  <section class="section section--spaced pergola-intro"><figure class="pergola-intro__image"><img src="/images/portfolio/pristresek-1-2023.webp" alt="Vlastní realizace ocelového přístřešku s polykarbonátovou krytinou" width="1024" height="768" loading="lazy" /><figcaption class="pergola-intro__caption">Vlastní realizace · DR zámečnictví</figcaption></figure><div class="pergola-intro__copy"><span class="section__eyebrow">PEVNÝ ZÁKLAD PRO VAŠI TERASU</span><h2>Ocel, která drží.<br /><em>Design, který sedí.</em></h2><p>Každou pergolu vyrábím na míru. Společně vybereme rozměry a povrch, probereme návaznost na dům i podmínky montáže.</p><ul class="pergola-features"><li>Ocelová konstrukce</li><li>Barva komaxit</li><li>Volitelné zinkování</li><li>Polykarbonátová krytina</li><li>Možnost vlastní montáže</li><li>Atypické řešení po domluvě</li></ul></div></section>
+  <section class="calculator-section" id="kalkulacka"><div class="section"><div class="section__header"><div><span class="section__eyebrow">VAŠE PERGOLA. VAŠE VOLBA.</span><h2>Od představy<br /><em>ke konkrétní ceně.</em></h2></div><p>Vyberte rozměry a provedení. Cena se hned přepočítá a konfiguraci pak přiložíme k nezávazné poptávce.</p></div><PergolaCalculator /></div></section>
+  <section class="section section--spaced faq-section"><div><span class="section__eyebrow">DOLADÍME SPOLU</span><h2>Každé místo<br />je trochu jiné.</h2></div><div class="faq-list"><details><summary>Co je potřeba připravit před montáží?</summary><p>Záleží na podkladu a způsobu kotvení. Před výrobou spolu probereme místo realizace a upřesníme, co má být připravené. Případné úpravy podkladu nejsou automaticky součástí kalkulace.</p></details><details><summary>Potřebuji rozměr, který tu není.</summary><p>Pošlete mi rozměry a fotografii místa přes nezávaznou poptávku. Připravím individuální návrh a cenu.</p><a class="text-link" href="/poptavka?produkt=atypicka-pergola">Poptat atypickou pergolu</a></details><details><summary>Co přesně znamená orientační cena?</summary><p>Součet zahrnuje vybrané položky bez DPH. Aktuální cenu vždy potvrdím před objednáním. Dopravu, konkrétní kotvení a atypické úpravy je potřeba potvrdit s výrobcem před objednáním.</p></details></div></section>
 </Layout>

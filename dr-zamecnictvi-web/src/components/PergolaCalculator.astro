@@ -1,213 +1,76 @@
 ---
-import { pergolaCalculatorSettings } from '../data/site';
-
-const { colors, defaultSizeId, sizes } = pergolaCalculatorSettings;
-const defaultSize = sizes.find((item) => item.id === defaultSizeId) ?? sizes[0];
-const defaultTotal =
-  defaultSize.structure +
-  defaultSize.assembly +
-  pergolaCalculatorSettings.roofingPrice +
-  pergolaCalculatorSettings.zincPrice +
-  pergolaCalculatorSettings.colorPrice;
-
-const formatCurrency = (value: number) =>
-  new Intl.NumberFormat('cs-CZ', { maximumFractionDigits: 0 }).format(value);
+import { pergolaCalculatorSettings as config } from '../data/pergola.mjs';
+import { calculate, defaults, currency } from '../lib/pergola.mjs';
+const initial = calculate(defaults);
+const groups = [
+ {name:'roofing',title:'Střešní krytina',options:[['polycarbonate','Polykarbonát'],['none','Bez krytiny']]},
+ {name:'zinc',title:'Ochrana konstrukce',options:[['included','Žárové zinkování'],['none','Bez zinkování']]},
+ {name:'assembly',title:'Montáž',options:[['pro','Montáž od nás'],['self','Vlastní montáž']]},
+ {name:'delivery',title:'Doprava',options:[['pickup','Osobní vyzvednutí'],['delivery','Doprava k vám']]},
+];
+const rows=[['structure','Ocelová konstrukce'],['roofing','Střešní krytina'],['color','Barva · komaxit'],['zinc','Žárové zinkování'],['assembly','Montáž']];
 ---
-
 <div class="pergola-calculator" data-pergola-calculator-root>
-  <div class="pergola-calculator__panel">
-    <div class="pergola-calculator__header">
-      <span class="section__eyebrow">Kalkulačka</span>
-      <h3>Kalkulačka pergoly</h3>
-      <p>
-        Vyberte rozměr, typ zastřešení, povrchovou úpravu a způsob montáže. Kalkulace vychází z aktuálních cen
-        na webu a slouží jako rychlá orientace.
-      </p>
+  <div class="pergola-calculator__layout">
+    <div class="pergola-calculator__controls">
+      <noscript><p class="no-js-note">Pro přepočítání ceny zapněte JavaScript. Zobrazená cena platí pro výchozí variantu 3 × 4 m. Individuální nabídku získáte telefonicky na 724 556 144.</p></noscript>
+      <fieldset class="calc-group"><legend>Rozměr pergoly <span class="calc-group__hint">Dva půdorysné rozměry v metrech</span></legend><div class="calc-size-grid">{config.sizes.map(size => <label class="calc-radio"><input type="radio" name="size" value={size.id} checked={size.id===defaults.size} /><span>{size.label}</span></label>)}</div></fieldset>
+      <fieldset class="calc-group"><legend>Barva konstrukce <span class="calc-group__hint">Komaxit je zahrnutý ve všech variantách</span></legend><div class="calc-color-grid">{config.colors.map(color => <label class="calc-color"><input type="radio" name="color" value={color.id} checked={color.id===defaults.color} /><span><i style={`--swatch:${color.swatch}`} aria-hidden="true"></i><span>{color.label}<small>{color.ral}</small></span></span></label>)}</div></fieldset>
+      {groups.map(group => <fieldset class="calc-group"><legend>{group.title}</legend><div class="calc-segmented">{group.options.map(([value,label])=><label class="calc-option"><input type="radio" name={group.name} value={value} checked={defaults[group.name]===value} /><span>{label}</span></label>)}</div></fieldset>)}
     </div>
-
-    <div class="pergola-calculator__layout">
-      <div class="pergola-calculator__controls">
-        <fieldset class="calc-group">
-          <legend>Rozměry</legend>
-          <div class="calc-size-grid">
-            {sizes.map((size) => (
-              <label class="calc-radio">
-                <input type="radio" name="size" value={size.id} checked={size.id === defaultSize.id} />
-                <span>{size.label}</span>
-              </label>
-            ))}
-          </div>
-        </fieldset>
-
-        <fieldset class="calc-group">
-          <legend>Typ střešní krytiny</legend>
-          <div class="calc-segmented">
-            <label class="calc-option">
-              <input type="radio" name="roofing" value="none" />
-              <span>Bez střešní krytiny</span>
-            </label>
-            <label class="calc-option">
-              <input type="radio" name="roofing" value="polycarbonate" checked />
-              <span>Polykarbonát</span>
-            </label>
-          </div>
-        </fieldset>
-
-        <fieldset class="calc-group">
-          <legend>Žárové zinkování</legend>
-          <div class="calc-segmented">
-            <label class="calc-option">
-              <input type="radio" name="zinc" value="none" />
-              <span>Bez žárového zinkování</span>
-            </label>
-            <label class="calc-option">
-              <input type="radio" name="zinc" value="included" checked />
-              <span>S žárovým zinkováním</span>
-            </label>
-          </div>
-        </fieldset>
-
-        <fieldset class="calc-group">
-          <legend>Montáž</legend>
-          <div class="calc-segmented">
-            <label class="calc-option">
-              <input type="radio" name="assembly" value="self" />
-              <span>Vlastní montáž</span>
-            </label>
-            <label class="calc-option">
-              <input type="radio" name="assembly" value="pro" checked />
-              <span>Montáž od nás</span>
-            </label>
-          </div>
-        </fieldset>
-
-        <fieldset class="calc-group">
-          <legend>Doprava</legend>
-          <div class="calc-segmented">
-            <label class="calc-option">
-              <input type="radio" name="delivery" value="pickup" checked />
-              <span>Osobní vyzvednutí</span>
-            </label>
-            <label class="calc-option">
-              <input type="radio" name="delivery" value="delivery" />
-              <span>K vám domů</span>
-            </label>
-          </div>
-        </fieldset>
-
-        <fieldset class="calc-group">
-          <legend>Vyberte barvu</legend>
-          <div class="calc-color-grid">
-            {colors.map((color) => (
-              <label class="calc-color">
-                <input type="radio" name="color" value={color.id} checked={color.id === colors[0].id} />
-                <span class="calc-color__swatch" style={`--swatch:${color.swatch}`}></span>
-                <span class="calc-color__label">{color.label}</span>
-              </label>
-            ))}
-          </div>
-        </fieldset>
+    <aside class="pergola-summary" aria-label="Shrnutí vaší pergoly">
+      <svg class="pergola-drawing" viewBox="0 0 480 290" role="img" aria-label="Schematický náhled zvoleného rozměru a barvy pergoly" data-drawing>
+        <defs><pattern id="roof-lines" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(12)"><path d="M0 0V12" stroke="currentColor" stroke-opacity=".2" /></pattern></defs>
+        <g data-drawing-frame></g><text x="240" y="273" text-anchor="middle" fill="#52614c" font-family="Manrope,sans-serif" font-size="15" data-drawing-size>3 × 4 m</text>
+      </svg>
+      <p class="pergola-drawing__caption">Schematický náhled · řešení kotvení domluvíme individuálně</p>
+      <div class="pergola-summary__rows">
+        <span class="pergola-summary__eyebrow">Vaše orientační cena</span>
+        <strong class="pergola-summary__total" data-total aria-live="polite" aria-atomic="true">{currency(initial.total)}</strong>
+        <span class="pergola-summary__tax">bez DPH · doprava se řeší samostatně</span>
+        {rows.map(([key,label])=><div class="pergola-summary__row"><span>{label}</span><strong data-row={key}>{currency(initial.rows[key])}</strong></div>)}
+        <div class="pergola-summary__row pergola-summary__row--delivery"><span>Doprava</span><strong data-delivery-price>Vyzvednutí zdarma</strong></div>
       </div>
-
-      <aside class="pergola-summary">
-        <span class="pergola-summary__eyebrow">Celková předpokládaná cena bez DPH</span>
-        <strong class="pergola-summary__total" data-total>{formatCurrency(defaultTotal)} Kč</strong>
-
-        <div class="pergola-summary__rows">
-          <div class="pergola-summary__row">
-            <span>Konstrukce</span>
-            <strong data-row="structure">{formatCurrency(defaultSize.structure)} Kč</strong>
-          </div>
-          <div class="pergola-summary__row">
-            <span>Střešní krytina</span>
-            <strong data-row="roofing">{formatCurrency(pergolaCalculatorSettings.roofingPrice)} Kč</strong>
-          </div>
-          <div class="pergola-summary__row">
-            <span>Barva</span>
-            <strong data-row="color">{formatCurrency(pergolaCalculatorSettings.colorPrice)} Kč</strong>
-          </div>
-          <div class="pergola-summary__row">
-            <span>Žárový zinek</span>
-            <strong data-row="zinc">{formatCurrency(pergolaCalculatorSettings.zincPrice)} Kč</strong>
-          </div>
-          <div class="pergola-summary__row">
-            <span>Montáž</span>
-            <strong data-row="assembly">{formatCurrency(defaultSize.assembly)} Kč</strong>
-          </div>
-        </div>
-
-        <p class="pergola-summary__note" data-delivery-note>
-          Osobní vyzvednutí bez dalšího příplatku.
-        </p>
-
-        <a class="button button--primary" href="/poptavka?produkt=pergola-kalkulace">
-          Odeslat poptávku
-        </a>
-      </aside>
-    </div>
+      <p class="pergola-summary__note" data-delivery-note>Osobní vyzvednutí bez dalšího příplatku.</p>
+      <a class="button" data-inquiry-link href="/poptavka?produkt=pergola-kalkulace">Poptat tuto pergolu</a>
+      <button class="calc-share" type="button" data-share>Zkopírovat konfiguraci</button><span class="calc-share-status" data-share-status role="status"></span>
+      <p class="pergola-summary__note">Kalkulace je nezávazná. Aktuální cenu a rozsah dodávky potvrdíme po upřesnění podkladu, kotvení a místa realizace.</p>
+    </aside>
   </div>
 </div>
-
-<script define:vars={{ calculatorConfig: pergolaCalculatorSettings }}>
-  const initPergolaCalculator = () => {
-    const root = document.querySelector('[data-pergola-calculator-root]');
-    if (!root || root.dataset.initialized === 'true') return;
-    root.dataset.initialized = 'true';
-
-    const sizeMap = new Map((calculatorConfig.sizes || []).map((size) => [size.id, size]));
-    const totalElement = root.querySelector('[data-total]');
-    const deliveryNoteElement = root.querySelector('[data-delivery-note]');
-    const rowElements = {
-      structure: root.querySelector('[data-row="structure"]'),
-      roofing: root.querySelector('[data-row="roofing"]'),
-      color: root.querySelector('[data-row="color"]'),
-      zinc: root.querySelector('[data-row="zinc"]'),
-      assembly: root.querySelector('[data-row="assembly"]'),
-    };
-
-    const formatter = new Intl.NumberFormat('cs-CZ', { maximumFractionDigits: 0 });
-    const formatCurrency = (value) => `${formatter.format(value)} Kč`;
-
-    const getValue = (name) => {
-      const checkedInput = root.querySelector(`input[name="${name}"]:checked`);
-      return checkedInput instanceof HTMLInputElement ? checkedInput.value : '';
-    };
-
+<script>
+  import { calculate, currency, defaults, parseSelection, selectionParams } from '../lib/pergola.mjs';
+  import { pergolaCalculatorSettings as config } from '../data/pergola.mjs';
+  const root = document.querySelector<HTMLElement>('[data-pergola-calculator-root]');
+  if (root) {
+    const initial = parseSelection(new URLSearchParams(location.search));
+    for (const key of Object.keys(defaults)) for (const input of root.querySelectorAll<HTMLInputElement>(`input[name="${key}"]`)) input.checked=input.value===initial[key];
+    const read = () => Object.fromEntries(Object.keys(defaults).map(key=>[key,root.querySelector<HTMLInputElement>(`input[name="${key}"]:checked`)?.value??defaults[key]]));
     const render = () => {
-      const size = sizeMap.get(getValue('size')) || calculatorConfig.sizes?.[0];
-      if (!size) return;
-
-      const roofingPrice = getValue('roofing') === 'polycarbonate' ? calculatorConfig.roofingPrice : 0;
-      const zincPrice = getValue('zinc') === 'included' ? calculatorConfig.zincPrice : 0;
-      const assemblyPrice = getValue('assembly') === 'pro' ? size.assembly : 0;
-      const colorPrice = calculatorConfig.colorPrice;
-      const total = size.structure + roofingPrice + zincPrice + assemblyPrice + colorPrice;
-
-      if (totalElement) totalElement.textContent = formatCurrency(total);
-      if (rowElements.structure) rowElements.structure.textContent = formatCurrency(size.structure);
-      if (rowElements.roofing) rowElements.roofing.textContent = roofingPrice ? formatCurrency(roofingPrice) : '0 Kč';
-      if (rowElements.color) rowElements.color.textContent = formatCurrency(colorPrice);
-      if (rowElements.zinc) rowElements.zinc.textContent = zincPrice ? formatCurrency(zincPrice) : '0 Kč';
-      if (rowElements.assembly) rowElements.assembly.textContent = assemblyPrice ? formatCurrency(assemblyPrice) : '0 Kč';
-
-      if (deliveryNoteElement) {
-        deliveryNoteElement.textContent =
-          getValue('delivery') === 'delivery'
-            ? calculatorConfig.deliveryNote
-            : 'Osobní vyzvednutí bez dalšího příplatku.';
-      }
+      const selection=read(), result=calculate(selection);
+      root.querySelector('[data-total]')!.textContent=currency(result.total);
+      for (const [key,value] of Object.entries(result.rows)) root.querySelector(`[data-row="${key}"]`)!.textContent=currency(value);
+      root.querySelector('[data-delivery-price]')!.textContent=selection.delivery==='delivery'?'Dle adresy, mimo součet':'Vyzvednutí zdarma';
+      root.querySelector('[data-delivery-note]')!.textContent=selection.delivery==='delivery'?config.deliveryNote:'Osobní vyzvednutí bez dalšího příplatku.';
+      const params=selectionParams(selection);
+      const url=new URL(location.href);for(const [key,value] of params)url.searchParams.set(key,value);
+      history.replaceState(null,'',url);
+      params.set('produkt','pergola-kalkulace');
+      root.querySelector<HTMLAnchorElement>('[data-inquiry-link]')!.href=`/poptavka?${params}`;
+      const drawing=root.querySelector<SVGElement>('[data-drawing]')!;
+      drawing.style.color=result.color.swatch;
+      const [width,depth]=result.size.id.split('x').map(Number);
+      const w=width/1000*28, d=depth/1000*18, x=240-(w+d)/2;
+      const a=[x,45],b=[x+w,45-12],c=[x+w+d,45-12+d*.5],e=[x+d,45+d*.5];
+      const point=(p:number[])=>p.join(',');const points=[a,b,c,e].map(point).join(' ');
+      const roof=selection.roofing==='polycarbonate'?`<polygon points="${points}" fill="url(#roof-lines)"/><polygon points="${points}" fill="currentColor" fill-opacity=".1"/>`:'';
+      const posts=[a,b,c,e].map(p=>`<path d="M${point(p)}v118"/>`).join('');
+      const inner=[.25,.5,.75].map(t=>`<path d="M${a[0]+w*t},${a[1]-12*t}l${d},${d*.5}"/>`).join('');
+      root.querySelector('[data-drawing-frame]')!.innerHTML=`${roof}<g fill="none" stroke="currentColor" stroke-width="7" stroke-linejoin="miter">${posts}<polygon points="${points}"/>${inner}</g><path d="M${x+d-10},${45+d*.5+141}l${w},-12" stroke="#8fa184" stroke-width="1"/>`;
+      root.querySelector('[data-drawing-size]')!.textContent=result.size.label;
+      root.querySelector('[data-share-status]')!.textContent='';
     };
-
-    root.addEventListener('change', render);
-    root.addEventListener('input', render);
-    render();
-  };
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initPergolaCalculator, { once: true });
-  } else {
-    initPergolaCalculator();
+    root.addEventListener('change',render);render();
+    root.querySelector('[data-share]')?.addEventListener('click',async()=>{const status=root.querySelector('[data-share-status]')!;try{await navigator.clipboard.writeText(location.href);status.textContent='Odkaz na konfiguraci je zkopírovaný.';}catch{status.textContent='Konfigurace je uložená v odkazu v adresním řádku.';}});
   }
-
-  document.addEventListener('astro:page-load', initPergolaCalculator);
 </script>

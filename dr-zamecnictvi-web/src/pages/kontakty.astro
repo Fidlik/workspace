@@ -65,12 +65,7 @@ import { company } from '../data/site';
       <article class="contact-card contact-card--map">
         <span class="section__eyebrow">Kde mě najdete</span>
         <div class="map-frame">
-          <iframe
-            title="Mapa - DR zámečnictví a kovovýroba"
-            src={company.mapEmbedUrl}
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-          ></iframe>
+          <a class="location-card" href={company.mapUrl} target="_blank" rel="noreferrer"><span aria-hidden="true">DR</span><h3>Stavte se ve Studénce.</h3><p>Požárnická 261<br />742 13 Studénka</p><span class="text-link">Zobrazit v Google Maps</span></a>
         </div>
         <div class="contact-actions">
           <a class="button button--ghost" href={company.mapUrl} target="_blank" rel="noreferrer">
