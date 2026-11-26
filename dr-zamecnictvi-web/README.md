@@ -26,6 +26,8 @@ Konfigurace se ukládá do URL. Poptávka předává rozměr, barvu, krytinu, zi
 
 ## Cloudflare Pages + GitHub
 
+Adresa náhledu: **https://dr-zamecnictvi.kompotex.org**. Doménu obsluhuje malý Worker z `cloudflare/domain-worker.mjs`, který předává požadavky do Pages větve `codex/dr-modern-design`. Zachovává cestu, parametry kalkulačky, tělo formuláře a původní veřejnou doménu při přesměrování. Frontend se dál aktualizuje přes GitHub a Cloudflare Pages. Nasazení propojení domény: `wrangler deploy --config wrangler.domain.jsonc`.
+
 Existující projekt: `dr-zamecnictvi-web`, repozitář `Fidlik/workspace`.
 
 - Kořen projektu: `dr-zamecnictvi-web`

@@ -10,7 +10,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "test": "node --experimental-strip-types --test tests/pergola.test.mjs tests/forms.test.mjs"
+    "test": "node --experimental-strip-types --test tests/pergola.test.mjs tests/forms.test.mjs tests/domain.test.mjs"
   },
   "dependencies": {
     "astro": "^6.0.4"
