@@ -3,25 +3,10 @@ import Layout from '../layouts/Layout.astro';
 import DetailSection from '../components/DetailSection.astro';
 import { ostatniSections } from '../data/site';
 ---
-
-<Layout
-  title="Ostatní | DR zámečnictví a kovovýroba"
-  description="Schodiště, zábradlí a umělecké projekty přehledně na jedné stránce."
->
-  <section class="page-hero">
-    <div class="section">
-      <span class="eyebrow">Ostatní</span>
-      <h1>Schodiště, zábradlí a umělecké projekty</h1>
-      <p>
-        Tato stránka sdružuje zakázky, které je potřeba řešit individuálně. Každá oblast má vlastní úvodní blok,
-        text, typy řešení, fotku a odkaz na formulář.
-      </p>
-    </div>
-  </section>
-
-  <section class="section page-stack">
+<Layout title="Další realizace | DR zámečnictví a kovovýroba" description="Zakázková výroba schodišť, zábradlí, uměleckých objektů a atypických výrobků z kovu.">
+  <div class="section catalog-stack">
     {ostatniSections.map((section, index) => (
-      <DetailSection section={section} reverse={index % 2 === 1} />
+      <DetailSection section={section} first={index === 0} topHeading={index === 0} />
     ))}
-  </section>
+  </div>
 </Layout>

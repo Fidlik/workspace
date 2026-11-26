@@ -1,0 +1,60 @@
+---
+type Props = {
+  label: string;
+  count: number;
+};
+const { label, count } = Astro.props;
+---
+<dr-carousel class="dr-carousel" aria-label={label} role="region">
+  <div class="dr-carousel__viewport" data-carousel-viewport tabindex={count > 1 ? 0 : undefined}>
+    <slot />
+  </div>
+  {count > 1 && <div class="dr-carousel__controls" data-carousel-controls hidden>
+    <button type="button" aria-label="Předchozí fotografie" data-carousel-previous><span aria-hidden="true">‹</span></button>
+    <button type="button" aria-label="Další fotografie" data-carousel-next><span aria-hidden="true">›</span></button>
+    <span class="dr-carousel__count" data-carousel-count aria-live="polite">1 / {count}</span>
+  </div>}
+</dr-carousel>
+
+<script>
+  class DrCarousel extends HTMLElement {
+    connectedCallback() {
+      const viewport = this.querySelector<HTMLElement>('[data-carousel-viewport]');
+      const controls = this.querySelector<HTMLElement>('[data-carousel-controls]');
+      const counter = this.querySelector('[data-carousel-count]');
+      if (!viewport || !controls || !counter) return;
+
+      const slides = Array.from(viewport.children) as HTMLElement[];
+      let index = 0;
+      const offset = (slide: HTMLElement) => slide.offsetLeft;
+      const lastIndex = () => {
+        const end = viewport.scrollWidth - viewport.clientWidth;
+        return Math.max(0, slides.findLastIndex(slide => offset(slide) <= end + 2));
+      };
+      const update = () => {
+        const end = lastIndex();
+        const left = viewport.scrollLeft;
+        index = slides.slice(0, end + 1).reduce((nearest, slide, current) =>
+          Math.abs(offset(slide) - left) < Math.abs(offset(slides[nearest]) - left) ? current : nearest, 0);
+        controls.hidden = end === 0;
+        counter.textContent = `${index + 1} / ${end + 1}`;
+      };
+      const move = (direction: number) => {
+        const total = lastIndex() + 1;
+        index = (index + direction + total) % total;
+        viewport.scrollTo({ left: offset(slides[index]) });
+      };
+      controls.querySelector('[data-carousel-previous]')?.addEventListener('click', () => move(-1));
+      controls.querySelector('[data-carousel-next]')?.addEventListener('click', () => move(1));
+      viewport.addEventListener('scroll', update, { passive: true });
+      viewport.addEventListener('keydown', event => {
+        if (event.target !== viewport || !['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+        event.preventDefault();
+        move(event.key === 'ArrowLeft' ? -1 : 1);
+      });
+      new ResizeObserver(update).observe(viewport);
+      update();
+    }
+  }
+  customElements.define('dr-carousel', DrCarousel);
+</script>

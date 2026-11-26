@@ -1,206 +1,79 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { company, featuredSections, gallery, process, references, stats, strengths } from '../data/site';
+import { company, galleryHighlights, services } from '../data/site';
+const strengths = [
+  { title: 'Férové jednání', path: 'M3 12l4-7 5 2 5-2 4 7-3 2-4-5-3 2a2 2 0 0 1-3-2l4-2M7 14l5 5 2-1 2-1 2-3M3 12l4 2m2 2 2-2m0 4 2-2' },
+  { title: 'Návrh a zaměření na místě', path: 'M3 7h18v10H3zM7 7v5m4-5v3m4-3v5m4-5v3' },
+  { title: 'Dodržení smluveného termínu', path: 'M4 5h16v15H4zM8 3v4m8-4v4M4 10h16m-11 5 2 2 4-4' },
+  { title: 'Poctivá práce do posledního detailu', path: 'M7 4h10l2 5-2 9H7L5 9l2-5Zm1 5h8v4H8zm4 9v3m8-5 2-2m-2 5 2 1' },
+];
 ---
-
-<Layout
-  title="DR zámečnictví a kovovýroba | Zakázková kovovýroba bez pluginového balastu"
-  description="Moderní jednodušší prezentace pro zakázkovou kovovýrobu Daniela Richtera ve Studénce."
->
-  <section class="hero">
-    <div class="section hero__grid">
-      <div>
-        <span class="eyebrow">Zakázková kovovýroba ve Studénce</span>
-        <h1>Pergoly, venkovní nábytek, oplocení a poctivé řemeslo na míru.</h1>
-        <p>{company.intro}</p>
-
+<Layout title="DR zámečnictví | Kovovýroba na míru ve Studénce" description={company.description}>
+  <section class="editorial-hero">
+    <div class="editorial-hero__photo">
+      <img src="/images/pergola-vecer.webp" alt="" width="1500" height="1000" fetchpriority="high" />
+    </div>
+    <div class="section editorial-hero__inner">
+      <div class="editorial-hero__copy">
+        <h1>Kovovýroba na míru.<br /><em>Poctivě a na dlouhá léta.</em></h1>
+        <p>Vyrábíme podle konkrétního prostoru, požadavků a způsobu využití – pro domácnosti i firmy. Od zaměření a návrhu až po výrobu a montáž.</p>
         <div class="hero__actions">
-          <a class="button button--primary" href="/poptavka?produkt=obecna-poptavka">Nezávazná poptávka</a>
-          <a class="button button--ghost" href="/fotogalerie">Prohlédnout realizace</a>
-        </div>
-
-        <div class="stats">
-          {stats.map((item) => (
-            <div class="stat">
-              <strong>{item.value}</strong>
-              <span>{item.label}</span>
-            </div>
-          ))}
+          <a class="button" href="/poptavka">Nezávazná poptávka</a>
+          <a class="button button--ghost" href="#realizace">Prohlédnout realizace</a>
         </div>
       </div>
-
-      <figure class="hero__media">
-        <img src="/images/hero.jpg" alt="Zakázková kovovýroba DR zámečnictví" loading="eager" />
-        <figcaption class="hero__badge">
-          <strong>{company.owner}</strong>
-          <span>{company.workshop}</span>
-        </figcaption>
-      </figure>
+      <div class="hero__caption">
+        <strong>Od návrhu po montáž</strong>
+        <p>Zakázku řešíme jako celek. Zaměříme, navrhneme, vyrobíme a namontujeme.</p>
+        <small>Ilustrační vizualizace</small>
+      </div>
     </div>
   </section>
 
-  <section class="section">
-    <div class="section__header">
-      <span class="section__eyebrow">Hlavní sekce</span>
-    </div>
-
-    <div class="service-grid">
-      {featuredSections.map((service) => (
-        <article class="service-card">
-          <img src={service.image} alt={service.title} loading="lazy" />
-          <div class="service-card__body">
-            <span class="section__eyebrow">{service.eyebrow}</span>
-            <h3>{service.title}</h3>
-            <p>{service.summary}</p>
-            <a class="service-card__link" href={service.href}>
-              Otevřít sekci
-            </a>
-          </div>
-        </article>
-      ))}
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="section__header">
-      <span class="section__eyebrow">Jak probíhá spolupráce</span>
-      <h2 class="section__title">Od prvního hovoru po montáž</h2>
-      <p class="section__intro">
-        Web má být stejně přímý jako samotná spolupráce. Proto jsou tady hlavní kroky přehledně a bez
-        zbytečných vrstev navíc.
-      </p>
-    </div>
-
-    <div class="process-grid">
-      {process.map((step, index) => (
-        <article class="process-card">
-          <div class="process-card__index">0{index + 1}</div>
-          <h3>{step.title}</h3>
-          <p>{step.text}</p>
-        </article>
-      ))}
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="section__header">
-      <span class="section__eyebrow">Proč právě sem</span>
-      <h2 class="section__title">Řemeslo, které stojí na osobním přístupu</h2>
-    </div>
-
-    <div class="process-grid">
-      {strengths.map((item, index) => (
-        <article class="process-card">
-          <div class="process-card__index">0{index + 1}</div>
-          <h3>{item}</h3>
-          <p>
-            Každá zakázka se řeší individuálně. Není to anonymní formulářový provoz, ale domluva s člověkem,
-            který projekt opravdu vyrábí.
-          </p>
-        </article>
-      ))}
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="section__header">
-      <span class="section__eyebrow">Reference</span>
-      <h2 class="section__title">Spokojenost zákazníků je nejlepší reklama</h2>
-    </div>
-
-    {references.map((reference) => (
-      <article class="quote-card">
-        <blockquote>{reference.quote}</blockquote>
-        <footer>{reference.author}</footer>
-      </article>
-    ))}
-  </section>
-
-  <section class="section">
-    <div class="section__header">
-      <span class="section__eyebrow">Fotogalerie</span>
-      <h2 class="section__title">Ukázka různých typů realizací</h2>
-      <p class="section__intro">
-        Místo těžké galerie s pluginy tady stačí rychlý, přehledný výběr obrázků, který se dobře načte i na
-        mobilu.
-      </p>
-    </div>
-
-    <div class="gallery-grid">
-      {gallery.map((item) => (
-        <figure class="gallery-card">
-          <img src={item.src} alt={item.alt} loading="lazy" />
-          <figcaption class="gallery-card__caption">{item.caption}</figcaption>
-        </figure>
-      ))}
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="contact-grid">
-      <article class="contact-card contact-card--details">
-        <span class="section__eyebrow">Kontakty</span>
-        <h2>{company.owner}</h2>
-        <p class="contact-subtitle">{company.addressName}</p>
-
-        <div class="contact-stack">
-          <div class="contact-block">
-            <h3>Adresa:</h3>
-            {company.addressLines.map((line) => (
-              <p>{line}</p>
-            ))}
-          </div>
-
-          <div class="contact-block">
-            <h3>Fakturační údaje:</h3>
-            <p>
-              <strong>IČ:</strong> {company.ico}
-            </p>
-          </div>
-
-          <div class="contact-block">
-            <h3>Kontaktní informace:</h3>
-            {company.phones.map((phone) => (
-              <p>
-                <strong>{phone.label}:</strong>{' '}
-                <a href={`tel:+420${phone.href}`}>{phone.display}</a>
-              </p>
-            ))}
-            <p>
-              <strong>E-mail:</strong>{' '}
-              <a href={`mailto:${company.email}`}>{company.email}</a>
-            </p>
-            <p>
-              <strong>Facebook:</strong>{' '}
-              <a href={company.facebook} target="_blank" rel="noreferrer">
-                DR zámečnictví a kovovýroba
-              </a>
-            </p>
-          </div>
-        </div>
-      </article>
-
-      <article class="contact-card contact-card--map">
-        <span class="section__eyebrow">Kde mě najdete</span>
-        <div class="map-frame">
-          <iframe
-            title="Mapa - DR zámečnictví a kovovýroba"
-            src={company.mapEmbedUrl}
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-          ></iframe>
-        </div>
-        <div class="contact-actions">
-          <a
-            class="button button--ghost"
-            href={company.mapUrl}
-            target="_blank"
-            rel="noreferrer"
-          >
-            Otevřít mapu
+  <section class="section section--spaced service-section" aria-label="Zakázková kovovýroba">
+    <div class="editorial-services">
+      {services.map(service => (
+        <article class="editorial-service">
+          <a class="editorial-service__image" href={service.href} aria-label={'Prohlédnout: ' + service.title}>
+            <img src={service.photo.src} alt={service.photo.alt} loading="lazy" width="800" height="600" />
           </a>
-        </div>
-      </article>
+          <div class="editorial-service__body">
+            <h2><a href={service.href}>{service.title}</a></h2>
+            <p>{service.text}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="section section--spaced values-section">
+    <h2>Na čem si zakládáme</h2>
+    <ul class="values-grid">
+      {strengths.map(({title, path}) => (
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={path} /></svg>
+          <h3>{title}</h3>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="section section--spaced" id="realizace">
+    <h2>Ukázka realizací</h2>
+    <div class="projects-mosaic">
+      {galleryHighlights.map(photo => (
+        <a href={photo.src} aria-label={'Zobrazit fotografii: ' + photo.alt}>
+          <img src={photo.src} alt={photo.alt} loading="lazy" />
+        </a>
+      ))}
+    </div>
+    <div class="projects-actions"><a class="button button--ghost" href="/fotogalerie">Zobrazit všechny realizace</a></div>
+  </section>
+
+  <section class="closing-cta">
+    <div class="section closing-cta__inner">
+      <div><h2>Proberme vaši zakázku</h2><p>Pošlete nám rozměry, místo realizace a svoji představu.</p></div>
+      <div><a class="closing-cta__phone" href={'tel:+420' + company.phones[0].href}>{company.phones[0].display}</a><a class="button" href="/poptavka">Nezávazná poptávka</a></div>
     </div>
   </section>
 </Layout>

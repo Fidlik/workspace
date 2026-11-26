@@ -1,0 +1,11 @@
+{
+  "name": "dr-zamecnictvi-domain",
+  "main": "cloudflare/domain-worker.mjs",
+  "account_id": "3554d0259a9db07e6a7d2455224ac68a",
+  "compatibility_date": "2026-11-26",
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [
+    { "pattern": "dr-zamecnictvi.kompotex.org", "custom_domain": true }
+  ]
+}

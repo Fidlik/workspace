@@ -1,61 +1,18 @@
 ---
+import PhotoCarousel from './PhotoCarousel.astro';
 import type { SectionBlock } from '../data/site';
 
-type Props = {
-  section: SectionBlock;
-  reverse?: boolean;
-};
-
-const { section, reverse = false } = Astro.props as Props;
+type Props = {section: SectionBlock; first?: boolean; topHeading?: boolean; fit?: 'contain' | 'cover'};
+const {section, first = false, topHeading = false, fit = 'cover'} = Astro.props;
+const Heading = topHeading ? 'h1' : 'h2';
 ---
-
-<section class:list={['detail-section', reverse && 'detail-section--reverse']} id={section.id}>
-  <div class="detail-section__visuals">
-    <figure class:list={['detail-section__media', 'image-card', section.plainMedia && 'image-card--plain']}>
-      <img src={section.image} alt={section.title} loading="lazy" />
-    </figure>
-
-    {section.gallery && section.gallery.length > 0 && (
-      <div class="detail-gallery">
-        {section.gallery.map((image) => (
-          <figure class:list={['detail-gallery__item', section.plainMedia && 'detail-gallery__item--plain']}>
-            <img src={image.src} alt={image.alt} loading="lazy" />
-          </figure>
-        ))}
-      </div>
-    )}
-  </div>
-
-  <article class="page-card detail-section__content">
-    <span class="section__eyebrow">{section.title}</span>
-    <h2>{section.title}</h2>
-    <p class="detail-section__lead">{section.intro}</p>
+<section class="catalog-row" id={section.id}>
+  <div class="catalog-row__copy">
+    <Heading>{section.title}</Heading>
+    {section.intro && <p class="catalog-row__lead">{section.intro}</p>}
     <p>{section.text}</p>
-
-    {section.price && (
-      <div class="price-box">
-        <strong>{section.price}</strong>
-        {section.priceNote && <span>{section.priceNote}</span>}
-      </div>
-    )}
-
-    {(section.fieldTypesTitle || section.fieldTypesText) && (
-      <div class="field-types">
-        {section.fieldTypesTitle && <h3>{section.fieldTypesTitle}</h3>}
-        {section.fieldTypesText && <p>{section.fieldTypesText}</p>}
-      </div>
-    )}
-
-    {section.variants && section.variants.length > 0 && (
-      <ul class="detail-list">
-        {section.variants.map((item) => <li>{item}</li>)}
-      </ul>
-    )}
-
-    <div class="contact-actions">
-      <a class="button button--primary" href={section.ctaHref}>
-        {section.ctaLabel}
-      </a>
-    </div>
-  </article>
+    {section.price && <p class="catalog-row__price">{section.price}</p>}
+    <a class="button" href={section.ctaHref}>Nezávazná poptávka</a>
+  </div>
+  <PhotoCarousel photos={section.photos} label={section.title + ' – fotografie'} eager={first} fit={fit} />
 </section>

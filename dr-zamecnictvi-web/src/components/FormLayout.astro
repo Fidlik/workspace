@@ -1,95 +1,60 @@
 ---
 import Layout from '../layouts/Layout.astro';
-
-type Props = {
-  title: string;
-  eyebrow: string;
-  description: string;
-  formType: 'poptavka' | 'objednavka';
-};
-
-const { title, eyebrow, description, formType } = Astro.props as Props;
+import { company } from '../data/site';
+type Props = {title:string;description:string;formType:'poptavka'|'objednavka'};
+const {title,description,formType}=Astro.props as Props;
 ---
-
-<Layout title={`${title} | DR zámečnictví a kovovýroba`} description={description}>
-  <section class="page-hero">
-    <div class="section">
-      <span class="eyebrow">{eyebrow}</span>
-      <h1>{title}</h1>
-      <p>{description}</p>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="form-shell">
-      <article class="page-card">
-        <span class="section__eyebrow">Formulář</span>
-        <h2>Vyplňte základní údaje</h2>
-        <form class="inquiry-form" method="POST" action="/api/forms">
-          <input type="hidden" name="formType" value={formType} />
-          <input type="hidden" name="product" value="" data-product-field />
-          <input type="text" name="website" class="honeypot" tabindex="-1" autocomplete="off" />
-
-          <label>
-            <span>Produkt / téma</span>
-            <input type="text" name="productLabel" placeholder="Např. Pergola 3000 / 4000" data-product-label />
-          </label>
-
-          <label>
-            <span>Jméno a příjmení</span>
-            <input type="text" name="name" required />
-          </label>
-
-          <label>
-            <span>Telefon</span>
-            <input type="tel" name="phone" required />
-          </label>
-
-          <label>
-            <span>E-mail</span>
-            <input type="email" name="email" />
-          </label>
-
-          <label>
-            <span>Město / adresa realizace</span>
-            <input type="text" name="location" />
-          </label>
-
-          <label>
-            <span>Rozměry nebo požadované provedení</span>
-            <input type="text" name="dimensions" placeholder="Např. 3000 / 5000" />
-          </label>
-
-          <label>
-            <span>Zpráva</span>
-            <textarea name="message" rows="6" placeholder="Napište stručně, co potřebujete vyrobit."></textarea>
-          </label>
-
-          <label class="checkbox">
-            <input type="checkbox" name="consent" required />
-            <span>Souhlasím se zpracováním údajů za účelem vyřízení poptávky.</span>
-          </label>
-
-          <button class="button button--primary" type="submit">
-            Odeslat formulář
-          </button>
-        </form>
-      </article>
-    </div>
-  </section>
+<Layout title={`${title} | DR zámečnictví`} description={description}>
+  <section class="page-hero"><div class="section"><h1>{title}</h1><p>{description}</p></div></section>
+  <section class="section"><div class="form-shell"><article class="page-card">
+    <div class="inquiry-config" data-inquiry-config hidden><h3>Vaše konfigurace pergoly</h3><pre data-config-summary></pre><a class="text-link" data-edit-config href="/pergoly#kalkulacka">Upravit konfiguraci</a></div>
+    <h2>Řekněte mi o svém nápadu.</h2>
+    <form class="inquiry-form" method="POST" action="/api/forms">
+      <input type="hidden" name="formType" value={formType} /><input type="hidden" name="product" data-product-field />
+      <label class="honeypot" aria-hidden="true">Webové stránky<input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+      <label><span>Co pro vás můžu vyrobit?</span><input type="text" name="productLabel" maxlength="200" placeholder="Např. ocelová pergola" data-product-label /></label>
+      <label><span>Jméno a příjmení *</span><input type="text" name="name" required maxlength="120" autocomplete="name" /></label>
+      <label><span>Telefon *</span><input type="tel" name="phone" required minlength="6" maxlength="30" autocomplete="tel" placeholder="Např. 724 556 144" /></label>
+      <label><span>E-mail</span><input type="email" name="email" maxlength="254" autocomplete="email" /></label>
+      <label><span>Město / místo realizace</span><input type="text" name="location" maxlength="300" autocomplete="address-level2" /></label>
+      <label><span>Rozměry nebo požadované provedení</span><input type="text" name="dimensions" maxlength="200" placeholder="Např. 3 × 5 m" data-dimensions /></label>
+      <label><span>Co ještě potřebujete doplnit?</span><textarea name="message" rows="5" maxlength="5000" placeholder="Napište mi svou představu, návaznost na dům nebo požadovaný termín."></textarea></label>
+      <label class="checkbox"><input type="checkbox" name="consent" required /><span>Souhlasím se zpracováním údajů pro vyřízení této poptávky. <a href="/ochrana-udaju">Jak nakládáme s údaji</a></span></label>
+      <button class="button" type="submit">Odeslat nezávaznou poptávku</button>
+      <p class="form-status" role="status" data-form-status></p>
+      <p class="small-note">Poptávka vás k ničemu nezavazuje. Můžete mi také zavolat na <a href={`tel:+420${company.phones[0].href}`}>{company.phones[0].display}</a> nebo napsat na <a href={`mailto:${company.email}`}>{company.email}</a>.</p>
+    </form>
+  </article></div></section>
 </Layout>
-
 <script>
-  const params = new URLSearchParams(window.location.search);
-  const product = params.get('produkt') ?? '';
-  const hiddenField = document.querySelector('[data-product-field]');
-  const labelField = document.querySelector('[data-product-label]');
-
-  if (hiddenField instanceof HTMLInputElement) {
-    hiddenField.value = product;
+  import {calculate,inquirySummary,parseSelection,selectionParams} from '../lib/pergola.mjs';
+  const params=new URLSearchParams(location.search),product=(params.get('produkt')??'').slice(0,200);
+  const form=document.querySelector<HTMLFormElement>('.inquiry-form')!;
+  form.querySelector<HTMLInputElement>('[data-product-field]')!.value=product;
+  const label=form.querySelector<HTMLInputElement>('[data-product-label]')!;
+  if(product)label.value=product.replace(/-/g,' ');
+  if(product==='pergola-kalkulace'){
+    const selection=parseSelection(params),result=calculate(selection);
+    label.value=`Ocelová pergola ${result.size.label}`;
+    form.querySelector<HTMLInputElement>('[data-dimensions]')!.value=result.size.label;
+    const summary=document.querySelector<HTMLElement>('[data-inquiry-config]')!;summary.hidden=false;
+    summary.querySelector('[data-config-summary]')!.textContent=inquirySummary(selection);
+    summary.querySelector<HTMLAnchorElement>('[data-edit-config]')!.href=`/pergoly?${selectionParams(selection)}#kalkulacka`;
+    for(const [name,value]of Object.entries(selection)){const input=document.createElement('input');input.type='hidden';input.name=name;input.value=value;form.append(input);}
   }
-
-  if (labelField instanceof HTMLInputElement && product) {
-    labelField.value = product.replace(/-/g, ' ');
-  }
+  form.addEventListener('submit',async event=>{
+    event.preventDefault();
+    if(!form.reportValidity())return;
+    const button=form.querySelector<HTMLButtonElement>('button[type=submit]')!,status=form.querySelector<HTMLElement>('[data-form-status]')!;
+    button.disabled=true;button.textContent='Odesílám…';status.textContent='';status.classList.remove('form-status--error');
+    try{
+      const response=await fetch(form.action,{method:'POST',body:new FormData(form),headers:{Accept:'application/json'}});
+      const data=await response.json();
+      if(!response.ok||data.success!==true)throw new Error(data.error||'Odeslání se nepodařilo.');
+      location.assign('/dekujeme');
+    }catch(error){
+      status.classList.add('form-status--error');status.textContent=`${error instanceof Error?error.message:'Odeslání se nepodařilo.'} Údaje zůstaly ve formuláři. Můžete to zkusit znovu nebo zavolat na 724 556 144.`;
+      button.disabled=false;button.textContent='Zkusit odeslat znovu';
+    }
+  });
 </script>
